@@ -1,6 +1,6 @@
 resource "routeros_ip_dhcp_client" "wan" {
   interface = var.wan.interface
-  comment = "TF"
+  comment   = "TF"
   # Disabled - we want to use static IP
   #disabled = false
   #add_default_route = "yes"

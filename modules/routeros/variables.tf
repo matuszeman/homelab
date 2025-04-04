@@ -25,6 +25,6 @@ variable "vlans" {
     #vlan = number
     #network = string
     untagged = list(string)
-    tagged = list(string)
+    tagged   = list(string)
   }))
 }

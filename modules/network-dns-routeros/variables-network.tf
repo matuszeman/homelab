@@ -7,6 +7,6 @@ variable "domain" {
 variable "static_ip_allocations" {
   type = map(object({
     address = string
-    mac = string
+    mac     = string
   }))
 }

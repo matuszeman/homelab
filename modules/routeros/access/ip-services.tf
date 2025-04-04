@@ -2,8 +2,8 @@
 # https://registry.terraform.io/providers/terraform-routeros/routeros/latest/docs/resources/ip_service
 locals {
   tls_service     = { "api-ssl" = 8729, "www-ssl" = 443 }
-  disable_service = { "api" = 8728, "ftp" = 21, "telnet" = 23}
-  enable_service  = { "ssh" = 22, "winbox" = 8291, "www" = 80  }
+  disable_service = { "api" = 8728, "ftp" = 21, "telnet" = 23 }
+  enable_service  = { "ssh" = 22, "winbox" = 8291, "www" = 80 }
 }
 
 resource "routeros_system_certificate" "tls_cert" {

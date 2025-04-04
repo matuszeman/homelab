@@ -16,7 +16,7 @@ variable "dhcp" {
 variable "dhcp_range" {
   type = object({
     start = string
-    end = string
+    end   = string
   })
   default = null
 }
@@ -24,7 +24,7 @@ variable "dhcp_range" {
 variable "static_ip_allocations" {
   type = map(object({
     address = string
-    mac = string
+    mac     = string
   }))
 }
 

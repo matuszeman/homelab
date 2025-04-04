@@ -1,9 +1,9 @@
 resource "routeros_interface_list" "lan" {
-  name = "LAN"
+  name    = "LAN"
   comment = "TF"
 }
 
 resource "routeros_interface_list" "wan" {
-  name = "WAN"
+  name    = "WAN"
   comment = "TF"
 }

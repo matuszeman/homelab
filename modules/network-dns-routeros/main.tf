@@ -4,6 +4,6 @@ resource "routeros_ip_dns_record" "statics" {
   name    = "${each.key}.${var.domain}"
   address = each.value.address
   type    = "A"
-  ttl = 60
+  ttl     = 60
   comment = "TF"
 }
