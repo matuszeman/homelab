@@ -1,0 +1,1 @@
+#resource "routeros_wifi" "wifi" {}
