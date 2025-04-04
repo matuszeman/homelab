@@ -1,31 +1,5 @@
 locals {
-  hashed_passwd = bcrypt(var.user.password)
   hostname = var.hostname
-  user_data = yamlencode({
-    #cloud-config
-    hostname : local.hostname
-    write_files: var.write_files
-    users : [
-      {
-        name : var.user.name
-        shell : "/bin/bash"
-        sudo : "ALL=(ALL) NOPASSWD:ALL"
-        lock_passwd : false
-        hashed_passwd : local.hashed_passwd
-        ssh-authorized-keys : [var.user.ssh_authorized_key]
-      }
-    ]
-    growpart : {
-      mode : "auto"
-      devices : ["/"]
-    }
-#    packages: [
-#      "qemu-guest-agent"
-#    ]
-    runcmd : [
-      var.runcmd
-    ]
-  })
   # match / set-name: https://netplan.readthedocs.io/en/latest/netplan-yaml/#properties-for-physical-device-types
   # https://unix.stackexchange.com/questions/464537/rename-network-interface-ubuntu-on-instance-boot-cloud-init
   # match by name didn't work - had to use macaddress
