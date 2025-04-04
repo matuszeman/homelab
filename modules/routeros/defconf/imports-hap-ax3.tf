@@ -45,19 +45,19 @@ import {
 
 import {
   id = "*1"
-  to = module.routeros.module.networks["mgmt"].routeros_ip_address.this
+  to = module.routeros.module.networks["default"].routeros_ip_address.this
 }
 import {
   id = "*1"
-  to = module.routeros.module.networks["mgmt"].routeros_ip_pool.this
+  to = module.routeros.module.networks["default"].routeros_ip_pool.this
 }
 import {
   id = "*1"
-  to = module.routeros.module.networks["mgmt"].routeros_ip_dhcp_server.this
+  to = module.routeros.module.networks["default"].routeros_ip_dhcp_server.this
 }
 import {
   id = "*1"
-  to = module.routeros.module.networks["mgmt"].routeros_ip_dhcp_server_network.this
+  to = module.routeros.module.networks["default"].routeros_ip_dhcp_server_network.this
 }
 
 import {

@@ -1,33 +1,20 @@
-variable "name" {
-  type = string
-}
-variable "domain" {
-  description = "Unique network/domain name"
-}
-variable "nameservers" {
-  type = set(string)
-}
-variable "default_gateway" {}
-
-variable "network" {}
-variable "dhcp" {
-  type = bool
-}
-variable "dhcp_range" {
+variable "network" {
   type = object({
-    start = string
-    end   = string
+    name = string
+    cidr = string
+    domain = string
+    nameservers = set(string)
+    gateway = string
+    dhcp = object({
+      enabled = bool
+      range = object({
+        start = string
+        end   = string
+      })
+    })
+    static_ips = map(object({
+      address = string
+      mac     = string
+    }))
   })
-  default = null
-}
-
-variable "static_ip_allocations" {
-  type = map(object({
-    address = string
-    mac     = string
-  }))
-}
-
-variable "address_pools" {
-  type = any
 }

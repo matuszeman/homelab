@@ -1,12 +1,10 @@
-variable "name" {
-  type = string
-}
-variable "domain" {
-  description = "Unique network/domain name"
-}
-variable "static_ip_allocations" {
-  type = map(object({
-    address = string
-    mac     = string
-  }))
+variable "network" {
+  type = object({
+    name = string
+    domain = string
+    static_ips = map(object({
+      address = string
+      mac     = string
+    }))
+  })
 }

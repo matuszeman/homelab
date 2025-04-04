@@ -1,1 +1,3 @@
-variable "interface" {}
+variable "interface" {
+  type = string
+}
