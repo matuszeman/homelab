@@ -2,8 +2,16 @@ variable "proxmox" {
   description = "Proxmox node configuration."
   type = object({
     node_name   = string
-    api_url     = string
-    api_token   = string
+  })
+}
+
+variable "talos"{
+  description = "Talos configuration."
+  type = object({
+    cluster_endpoint = string
+    cluster_name     = string
+    version          = string
+    image_hash       = string
   })
 }
 
@@ -12,9 +20,9 @@ variable "vm_params" {
   type = map(object({
     cpu_cores    = number
     disk_size    = number
-    k8s_role     = string
-    install_disk = optional(string)
-    ip_address   = optional(string)
+    role         = string
+    ip_address   = string
+    gateway      = string
     memory       = number
     tags         = list(string)
   }))

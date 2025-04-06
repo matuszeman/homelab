@@ -1,32 +1,55 @@
 ```markdown
+```hcl
 module "proxmox" {
-    source = "github.com/example/proxmox-module"
+    source = "./modules/talos-cluster-proxmox"
 
     proxmox = {
-        description = "Proxmox node configuration."
         node_name   = "example-node"
-        api_url     = "https://example-proxmox-url:8006/"
-        api_token   = "example-api-token"
+    }
+
+    talos = {
+        cluster_endpoint = "https://example-endpoint:6443"
+        cluster_name     = "example-cluster"
+        version          = "vX.Y.Z"
+        image_hash       = "example-image-hash"
     }
 
     vm_params = {
-        example-vm-1 = {
+        vm-1 = {
+            cpu_cores    = 2
+            disk_size    = 10
+            role         = "controlplane"
+            ip_address   = "192.168.1.1"
+            gateway      = "192.168.1.254"
+            memory       = 1024
+            tags         = ["example", "controlplane"]
+        }
+        vm-2 = {
             cpu_cores    = 2
             disk_size    = 20
-            k8s_role     = "example-role"
-            install_disk = "example-disk"
-            ip_address   = "192.168.0.101"
+            role         = "controlplane"
+            ip_address   = "192.168.1.2"
+            gateway      = "192.168.1.254"
             memory       = 2048
-            tags         = ["example-tag"]
+            tags         = ["example", "controlplane"]
         }
-        example-vm-2 = {
-            cpu_cores    = 4
-            disk_size    = 40
-            k8s_role     = "example-role"
-            install_disk = "example-disk"
-            ip_address   = "192.168.0.102"
-            memory       = 4096
-            tags         = ["example-tag"]
+        vm-3 = {
+            cpu_cores    = 2
+            disk_size    = 20
+            role         = "controlplane"
+            ip_address   = "192.168.1.3"
+            gateway      = "192.168.1.254"
+            memory       = 2048
+            tags         = ["example", "controlplane"]
+        }
+        vm-4 = {
+            cpu_cores    = 1
+            disk_size    = 20
+            role         = "worker"
+            ip_address   = "192.168.1.4"
+            gateway      = "192.168.1.254"
+            memory       = 3072
+            tags         = ["example", "worker"]
         }
     }
 }

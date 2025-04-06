@@ -34,10 +34,12 @@ resource "proxmox_virtual_environment_vm" "this" {
     type = "l26"
   }
 
+  # Cloud-int configuration
   initialization {
     ip_config {
       ipv4 {
-        address = each.value["ip_address"] != null ? "${each.value["ip_address"]}/24" : null
+        address = "${each.value["ip_address"]}/24"
+        gateway = "${each.value["gateway"]}"
       }
     }
   }
