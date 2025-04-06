@@ -25,7 +25,7 @@ resource "talos_machine_configuration_apply" "controlplane" {
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
   for_each                    = var.vm_params
-  node                        = each.value.ip_address
+  node                        = each.value.role == "controlplane" ? each.value.ip_address : null
   config_patches = [
     yamlencode({
       machine = {
@@ -42,7 +42,7 @@ resource "talos_machine_configuration_apply" "worker" {
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
   for_each                    = var.vm_params
-  node                        = each.value.ip_address
+  node                        = each.value.role == "worker" ? each.value.ip_address : null
   config_patches = [
     yamlencode({
       machine = {
