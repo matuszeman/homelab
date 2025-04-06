@@ -56,10 +56,10 @@ resource "talos_machine_configuration_apply" "worker" {
 
 resource "talos_machine_bootstrap" "this" {
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = [for k, v in var.vm_params : v.ip_address if v.role == "controlplane"][0]
+  node                 = [for k, v in var.vm_params : v.ip_address if v.role == "control-plane"][0]
 }
 
 resource "talos_cluster_kubeconfig" "this" {
   client_configuration = talos_machine_secrets.this.client_configuration
-  node                 = [for k, v in var.vm_params : v.ip_address if v.role == "controlplane"][0]
+  node                 = [for k, v in var.vm_params : v.ip_address if v.role == "control-plane"][0]
 }
