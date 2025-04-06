@@ -1,7 +1,7 @@
 ```markdown
 ```hcl
 module "proxmox" {
-    source = "./modules/talos-cluster-proxmox"
+    source = "<GH-URL-to-this-module>"
 
     proxmox = {
         node_name   = "example-node"
