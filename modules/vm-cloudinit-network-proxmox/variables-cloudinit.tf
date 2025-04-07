@@ -4,9 +4,9 @@ variable "hostname" {
 }
 
 variable "nics" {
-  type = list(object({
-    name: string
-    mac: string
+  type = map(object({
+    # creates random one if now specified
+    mac: optional(string)
     static_ip = optional(string)
     network: object({
       nameservers = set(string)
