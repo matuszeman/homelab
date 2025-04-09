@@ -1,9 +1,9 @@
 resource "talos_machine_secrets" "this" {}
 
-data "talos_machine_configuration" "controlplane" {
+data "talos_machine_configuration" "control-plane" {
   cluster_name     = var.talos.cluster_name
   cluster_endpoint = var.talos.cluster_endpoint
-  machine_type     = "controlplane"
+  machine_type     = "control-plane"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
 
@@ -20,10 +20,10 @@ data "talos_client_configuration" "this" {
   endpoints            = [for k, v in var.vm_params : v.ip_address]
 }
 
-resource "talos_machine_configuration_apply" "controlplane" {
+resource "talos_machine_configuration_apply" "control-plane" {
   depends_on = [proxmox_virtual_environment_vm.this]
   client_configuration        = talos_machine_secrets.this.client_configuration
-  machine_configuration_input = data.talos_machine_configuration.controlplane.machine_configuration
+  machine_configuration_input = data.talos_machine_configuration.control-plane.machine_configuration
   for_each                    = var.vm_params
   node                        = each.value.role == "control-plane" ? each.value.ip_address : null
   config_patches = [
