@@ -15,6 +15,20 @@ variable "talos" {
   })
 }
 
+variable "talos_config" {
+  description = "Talos configuration."
+  type = object({
+    allow_scheduling_on_control_planes = bool
+    kubelet_rotate_certificates = bool
+    enable_metric_server = bool
+  })
+  default = object({
+    allow_scheduling_on_control_planes = false
+    kubelet_rotate_certificates = false
+    enable_metric_server = false
+  })
+}
+
 variable "vm_params" {
   description = "A map of parameters for the VMs."
   type = map(object({
