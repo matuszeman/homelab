@@ -21,11 +21,11 @@ data "talos_client_configuration" "this" {
 }
 
 resource "talos_machine_configuration_apply" "control-plane" {
-  depends_on = [proxmox_virtual_environment_vm.this]
+  depends_on                  = [proxmox_virtual_environment_vm.this]
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.control-plane.machine_configuration
-  for_each                    = var.vm_params
-  node                        = each.value.role == "control-plane" ? each.value.ip_address : null
+  for_each                    = { for k, v in var.vm_params : k => v if v.role == "control-plane" }
+  node                        = each.value.ip_address
   config_patches = [
     yamlencode({
       machine = {
@@ -38,11 +38,11 @@ resource "talos_machine_configuration_apply" "control-plane" {
 }
 
 resource "talos_machine_configuration_apply" "worker" {
-  depends_on = [proxmox_virtual_environment_vm.this]
+  depends_on                  = [proxmox_virtual_environment_vm.this]
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
-  for_each                    = var.vm_params
-  node                        = each.value.role == "worker" ? each.value.ip_address : null
+  for_each                    = { for k, v in var.vm_params : k => v if v.role == "control-plane" }
+  node                        = each.value.ip_address
   config_patches = [
     yamlencode({
       machine = {

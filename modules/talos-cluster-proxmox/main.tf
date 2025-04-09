@@ -39,7 +39,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     ip_config {
       ipv4 {
         address = "${each.value["ip_address"]}/24"
-        gateway = "${each.value["gateway"]}"
+        gateway = each.value["gateway"]
       }
     }
   }
