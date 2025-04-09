@@ -41,7 +41,7 @@ resource "talos_machine_configuration_apply" "worker" {
   depends_on                  = [proxmox_virtual_environment_vm.this]
   client_configuration        = talos_machine_secrets.this.client_configuration
   machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
-  for_each                    = { for k, v in var.vm_params : k => v if v.role == "control-plane" }
+  for_each                    = { for k, v in var.vm_params : k => v if v.role == "worker" }
   node                        = each.value.ip_address
   config_patches = [
     yamlencode({
