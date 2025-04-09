@@ -3,7 +3,7 @@ resource "talos_machine_secrets" "this" {}
 data "talos_machine_configuration" "control-plane" {
   cluster_name     = var.talos.cluster_name
   cluster_endpoint = var.talos.cluster_endpoint
-  machine_type     = "control-plane"
+  machine_type     = "controlplane"
   machine_secrets  = talos_machine_secrets.this.machine_secrets
 }
 
