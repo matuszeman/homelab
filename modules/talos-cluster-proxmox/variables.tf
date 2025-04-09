@@ -22,11 +22,11 @@ variable "talos_config" {
     kubelet_rotate_certificates = bool
     enable_metric_server = bool
   })
-  default = object({
+  default = {
     allow_scheduling_on_control_planes = false
     kubelet_rotate_certificates = false
     enable_metric_server = false
-  })
+  }
 }
 
 variable "vm_params" {
