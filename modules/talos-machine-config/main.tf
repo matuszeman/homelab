@@ -38,6 +38,9 @@ data "talos_machine_configuration" "this" {
             ]
           }
         }
+        cluster: {
+          allowSchedulingOnControlPlanes: var.cluster_config.allow_scheduling_on_control_planes
+        }
       })
   ])
 }

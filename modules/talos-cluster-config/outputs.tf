@@ -25,3 +25,7 @@ output "vip_ip" {
 output "vip_dns" {
   value = var.vip_dns
 }
+
+output "allow_scheduling_on_control_planes" {
+  value = var.allow_scheduling_on_control_planes
+}
