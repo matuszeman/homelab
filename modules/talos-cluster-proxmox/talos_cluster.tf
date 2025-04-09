@@ -37,13 +37,13 @@ resource "talos_machine_configuration_apply" "control-plane" {
             rotate-server-certificates = var.talos_config.kubelet_rotate_certificates
           }
         }
-        cluster = {
-          allow_scheduling_on_control_planes = var.talos_config.allow_scheduling_on_control_planes
-          extraManifests =  var.talos_config.enable_metric_server ? [
-            "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
-            "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-          ] : null
-        }
+      }
+      cluster = {
+        allowSchedulingOnControlPlanes = var.talos_config.allow_scheduling_on_control_planes
+        extraManifests = var.talos_config.enable_metric_server ? [
+          "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
+          "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+        ] : []
       }
     })
   ]
@@ -66,13 +66,13 @@ resource "talos_machine_configuration_apply" "worker" {
             rotate-server-certificates = var.talos_config.kubelet_rotate_certificates
           }
         }
-        cluster = {
-          allow_scheduling_on_control_planes = var.talos_config.allow_scheduling_on_control_planes
-          extraManifests =  var.talos_config.enable_metric_server ? [
-            "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
-            "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
-          ] : null
-        }
+      }
+      cluster = {
+        allowSchedulingOnControlPlanes = var.talos_config.allow_scheduling_on_control_planes
+        extraManifests = var.talos_config.enable_metric_server ? [
+          "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
+          "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+        ] : []
       }
     })
   ]
