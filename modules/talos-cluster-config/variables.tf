@@ -1,4 +1,4 @@
-variable "talos_version" {}
+variable "talos_init_version" {}
 variable "cluster_name" {}
 variable "network" {}
 variable "vip_ip" {}
