@@ -20,3 +20,15 @@ variable "vip_nic" {}
 variable "nics" {
   type = any
 }
+variable "node_labels" {
+  type = map(string)
+  default = {}
+}
+variable "node_annotations" {
+  type = map(string)
+  default = {}
+}
+variable "node_taints" {
+  type = map(string)
+  default = {}
+}

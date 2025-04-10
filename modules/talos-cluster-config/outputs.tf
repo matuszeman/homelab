@@ -29,3 +29,7 @@ output "vip_dns" {
 output "allow_scheduling_on_control_planes" {
   value = var.allow_scheduling_on_control_planes
 }
+
+output "metrics_server_enabled" {
+  value = var.metrics_server_enabled
+}

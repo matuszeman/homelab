@@ -13,12 +13,18 @@ data "talos_machine_configuration" "this" {
           image = var.install_image
         }
         kubelet: {
+          extraArgs = {
+            rotate-server-certificates = var.cluster_config.metrics_server_enabled
+          }
           nodeIP: {
             validSubnets: [
               var.cluster_config.network.cidr
             ]
           }
         }
+        nodeLabels: var.node_labels
+        nodeAnnotations: var.node_annotations
+        nodeTaints: var.node_taints
       }
     }),
     # controlplane
@@ -40,6 +46,16 @@ data "talos_machine_configuration" "this" {
         }
         cluster: {
           allowSchedulingOnControlPlanes: var.cluster_config.allow_scheduling_on_control_planes
+        }
+      }),
+    # bootstrap controlplane
+      var.bootstrap == false ? null :
+      yamlencode({
+        cluster: {
+          extraManifests: [
+            "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml",
+            "https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+          ]
         }
       })
   ])

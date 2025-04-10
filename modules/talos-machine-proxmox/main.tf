@@ -7,13 +7,17 @@ module "cloudinit-network" {
   nics = var.nics
 }
 
-module "talos-controlplane-config" {
+module "talos-machine-config" {
   source = "../talos-machine-config"
   machine_type = var.talos_machine_type
   cluster_config = var.cluster_config
   vip_nic = local.vip_nic
   install_disk = "/dev/vda"
   install_image = local.talos_image.installer
+  node_labels = var.node_labels
+  node_annotations = var.node_annotations
+  node_taints = var.node_taints
+  bootstrap = var.bootstrap
 }
 
 locals {
@@ -28,7 +32,7 @@ locals {
 # https://github.com/ionfury/homelab-modules/blob/main/modules/talos-cluster/apply.tf#L6
 resource "talos_machine_configuration_apply" "this" {
   client_configuration        = var.cluster_config.client_configuration
-  machine_configuration_input = module.talos-controlplane-config.machine_configuration
+  machine_configuration_input = module.talos-machine-config.machine_configuration
   node                        = local.node_ip
 
   # https://www.talos.dev/v1.9/talos-guides/configuration/editing-machine-configuration/
