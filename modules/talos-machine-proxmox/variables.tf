@@ -16,7 +16,9 @@ variable "talos_image_versions" {
 variable "talos_machine_type" {
   type = string
 }
-variable "vip_nic" {}
+variable "cluster_nic" {
+  default = null
+}
 variable "nics" {
   type = any
 }

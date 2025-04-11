@@ -57,7 +57,7 @@ module "talos-1" {
   vcpu = 2
   root_volume_size_gb = 10
 
-  vip_nic = "default"
+  cluster_nic = "default"
   nics = {
     default = {
       network = local.networks.default
@@ -81,7 +81,7 @@ module "talos-2" {
   vcpu = 1
   root_volume_size_gb = 10
 
-  vip_nic = "default"
+  cluster_nic = "default"
   nics = {
     default = {
       network = local.networks.default
