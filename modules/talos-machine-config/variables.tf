@@ -20,12 +20,22 @@ variable "bootstrap" {
 }
 variable "install_disk" {}
 variable "install_image" {}
-variable "vip_nic" {
-  type = object({
-    mac: string
-  })
+variable "hostname" {}
+variable "cluster_nic_name" {
+  type = string
 }
-
+variable "nics" {
+  type = map(object({
+    mac: string
+    static_ip = optional(string)
+    route_metric = optional(number, 0)
+    network: object({
+      nameservers = set(string)
+      gateway = string
+      cidr = string
+    })
+  }))
+}
 # https://www.talos.dev/v1.9/reference/configuration/v1alpha1/config/#Config.machine
 variable "node_labels" {
   type = map(string)

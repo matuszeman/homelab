@@ -8,6 +8,25 @@ data "talos_machine_configuration" "this" {
     # common
     yamlencode({
       machine: {
+        network : {
+          hostname = var.hostname
+          # https://www.talos.dev/v1.9/advanced/advanced-networking/
+          interfaces : [
+            for name, nic in var.nics :
+            merge(
+              {
+                deviceSelector : {
+                  hardwareAddr : nic.mac
+                }
+              },
+              var.machine_type != "controlplane" || var.cluster_nic_name != name ? null : {
+                vip : {
+                  ip : var.cluster_config.vip_ip
+                }
+              }
+            )
+          ]
+        }
         install = {
           disk = var.install_disk
           image = var.install_image
@@ -30,20 +49,6 @@ data "talos_machine_configuration" "this" {
     # controlplane
     var.machine_type != "controlplane" ? null : # control plane only
       yamlencode({
-        machine: {
-          network : {
-            interfaces : [
-              {
-                deviceSelector : {
-                  hardwareAddr : var.vip_nic.mac
-                }
-                vip : {
-                  ip : var.cluster_config.vip_ip
-                }
-              }
-            ]
-          }
-        }
         cluster: {
           allowSchedulingOnControlPlanes: var.cluster_config.allow_scheduling_on_control_planes
         }
