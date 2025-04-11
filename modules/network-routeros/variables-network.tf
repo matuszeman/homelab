@@ -14,7 +14,7 @@ variable "network" {
     })
     static_ips = map(object({
       address = string
-      mac     = string
+      mac     = optional(string)
     }))
   })
 }
