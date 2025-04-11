@@ -1,5 +1,5 @@
 resource "routeros_ip_address" "this" {
-  comment   = "TF"
+  comment   = "TF - ${var.network.name}"
   address   = "${var.network.gateway}/${split("/", var.network.cidr)[1]}"
   interface = var.interface
 }
@@ -17,8 +17,13 @@ resource "routeros_ip_dhcp_server" "this" {
   comment      = "TF"
 }
 
+locals {
+  static_ips = {
+    for name, spec in var.network.static_ips : name => spec if spec.mac != null
+  }
+}
 resource "routeros_ip_dhcp_server_lease" "statics" {
-  for_each    = var.network.static_ips
+  for_each    = local.static_ips
 
   comment     = "TF - ${each.key}"
   server      = routeros_ip_dhcp_server.this.name
@@ -27,7 +32,7 @@ resource "routeros_ip_dhcp_server_lease" "statics" {
 }
 
 resource "routeros_ip_dhcp_server_network" "this" {
-  comment    = "TF"
+  comment    = "TF - ${var.network.name}"
   address    = var.network.cidr
   gateway    = var.network.gateway
   dns_server = var.network.nameservers
