@@ -10,6 +10,7 @@ locals {
   }
 
   argocd = {
+    domain = "argocd.${var.networks.default.domain}"
     repo_creds = {
       github = {
         type = "git"

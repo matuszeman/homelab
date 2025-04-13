@@ -26,7 +26,9 @@ resource "kubernetes_namespace" "this" {
 # Get admin password:
 # kubectl -n system get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 module "argocd" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/argocd?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/argocd?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/argocd"
+
   namespace = local.system_namespace
   release = "argocd"
 
@@ -43,7 +45,9 @@ module "argocd" {
 # Check arp
 # arp -a
 module "metallb" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/metallb?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/metallb?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/metallb"
+
   argocd = module.argocd
   namespace = local.system_namespace
 
@@ -51,13 +55,17 @@ module "metallb" {
 }
 
 module "traefik-crds" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/traefik-crds?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/traefik-crds?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/traefik-crds"
+
   argocd = module.argocd
   namespace = local.system_namespace
 }
 
 module "traefik-private" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/traefik?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/traefik?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/traefik"
+
   argocd = module.argocd
   namespace = local.system_namespace
 
@@ -67,7 +75,9 @@ module "traefik-private" {
   }
 }
 module "external-dns-cloudflare-private" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/external-dns-cloudflare?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/external-dns-cloudflare?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/external-dns-cloudflare"
+
   argocd = module.argocd
   namespace = local.system_namespace
   release = "external-dns-cloudflare-private"
@@ -84,7 +94,9 @@ module "external-dns-cloudflare-private" {
 }
 
 module "traefik-public" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/traefik?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/traefik?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/traefik"
+
   argocd = module.argocd
   namespace = local.system_namespace
 
@@ -94,7 +106,9 @@ module "traefik-public" {
   }
 }
 module "external-dns-cloudflare-public" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/external-dns-cloudflare?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/external-dns-cloudflare?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/external-dns-cloudflare"
+
   argocd = module.argocd
   namespace = local.system_namespace
   release = "external-dns-cloudflare-public"
@@ -113,13 +127,17 @@ module "external-dns-cloudflare-public" {
 
 
 module "sealed-secrets" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/sealed-secrets?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/sealed-secrets?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/sealed-secrets"
+
   argocd = module.argocd
   namespace = local.system_namespace
 }
 
 module "cert-manager-letsencrypt-cloudflare" {
-  source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/cert-manager-letsencrypt?depth=1&ref=main"
+  #source = "git::https://github.com/matuszeman/homelab.git//kube/argocd/apps/cert-manager-letsencrypt?depth=1&ref=1.0.0"
+  source = "../../../kube/argocd/apps/cert-manager-letsencrypt"
+
   argocd = module.argocd
   namespace = local.system_namespace
   release = "cert-manager-letsencrypt-cloudflare"
