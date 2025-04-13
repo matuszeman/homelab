@@ -1,0 +1,10 @@
+# kubeseal --controller-namespace system --scope namespace-wide --namespace system -f system.yaml -w system-encrypted.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+stringData:
+  # https://dash.cloudflare.com/profile/api-tokens
+  cloudflare_api_token: TODO
+  git_private_key: |
+    TODO
