@@ -1,0 +1,21 @@
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#repository-credentials
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  annotations:
+    sealedsecrets.bitnami.com/namespace-wide: "true"
+  name: ${name}
+  namespace: ${namespace}
+spec:
+  encryptedData:
+    #%{ for key, val in encrypted_data }
+    ${key}: ${val}
+    #%{ endfor }
+  template:
+    metadata:
+      labels:
+        argocd.argoproj.io/secret-type: repo-creds
+    data:
+      type: ${type}
+      url: ${url}
+      sshPrivateKey: {{`"{{.sshPrivateKey }}"`}}

@@ -1,0 +1,22 @@
+global:
+  domain: ${ingress.domain}
+configs:
+  params:
+    # we access server using ingress over https, but on http server port.
+    # if insecure=false, argocd server would try to redirect to https even we access it on https via ingress.
+    server.insecure: true
+dex:
+  enabled: false
+server:
+  ingress:
+    enabled: true
+    ingressClassName: ${ingress.ingress_class}
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: ${ingress.traefik_entrypoints}
+      cert-manager.io/cluster-issuer: ${ingress.cert_manager_cluster_issuer}
+    hosts:
+      - ${ingress.domain}
+    tls:
+      - secretName: ${release}-ingress-tls
+        hosts:
+          - ${ingress.domain}
