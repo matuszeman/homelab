@@ -44,6 +44,9 @@ data "talos_machine_configuration" "this" {
         nodeLabels: var.node_labels
         nodeAnnotations: var.node_annotations
         nodeTaints: var.node_taints
+        registries: {
+          config: var.cluster_config.registries_config
+        }
       }
     }),
     # controlplane

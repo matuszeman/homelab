@@ -33,3 +33,7 @@ output "allow_scheduling_on_control_planes" {
 output "metrics_server_enabled" {
   value = var.metrics_server_enabled
 }
+
+output "registries_config" {
+  value = var.registries_config
+}
