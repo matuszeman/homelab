@@ -10,6 +10,7 @@ variable "cluster_config" {
       cidr = string
     })
     vip_ip = string
+    registries_config = any
   })
 }
 variable "machine_type" {
