@@ -3,6 +3,7 @@ module "argocd" {
   argocd = var.argocd
 
   # https://artifacthub.io/packages/helm/traefik/traefik/9.2.0
+  # https://github.com/traefik/traefik-helm-chart/tree/master/traefik
   chart = "traefik"
   chart_version = "35.0.0"
   repo_url = "https://traefik.github.io/charts"
@@ -12,6 +13,19 @@ module "argocd" {
   skip_crds = true
 
   values_object = {
+    fullnameOverride: var.release
+    instanceLabelOverride: var.release
+    metrics: {
+      otlp : {
+        enabled : true
+        grpc : {
+          enabled : true
+          endpoint : "${var.monitoring_services.metrics.otlp_grpc.host}:${var.monitoring_services.metrics.otlp_grpc.port}"
+          insecure : true
+        }
+      }
+    }
+
 #     nodeSelector: {
 #       "network.node.homelab/${var.target_network}": "true"
 #     }
