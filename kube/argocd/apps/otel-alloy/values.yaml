@@ -55,8 +55,9 @@ destinations:
       type: basic
       usernameKey: pyroscope_username
       passwordKey: ${secret_access_token_key}
+# https://github.com/grafana/k8s-monitoring-helm/blob/main/charts/k8s-monitoring/charts/feature-cluster-metrics/values.yaml
 clusterMetrics:
-  enabled: false
+  enabled: true
   opencost:
     # OpenCost requires the secret for grafana-cloud-metrics to be set. Please set: clusterMetrics: opencost: opencost: prometheus: existingSecretName: grafana-cloud-metrics-otel-k8s-monitoring
     enabled: false
@@ -70,6 +71,9 @@ clusterMetrics:
 #        external:
 #          url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom
   kepler:
+    enabled: false
+  windows-exporter:
+    # TODO for some reason this is still deployed
     enabled: false
 annotationAutodiscovery:
   enabled: true
