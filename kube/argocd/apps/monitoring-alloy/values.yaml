@@ -108,7 +108,7 @@ applicationObservability:
 autoInstrumentation:
   enabled: false
 profiling:
-  enabled: true
+  enabled: false
 integrations:
   alloy:
     instances:
@@ -143,4 +143,4 @@ alloy-receiver:
         targetPort: 9411
         protocol: TCP
 alloy-profiles:
-  enabled: true
+  enabled: false
