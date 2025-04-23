@@ -1,0 +1,146 @@
+fullnameOverride: ${fullnameOverride}
+cluster:
+  name: ${cluster_name}
+destinations:
+  - name: grafana-cloud-metrics
+    type: prometheus
+    url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
+    # https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring/docs/examples/auth/external-secrets#values
+    secret:
+      create: false
+      name: ${secret_name}
+      namespace: ${secret_namespace}
+    auth:
+      type: basic
+      usernameKey: prometheus_username
+      passwordKey: ${secret_access_token_key}
+      password:
+  - name: grafana-cloud-logs
+    type: loki
+    url: https://logs-prod-012.grafana.net/loki/api/v1/push
+    secret:
+      create: false
+      name: ${secret_name}
+      namespace: ${secret_namespace}
+    auth:
+      type: basic
+      usernameKey: loki_username
+      passwordKey: ${secret_access_token_key}
+  - name: grafana-cloud-traces
+    type: otlp
+    url: https://tempo-prod-10-prod-eu-west-2.grafana.net:443
+    protocol: grpc
+    secret:
+      create: false
+      name: ${secret_name}
+      namespace: ${secret_namespace}
+    auth:
+      type: basic
+      usernameKey: tempo_username
+      passwordKey: ${secret_access_token_key}
+    metrics:
+      enabled: false
+    logs:
+      enabled: false
+    traces:
+      enabled: true
+  - name: grafana-cloud-profiles
+    type: pyroscope
+    url: https://profiles-prod-002.grafana.net:443
+    secret:
+      create: false
+      name: ${secret_name}
+      namespace: ${secret_namespace}
+    auth:
+      type: basic
+      usernameKey: pyroscope_username
+      passwordKey: ${secret_access_token_key}
+# https://github.com/grafana/k8s-monitoring-helm/blob/main/charts/k8s-monitoring/charts/feature-cluster-metrics/values.yaml
+clusterMetrics:
+  enabled: true
+  opencost:
+    # OpenCost requires the secret for grafana-cloud-metrics to be set. Please set: clusterMetrics: opencost: opencost: prometheus: existingSecretName: grafana-cloud-metrics-otel-k8s-monitoring
+    enabled: false
+    #enabled: true
+#    metricsSource: grafana-cloud-metrics
+#    opencost:
+#      exporter:
+#        defaultClusterId: homelab
+#      prometheus:
+#        existingSecretName: ${secret_name}
+#        external:
+#          url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom
+  kepler:
+    enabled: false
+  windows-exporter:
+    # TODO for some reason this is still deployed
+    enabled: false
+annotationAutodiscovery:
+  enabled: true
+prometheusOperatorObjects:
+  enabled: true
+clusterEvents:
+  enabled: true
+nodeLogs:
+  # https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring/charts/feature-node-logs
+  # Node log don't work on talos with this configuration
+  # otel-alloy-logs Error: /etc/alloy/config.alloy:54:3: Failed to build component: building component: creating journal reader: failed to open journal in directory "/var/log/journal": no such file or directory
+  enabled: false
+  #enabled: true
+podLogs:
+  enabled: true
+applicationObservability:
+  enabled: true
+  receivers:
+    otlp:
+      grpc:
+        enabled: true
+        port: 4317
+      http:
+        enabled: true
+        port: 4318
+    zipkin:
+      enabled: true
+      port: 9411
+  connectors:
+    grafanaCloudMetrics:
+      enabled: true
+autoInstrumentation:
+  enabled: false
+profiling:
+  enabled: false
+integrations:
+  alloy:
+    instances:
+      - name: alloy
+        labelSelectors:
+          app.kubernetes.io/name:
+            - alloy-metrics
+            - alloy-singleton
+            - alloy-logs
+            - alloy-receiver
+            - alloy-profiles
+alloy-metrics:
+  enabled: true
+alloy-singleton:
+  enabled: true
+alloy-logs:
+  enabled: true
+alloy-receiver:
+  enabled: true
+  alloy:
+    extraPorts:
+      - name: otlp-grpc
+        port: 4317
+        targetPort: 4317
+        protocol: TCP
+      - name: otlp-http
+        port: 4318
+        targetPort: 4318
+        protocol: TCP
+      - name: zipkin
+        port: 9411
+        targetPort: 9411
+        protocol: TCP
+alloy-profiles:
+  enabled: false
