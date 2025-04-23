@@ -1,3 +1,7 @@
+locals {
+  ingress_class = var.release
+}
+
 module "argocd" {
   source = "./../../modules/argocd-app"
   argocd = var.argocd
@@ -29,7 +33,7 @@ module "argocd" {
     }
 
     ingressClass : {
-      name : var.release
+      name : local.ingress_class
       isDefaultClass : false
     }
 
