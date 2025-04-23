@@ -32,7 +32,7 @@ module "argocd" {
       tls: true
       tlsSecret: "${var.release}-ingress-tls"
       annotations: merge(
-        var.ingress.provider.annotations,
+        var.ingress.controller.annotations,
         {
           "cert-manager.io/cluster-issuer": var.ingress.cert_manager_cluster_issuer
         }
