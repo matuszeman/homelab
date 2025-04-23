@@ -1,6 +1,12 @@
 module "image" {
   source = "../talos-image"
   talos_version = var.talos_version
+  extensions = concat([
+    "qemu-guest-agent",
+    # Longhorn - https://longhorn.io/docs/1.8.1/deploy/install/#installation-requirements
+    #"iscsi-tools",
+    #"util-linux-tools"
+  ], var.talos_additional_extensions)
 }
 
 resource "proxmox_virtual_environment_download_file" "iso" {
@@ -9,8 +15,5 @@ resource "proxmox_virtual_environment_download_file" "iso" {
   node_name               = var.pve_node
   file_name               = "${var.name_prefix}${var.name}.img"
   url                     = module.image.iso_url
-  #checksum                = var.talos.image_hash
-  #decompression_algorithm = "zst"
-  #checksum_algorithm      = "sha256"
   overwrite               = false
 }
