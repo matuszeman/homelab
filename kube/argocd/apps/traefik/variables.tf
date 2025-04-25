@@ -10,6 +10,11 @@ variable "namespace" {
 }
 variable "monitoring" {
   type = object({
+    logs = object({
+      access = object({
+        enabled = optional(bool, false)
+      })
+    })
     metrics = object({
       enabled = optional(bool, false)
     })

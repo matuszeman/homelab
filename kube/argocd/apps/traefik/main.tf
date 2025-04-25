@@ -17,6 +17,10 @@ module "argocd" {
   skip_crds = true
 
   values_object = merge({
+    # disables checknewversion and sendanonymoususage which is enabled by default
+    globalArguments: [
+      "--global.checknewversion=false"
+    ]
     fullnameOverride : var.release
     instanceLabelOverride : var.release
     # change to service monitor
@@ -29,6 +33,11 @@ module "argocd" {
     service : {
       annotations : {
         "metallb.universe.tf/loadBalancerIPs" : var.metallb.ip
+      }
+      spec: {
+        # To have correct client IPs
+        # https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+        externalTrafficPolicy: "Local"
       }
     }
 
@@ -77,6 +86,45 @@ module "argocd" {
       #      http3 : {
       #        enabled : true
       #      }
+    }
+    logs : {
+      general: {
+        format: "json"
+      }
+      access: {
+        enabled: var.monitoring.logs.access.enabled
+        format: "json"
+        filters = {
+          statuscodes = "400-499,500-599"
+        }
+        fields = {
+          general = {
+            defaultmode = "drop"
+            names = {
+              ClientHost            = "keep"
+              ClientUsername        = "keep"
+              Duration              = "keep"
+              Overhead              = "keep"
+              RequestHost           = "keep"
+              RequestMethod         = "keep"
+              RequestPath           = "keep"
+              RequestProtocol       = "keep"
+              RequestContentSize    = "keep"
+              OriginStatus          = "keep"
+              OriginContentSize     = "keep"
+              DownstreamStatus      = "keep"
+              DownstreamContentSize = "keep"
+            }
+          }
+          headers = {
+            defaultmode = "drop"
+            names = {
+              User-Agent = "keep"
+              Referer    = "keep"
+            }
+          }
+        }
+      }
     }
   }, var.monitoring.metrics.enabled == false ? null : {
     metrics : {
