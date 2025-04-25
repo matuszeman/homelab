@@ -13,7 +13,7 @@ module "talos-machine-config" {
   machine_type = var.talos_machine_type
   cluster_config = var.cluster_config
   hostname = var.name
-  nics = var.nics
+  nics = module.cloudinit-network.nics
   cluster_nic_name = local.cluster_nic_name
   install_disk = "/dev/vda"
   install_image = local.talos_image.installer
