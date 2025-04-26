@@ -1,4 +1,4 @@
-output "talos-config" {
+output "config" {
   value     = data.talos_client_configuration.this.talos_config
   sensitive = true
 }

@@ -1,4 +1,4 @@
-output "talos-kube-config" {
+output "config" {
   value     = talos_cluster_kubeconfig.this.kubeconfig_raw
   sensitive = true
 }
