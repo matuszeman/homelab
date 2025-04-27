@@ -16,6 +16,7 @@ module "argocd" {
 
   skip_crds = true
 
+  values_object_override = var.helm_values_override
   values_object = merge({
     # disables checknewversion and sendanonymoususage which is enabled by default
     globalArguments: [

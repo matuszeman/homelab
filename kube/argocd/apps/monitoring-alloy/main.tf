@@ -12,6 +12,7 @@ module "argocd-app" {
   namespace     = var.namespace
   release       = var.release
 
+  values_object_override = var.helm_values_override
   values_object = merge(yamldecode(templatefile("${path.module}/values.yaml", {
     fullnameOverride: var.release
     cluster_name = var.cluster_name

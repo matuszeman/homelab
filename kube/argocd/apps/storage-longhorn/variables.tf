@@ -17,3 +17,8 @@ variable "ingress" {
     cert_manager_cluster_issuer = string
   })
 }
+
+variable "helm_values_override" {
+  type = any
+  default = {}
+}

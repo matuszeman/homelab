@@ -37,3 +37,8 @@ variable "monitoring" {
     })
   })
 }
+
+variable "helm_values_override" {
+  type = any
+  default = {}
+}

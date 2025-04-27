@@ -16,6 +16,7 @@ module "argocd" {
 
   skip_crds = !var.manage_crds
 
+  values_object_override = var.helm_values_override
   values_object = {
     # https://cert-manager.io/docs/installation/helm/#option-1-installing-crds-with-kubectl
     crds : {

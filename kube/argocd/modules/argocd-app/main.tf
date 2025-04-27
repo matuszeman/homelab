@@ -1,15 +1,26 @@
+module "deepmerge" {
+  source  = "Invicton-Labs/deepmerge/null"
+  version = "0.1.6"
+  maps = flatten([
+    var.values_object,
+    var.values_object_override
+  ])
+}
+
 locals {
   cluster_name                = "in-cluster"
-  agrocd_apps_namespace       = var.argocd.namespace
+  argocd_apps_namespace       = var.argocd.namespace
   app_namespace               = var.namespace
   release_name                = var.release
+
+  values = module.deepmerge.merged
 
   manifest = {
     apiVersion : "argoproj.io/v1alpha1"
     kind : "Application"
     metadata = {
-      namespace : local.agrocd_apps_namespace
-      name : local.release_name
+      namespace : local.argocd_apps_namespace
+      name : var.argocd.app_prefix != null ? "${var.argocd.app_prefix}-${local.release_name}" : local.release_name
       finalizers: var.argocd.preserve_resources_on_deletion ? null : [
         "resources-finalizer.argocd.argoproj.io"
       ]
@@ -29,22 +40,26 @@ locals {
           releaseName : local.release_name
           # https://github.com/argoproj/argo-cd/issues/15126
           #valuesObject: var.values_object
-          values: yamlencode(var.values_object)
+          values: yamlencode(local.values)
           skipCrds: var.skip_crds
         }
       }
       project : "default"
-      syncPolicy = {
-        automated = {
-          prune: true
+      syncPolicy = merge(
+        !var.argocd.autosync ? null : {
+          automated = {
+            prune: var.argocd.autosync_prune
+          }
+        },
+        {
+          syncOptions = [
+            "PruneLast=true",
+            #"CreateNamespace=true",
+            # https://github.com/prometheus-operator/prometheus-operator/issues/4355
+            "ServerSideApply=true"
+          ]
         }
-        syncOptions = [
-          "PruneLast=true",
-          "CreateNamespace=true",
-          # https://github.com/prometheus-operator/prometheus-operator/issues/4355
-          "ServerSideApply=true"
-        ]
-      }
+      )
     }
   }
 }

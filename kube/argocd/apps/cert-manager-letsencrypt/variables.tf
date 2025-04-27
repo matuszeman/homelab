@@ -6,6 +6,10 @@ variable "namespace" {
 variable "manage_crds" {
   type = bool
 }
+variable "helm_values_override" {
+  type = any
+  default = {}
+}
 
 variable "cluster_issuer_staging" {}
 variable "cluster_issuer" {}
