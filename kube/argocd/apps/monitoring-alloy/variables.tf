@@ -13,3 +13,7 @@ variable "sealed_secrets" {
     pyroscope_username = string
   })
 }
+variable "helm_values_override" {
+  type = any
+  default = {}
+}

@@ -1,7 +1,10 @@
 variable "argocd" {
   type = object({
     namespace = string
+    app_prefix = optional(string)
     preserve_resources_on_deletion: optional(bool, false)
+    autosync = optional(bool, true)
+    autosync_prune = optional(bool, true)
   })
 }
 
@@ -25,6 +28,12 @@ variable "repo_url" {
 variable "chart" {}
 
 variable "values_object" {
+  type = any
+  default = {}
+  description = "Deprecated, use values instead"
+}
+
+variable "values_object_override" {
   type = any
   default = {}
 }

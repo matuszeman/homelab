@@ -41,6 +41,7 @@ resource "helm_release" "this" {
             encrypted_data: spec.sealedSecrets
           })
       ]
-    })
+    }),
+    yamlencode(var.helm_values_override)
   ]
 }

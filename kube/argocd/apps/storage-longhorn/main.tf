@@ -12,6 +12,7 @@ module "argocd" {
 
   skip_crds = !var.manage_crds
 
+  values_object_override = var.helm_values_override
   values_object = merge({
     nameOverride : var.release
     namespaceOverride : var.namespace

@@ -14,6 +14,7 @@ module "this" {
   namespace     = var.namespace
   release       = "metallb"
 
+  values_object_override = var.helm_values_override
   values_object = {
 #     speaker : {
 #       nodeSelector : {

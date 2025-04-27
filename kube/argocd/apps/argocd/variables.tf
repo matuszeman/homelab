@@ -2,7 +2,10 @@ variable "release" {}
 variable "namespace" {
   type = string
 }
-
+variable "helm_values_override" {
+  type = any
+  default = {}
+}
 variable "ingress" {
   type = object({
     domain = string

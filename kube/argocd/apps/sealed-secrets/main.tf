@@ -14,6 +14,7 @@ module "argocd" {
   release       = "sealed-secrets"
   namespace     = var.namespace
 
+  values_object_override = var.helm_values_override
   values_object = {
     # kubeseal cli uses sealed-secrets-controller as default
     # error: cannot get sealed secret service: services "sealed-secrets-controller" not found.
