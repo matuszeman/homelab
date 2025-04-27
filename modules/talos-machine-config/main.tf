@@ -55,6 +55,18 @@ data "talos_machine_configuration" "this" {
         cluster: {
           allowSchedulingOnControlPlanes: var.cluster_config.allow_scheduling_on_control_planes
         }
+        machine: {
+          nodeLabels: merge(
+            # metallb honors node-kubernetes-io-exclude-from-external-load-balancers
+            # we want to delete this if scheduling is enabled on controlplanes
+            # https://metallb.universe.tf/troubleshooting/#metallb-is-not-advertising-my-service-from-my-control-plane-nodes-or-from-my-single-node-cluster
+            var.cluster_config.allow_scheduling_on_control_planes == false ? null : {
+              "node.kubernetes.io/exclude-from-external-load-balancers" : {
+                "$patch": "delete"
+              }
+            }
+          )
+        }
       }),
     # bootstrap controlplane
       var.bootstrap == false ? null :
