@@ -30,7 +30,6 @@ variable "chart" {}
 variable "values_object" {
   type = any
   default = {}
-  description = "Deprecated, use values instead"
 }
 
 variable "values_object_override" {

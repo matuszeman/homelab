@@ -80,8 +80,23 @@ module "argocd" {
     }
 
     ports : {
+      web: {
+        forwardedHeaders: {
+          trustedIPs: var.trustedProxyIps
+        }
+        # https://doc.traefik.io/traefik/routing/entrypoints/#redirection
+        redirections: {
+          entryPoint: {
+            to : "websecure"
+            scheme : "https"
+          }
+        }
+      }
       websecure : {
         asDefault : true
+        forwardedHeaders: {
+          trustedIPs: var.trustedProxyIps
+        }
       }
       # it was setting containerPort: 0
       #      http3 : {

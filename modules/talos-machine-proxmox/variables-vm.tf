@@ -13,3 +13,7 @@ variable "memory_gb" {
 variable "vcpu" {
   type = number
 }
+
+variable "nics" {
+  type = any
+}
