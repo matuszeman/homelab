@@ -19,9 +19,6 @@ variable "talos_machine_type" {
 variable "cluster_nic" {
   default = null
 }
-variable "nics" {
-  type = any
-}
 variable "node_labels" {
   type = map(string)
   default = {}

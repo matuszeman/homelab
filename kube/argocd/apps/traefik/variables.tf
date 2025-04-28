@@ -38,6 +38,11 @@ variable "monitoring" {
   })
 }
 
+variable "trustedProxyIps" {
+  type = list(string)
+  default = []
+}
+
 variable "helm_values_override" {
   type = any
   default = {}
