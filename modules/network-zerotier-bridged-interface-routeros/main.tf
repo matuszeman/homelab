@@ -8,9 +8,10 @@ resource "routeros_zerotier_interface" "this" {
 }
 
 resource "zerotier_member" "this" {
-  name                    = "${var.zerotier_network.network.name}-bridge"
+  name                    = "ros-${var.instance_name}-${var.interface_name}"
   member_id               = var.member_id
   network_id              = var.zerotier_network.id
+  authorized              = true
   description             = "tf"
   hidden                  = false
   allow_ethernet_bridging = true

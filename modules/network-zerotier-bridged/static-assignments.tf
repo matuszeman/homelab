@@ -7,9 +7,10 @@ locals {
 resource "zerotier_member" "this" {
   for_each = local.static_ips
 
-  name                    = "${each.key}-static"
+  name                    = "static-${each.key}"
   member_id               = each.value.zerotier_member
   network_id              = zerotier_network.this.id
+  authorized              = true
   description             = "tf"
   hidden                  = false
   allow_ethernet_bridging = true
