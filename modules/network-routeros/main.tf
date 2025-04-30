@@ -4,39 +4,12 @@ resource "routeros_ip_address" "this" {
   interface = var.interface
 }
 
-resource "routeros_ip_pool" "this" {
-  comment = "TF"
-  name    = "${var.network.name}-dhcp"
-  ranges  = ["${var.network.dhcp.range.start}-${var.network.dhcp.range.end}"]
-}
+module "dhcp-server" {
+  source = "./dhcp-server"
+  count = var.network.dhcp_server == var.network.gateway ? 1 : 0
 
-resource "routeros_ip_dhcp_server" "this" {
-  address_pool = routeros_ip_pool.this.name
-  interface    = var.interface
-  name         = var.network.name
-  comment      = "TF"
-}
-
-locals {
-  static_ips = {
-    for name, spec in var.network.static_ips : name => spec if spec.mac != null
-  }
-}
-resource "routeros_ip_dhcp_server_lease" "statics" {
-  for_each    = local.static_ips
-
-  comment     = "TF - ${each.key}"
-  server      = routeros_ip_dhcp_server.this.name
-  address     = each.value.address
-  mac_address = each.value.mac
-}
-
-resource "routeros_ip_dhcp_server_network" "this" {
-  comment    = "TF - ${var.network.name}"
-  address    = var.network.cidr
-  gateway    = var.network.gateway
-  dns_server = var.network.nameservers
-  # https://en.wikipedia.org/wiki/Search_domain
-  # TODO Is this what we want? Have FQD here?
-  domain = var.network.domain
+  interface = var.interface
+  network = var.network
+  address = var.network.dhcp_server
+  address_pool = var.network.address_pools[var.dhcp_address_pool]
 }
