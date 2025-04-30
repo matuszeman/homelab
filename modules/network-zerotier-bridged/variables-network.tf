@@ -15,7 +15,10 @@ variable "network" {
     dhcp_server = optional(string)
     static_ips = map(object({
       address = string
-      zerotier_member = optional(string)
+      zerotier_member = optional(object({
+        id = string
+        authorized = bool
+      }))
     }))
   })
 }
