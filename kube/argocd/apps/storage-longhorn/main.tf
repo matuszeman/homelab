@@ -16,6 +16,12 @@ module "argocd" {
   values_object = merge({
     nameOverride : var.release
     namespaceOverride : var.namespace
+    # allow csi driver to be provisioned on all nodes
+    # https://longhorn.io/docs/archives/1.2.4/references/settings/#kubernetes-taint-toleration
+    # https://longhorn.io/docs/archives/1.2.4/advanced-resources/deploy/taint-toleration/#setting-up-taints-and-tolerations-after-longhorn-has-been-installed
+    defaultSettings: {
+      taintToleration: ":"
+    }
     persistence: {
       defaultClass: false
       defaultClassReplicaCount: 1
