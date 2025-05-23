@@ -1,3 +1,25 @@
+locals {
+  # Note: In the default Kubernetes configuration, worker nodes are not allowed to
+  # modify the taints (see NodeRestriction admission plugin),
+  # thus setting taints is only allowed on node creation.
+
+  # This transforms from nodeAnnotations format to kubelet.extraConfig.registerWithTaints format
+  # from { elasticsearch = "true:NoSchedule" }
+  # to { effect: "NoSchedule", key: "elasticsearch", value: "true" }
+  #
+  # Refs:
+  # https://www.talos.dev/v1.10/reference/configuration/v1alpha1/config/#Config.machine
+  # https://github.com/siderolabs/talos/discussions/9895#discussioncomment-11506439
+  kubelet_register_with_taints = [
+    for key, value in var.node_taints :
+    {
+      key   = key
+      effect = split(":", value)[1]
+      value = split(":", value)[0]
+    }
+  ]
+}
+
 data "talos_machine_configuration" "this" {
   cluster_name     = var.cluster_config.cluster_name
   machine_type     = var.machine_type
@@ -39,6 +61,9 @@ data "talos_machine_configuration" "this" {
             validSubnets: [
               var.cluster_config.network.cidr
             ]
+          }
+          extraConfig = {
+            registerWithTaints: local.kubelet_register_with_taints
           }
         }
         nodeLabels: var.node_labels
