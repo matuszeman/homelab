@@ -16,11 +16,19 @@ module "argocd" {
   values_object = merge({
     nameOverride : var.release
     namespaceOverride : var.namespace
-    # allow csi driver to be provisioned on all nodes
+    # Let longhorn manager and drivers to be scheduleable on all nodes - otherwise error node is Down with error:
     # https://longhorn.io/docs/archives/1.2.4/references/settings/#kubernetes-taint-toleration
     # https://longhorn.io/docs/archives/1.2.4/advanced-resources/deploy/taint-toleration/#setting-up-taints-and-tolerations-after-longhorn-has-been-installed
     defaultSettings: {
-      taintToleration: ":"
+      taintToleration: "\":\""
+    }
+    longhornManager: {
+      tolerations : [
+        {
+          operator : "Exists"
+          effect : "NoSchedule"
+        }
+      ]
     }
     persistence: {
       defaultClass: false
