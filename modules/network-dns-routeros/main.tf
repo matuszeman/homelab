@@ -5,5 +5,5 @@ resource "routeros_ip_dns_record" "statics" {
   address = each.value.address
   type    = "A"
   ttl     = 60
-  comment = "TF"
+  comment = try("TF: ${each.value.description}", "TF")
 }

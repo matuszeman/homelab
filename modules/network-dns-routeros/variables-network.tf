@@ -4,6 +4,7 @@ variable "network" {
     domain = string
     static_ips = map(object({
       address = string
+      description = optional(string)
     }))
   })
 }

@@ -1,3 +1,5 @@
+variable "name" {}
+
 variable "networks" {
   type = map(object({
     vlan = optional(number)
