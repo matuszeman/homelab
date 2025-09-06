@@ -1,14 +1,15 @@
 variable "name" {}
 
-variable "networks" {
-  type = map(object({
-    vlan = optional(number)
-  }))
-}
+# variable "networks" {
+#   type = map(object({
+#     vlan = optional(number)
+#   }))
+# }
 variable "bridge" {
   type = object({
     ports = map(object({
-      vlan = optional(string, "1")
+      vlan_access_port = optional(string)
+      vlan_trunk_port  = optional(list(number))
       #interface = string
     }))
   })
@@ -21,12 +22,4 @@ variable "wan" {
 
 variable "vlan_filtering" {
   type = bool
-}
-variable "vlans" {
-  type = map(object({
-    #vlan = number
-    #network = string
-    untagged = list(string)
-    tagged   = list(string)
-  }))
 }
