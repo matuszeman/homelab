@@ -59,12 +59,12 @@ locals {
 }
 
 resource "routeros_interface_vlan" "list" {
-  for_each = var.vlans
+  for_each = local.vlans
 
   interface = routeros_interface_bridge.bridge.name
-  name      = "vlan-${each.value.id}"
-  vlan_id   = each.value.id
-  comment   = format(local.comment_format, "network=${each.key}")
+  name      = "vlan-${each.key}"
+  vlan_id   = each.key
+  comment   = format(local.comment_format, "")
 }
 
 resource "routeros_interface_bridge_vlan" "list" {

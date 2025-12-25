@@ -3,16 +3,16 @@ resource "routeros_zerotier_interface" "this" {
   allow_global  = false
   allow_managed = false
   instance      = var.zerotier_instance.name
-  name          = var.interface_name
+  name          = "zt-${var.network.name}"
   comment       = var.interface_comment
   network       = var.zerotier_network.id
 }
 
-resource "routeros_ip_address" "this" {
-  comment   = "tf: zerotier ${var.zerotier_member_name} ip"
-  address   = "${var.interface_ip}/${split("/", var.zerotier_network.cidr)[1]}"
-  interface = routeros_zerotier_interface.this.name
-}
+# resource "routeros_ip_address" "this" {
+#   comment   = "tf: zerotier ${var.zerotier_member_name} ip"
+#   address   = "${var.interface_ip}/${split("/", var.zerotier_network.cidr)[1]}"
+#   interface = routeros_zerotier_interface.this.name
+# }
 
 resource "zerotier_member" "this" {
   name                    = var.zerotier_member_name
@@ -21,7 +21,7 @@ resource "zerotier_member" "this" {
   authorized              = true
   description             = "tf"
   hidden                  = false
-  allow_ethernet_bridging = false
+  allow_ethernet_bridging = var.allow_ethernet_bridging
   no_auto_assign_ips      = true
-  ip_assignments          = [var.interface_ip]
+  ip_assignments          = [var.network.gateway]
 }

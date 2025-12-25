@@ -1,5 +1,15 @@
+variable "ctx" {}
+variable "disabled" {
+    default = false
+}
+
 variable "interface" {
   type = string
+}
+
+variable "lease_time" {
+  type = string
+  default = "30m"
 }
 
 variable "address" {}

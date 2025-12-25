@@ -1,7 +1,11 @@
 # routeros
-variable "interface_ip" {}
-variable "interface_name" {}
+variable "network" {}
 variable "interface_comment" {}
+variable "allow_ethernet_bridging" {
+  type    = bool
+  default = false
+  description = "Enable for bridged mode"
+}
 
 # zerotier
 variable "zerotier_member_name" {}
