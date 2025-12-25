@@ -4,13 +4,13 @@
 locals {
   # Get all access port names for filtering
   access_port_names = toset([
-    for port_name, port_config in var.bridge.ports : port_name
+    for port_name, port_config in var.ports : port_name
     if port_config.vlan_access_port != null
   ])
 
   # Collect all VLAN IDs from access ports
   access_vlans = {
-    for port_name, port_config in var.bridge.ports :
+    for port_name, port_config in var.ports :
     port_config.vlan_access_port => {
       tagged   = []
       untagged = [port_name]
@@ -28,7 +28,7 @@ locals {
 
   # Get all trunk VLAN IDs
   all_trunk_vlans = flatten([
-    for port_name, port_config in var.bridge.ports :
+    for port_name, port_config in var.ports :
     port_config.vlan_trunk_port != null ? port_config.vlan_trunk_port : []
   ])
 
@@ -37,7 +37,7 @@ locals {
   trunk_vlans = {
     for vlan_id in distinct(local.all_trunk_vlans) : vlan_id => {
       tagged = [
-        for port_name, port_config in var.bridge.ports : port_name
+        for port_name, port_config in var.ports : port_name
         if port_config.vlan_trunk_port != null &&
            contains(coalesce(port_config.vlan_trunk_port, []), vlan_id) &&
            !contains(local.access_port_names, port_name)
@@ -59,12 +59,12 @@ locals {
 }
 
 resource "routeros_interface_vlan" "list" {
-  for_each = local.vlans
+  for_each = var.vlans
 
   interface = routeros_interface_bridge.bridge.name
-  name      = "vlan-${each.key}"
-  vlan_id   = each.key
-  comment   = "TF"
+  name      = "vlan-${each.value.id}"
+  vlan_id   = each.value.id
+  comment   = format(local.comment_format, "network=${each.key}")
 }
 
 resource "routeros_interface_bridge_vlan" "list" {
@@ -74,5 +74,5 @@ resource "routeros_interface_bridge_vlan" "list" {
   vlan_ids = [each.key]
   tagged   = concat([routeros_interface_bridge.bridge.name], each.value.tagged)
   untagged = each.value.untagged
-  comment  = "TF"
+  comment  = format(local.comment_format, "")
 }
