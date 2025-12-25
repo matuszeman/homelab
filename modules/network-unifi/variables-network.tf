@@ -1,7 +1,3 @@
-variable "dhcp_address_pool" {
-  type = string
-  default = "dhcp"
-}
 
 variable "network" {
   type = object({
