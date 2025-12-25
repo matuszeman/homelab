@@ -1,9 +1,4 @@
 variable "ctx" {}
-variable "vlans" {
-  type = map(object({
-    id:string
-  }))
-}
 variable "name" {}
 variable "ports" {
   type = map(object({
