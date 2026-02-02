@@ -1,5 +1,5 @@
 app:
-  fullnameOverride: argocd
+  #fullnameOverride: argocd
   configs:
     params:
       # we access server using ingress over https, but on http server port.
