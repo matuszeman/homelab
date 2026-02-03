@@ -1,0 +1,6 @@
+dependencies:
+- name: traefik-crds
+  repository: https://traefik.github.io/charts
+  version: 1.14.0
+digest: sha256:07f52705c377b091f72788854c9b75799854069e328c253f2704c9dc6df37b08
+generated: "2026-02-03T05:16:12.846137+01:00"

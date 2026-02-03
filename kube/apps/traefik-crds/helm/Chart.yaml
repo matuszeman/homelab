@@ -1,0 +1,10 @@
+apiVersion: v2
+name: app
+type: application
+version: 1.0.0
+dependencies:
+  - name: traefik-crds
+    # https://artifacthub.io/packages/helm/traefik/traefik-crds
+    alias: app
+    version: 1.14.0
+    repository: https://traefik.github.io/charts
