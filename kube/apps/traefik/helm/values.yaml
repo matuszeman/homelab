@@ -1,0 +1,5 @@
+# https://artifacthub.io/packages/helm/traefik/traefik/9.2.0
+# https://github.com/traefik/traefik-helm-chart/tree/master/traefik
+app:
+  global:
+    checkNewVersion: false
