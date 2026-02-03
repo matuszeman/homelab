@@ -1,5 +1,3 @@
-variable "argocd" {
-  type = object({
-    namespace = string
-  })
-}
+variable "release" {}
+variable "namespace" {}
+

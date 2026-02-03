@@ -14,16 +14,3 @@ resource "helm_release" "this" {
     templatefile("${path.module}/../../helm/values-bootstrap.yaml", {})
   ]
 }
-
-data "kubernetes_secret_v1" "initial_admin_secret" {
-  metadata {
-    name      = "${var.release}-initial-admin-secret"
-    namespace = var.namespace
-  }
-
-  binary_data = {
-    password = ""
-  }
-
-  depends_on = [helm_release.this]
-}
