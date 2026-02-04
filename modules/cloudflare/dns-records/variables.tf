@@ -4,17 +4,21 @@ variable "domain" {
   type = string
 }
 
+variable "zone_id" {}
+
 variable "records" {
   type = map(object({
     a = optional(list(object({
       address = string
       ttl     = optional(number, 3600)
       comment = optional(string, "")
+      proxied = optional(bool, false)
     })), [])
     aaaa = optional(list(object({
       address = string
       ttl     = optional(number, 3600)
       comment = optional(string, "")
+      proxied = optional(bool, false)
     })), [])
     cname = optional(list(object({
       cname   = string

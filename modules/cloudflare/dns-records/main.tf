@@ -5,8 +5,10 @@ locals {
       for idx, a_record in record.a : {
         key     = "${hostname}-${replace(a_record.address, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
-        address = a_record.address
+        content = a_record.address
+        type    = "A"
         ttl     = a_record.ttl
+        proxied = a_record.proxied
         comment = a_record.comment
       }
     ]
@@ -17,8 +19,10 @@ locals {
       for idx, aaaa_record in record.aaaa : {
         key     = "${hostname}-${replace(aaaa_record.address, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
-        address = aaaa_record.address
+        content = aaaa_record.address
+        type    = "AAAA"
         ttl     = aaaa_record.ttl
+        proxied = aaaa_record.proxied
         comment = aaaa_record.comment
       }
     ]
@@ -29,7 +33,8 @@ locals {
       for idx, cname_record in record.cname : {
         key     = "${hostname}-${replace(cname_record.cname, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
-        cname   = cname_record.cname
+        content = cname_record.cname
+        type    = "CNAME"
         ttl     = cname_record.ttl
         comment = cname_record.comment
       }
@@ -39,12 +44,13 @@ locals {
   mx_records = flatten([
     for hostname, record in var.records : [
       for idx, mx_record in record.mx : {
-        key        = "${hostname}-${mx_record.preference}-${replace(mx_record.exchange, "/[^a-zA-Z0-9]/", "-")}"
-        name       = "${hostname}.${var.domain}"
-        exchange   = mx_record.exchange
-        preference = mx_record.preference
-        ttl        = mx_record.ttl
-        comment    = mx_record.comment
+        key      = "${hostname}-${mx_record.preference}-${replace(mx_record.exchange, "/[^a-zA-Z0-9]/", "-")}"
+        name     = "${hostname}.${var.domain}"
+        content  = mx_record.exchange
+        type     = "MX"
+        priority = mx_record.preference
+        ttl      = mx_record.ttl
+        comment  = mx_record.comment
       }
     ]
   ])
@@ -54,7 +60,8 @@ locals {
       for idx, txt_record in record.txt : {
         key     = "${hostname}-${substr(md5(txt_record.text), 0, 8)}"
         name    = "${hostname}.${var.domain}"
-        text    = txt_record.text
+        content = txt_record.text
+        type    = "TXT"
         ttl     = txt_record.ttl
         comment = txt_record.comment
       }
@@ -62,54 +69,68 @@ locals {
   ])
 }
 
-resource "routeros_ip_dns_record" "a" {
+# data "cloudflare_zone" "domain" {
+#   name = var.domain
+# }
+
+locals {
+  zone_id = var.zone_id
+}
+
+resource "cloudflare_dns_record" "a" {
   for_each = { for record in local.a_records : record.key => record }
 
+  zone_id = local.zone_id
   name    = each.value.name
-  address = each.value.address
-  type    = "A"
-  ttl     = each.value.ttl
+  content = each.value.content
+  type    = each.value.type
+  ttl     = each.value.proxied ? 1 : each.value.ttl
+  proxied = each.value.proxied
   comment = "${each.value.comment} ${var.ctx.tags_string}"
 }
 
-resource "routeros_ip_dns_record" "aaaa" {
+resource "cloudflare_dns_record" "aaaa" {
   for_each = { for record in local.aaaa_records : record.key => record }
 
+  zone_id = local.zone_id
   name    = each.value.name
-  address = each.value.address
-  type    = "AAAA"
-  ttl     = each.value.ttl
+  content = each.value.content
+  type    = each.value.type
+  ttl     = each.value.proxied ? 1 : each.value.ttl
+  proxied = each.value.proxied
   comment = "${each.value.comment} ${var.ctx.tags_string}"
 }
 
-resource "routeros_ip_dns_record" "cname" {
+resource "cloudflare_dns_record" "cname" {
   for_each = { for record in local.cname_records : record.key => record }
 
+  zone_id = local.zone_id
   name    = each.value.name
-  cname   = each.value.cname
-  type    = "CNAME"
+  content = each.value.content
+  type    = each.value.type
   ttl     = each.value.ttl
   comment = "${each.value.comment} ${var.ctx.tags_string}"
 }
 
-resource "routeros_ip_dns_record" "mx" {
+resource "cloudflare_dns_record" "mx" {
   for_each = { for record in local.mx_records : record.key => record }
 
-  name       = each.value.name
-  mx_exchange   = each.value.exchange
-  mx_preference = each.value.preference
-  type       = "MX"
-  ttl        = each.value.ttl
-  comment    = "${each.value.comment} ${var.ctx.tags_string}"
+  zone_id  = local.zone_id
+  name     = each.value.name
+  content  = each.value.content
+  type     = each.value.type
+  priority = each.value.priority
+  ttl      = each.value.ttl
+  comment  = "${each.value.comment} ${var.ctx.tags_string}"
 }
 
-resource "routeros_ip_dns_record" "txt" {
+resource "cloudflare_dns_record" "txt" {
   for_each = { for record in local.txt_records : record.key => record }
 
+  zone_id = local.zone_id
   name    = each.value.name
-  text    = each.value.text
-  type    = "TXT"
+  content = each.value.content
+  type    = each.value.type
   ttl     = each.value.ttl
   comment = "${each.value.comment} ${var.ctx.tags_string}"
 }
-
