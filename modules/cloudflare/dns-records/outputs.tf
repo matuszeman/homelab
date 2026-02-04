@@ -33,9 +33,3 @@ output "all_records" {
     txt   = cloudflare_dns_record.txt
   }
 }
-
-# output "zone_id" {
-#   description = "Cloudflare zone ID for the domain"
-#   value       = data.cloudflare_zone.domain.id
-# }
-

@@ -32,21 +32,42 @@ provider "cloudflare" {
 module "homelab_dns" {
   source = "../../modules/cloudflare/dns-records"
 
-  ctx    = module.ctx
-  domain = "example.com"
+  ctx     = module.ctx
+  domain  = "example.com"
+  zone_id = var.cloudflare_zone_id
+  
+  # Set defaults for record types
+  a_defaults = {
+    proxied = true
+    ttl     = 300
+  }
+  aaaa_defaults = {
+    proxied = true
+  }
+  cname_defaults = {
+    ttl = 3600
+  }
+  mx_defaults = {
+    preference = 10
+    ttl        = 3600
+  }
+  txt_defaults = {
+    ttl = 1800
+  }
+  
   records = {
-    # Home Assistant
+    # Home Assistant - uses defaults (proxied = true, ttl = 300)
     ha = {
       a = [
-        { address = "192.168.88.97", comment = "home assistant", ttl = "1d" }
+        { address = "192.168.88.97", comment = "home assistant" }
       ]
     }
     
-    # Web services with load balancing
+    # Web services with load balancing - override proxied for some
     web = {
       a = [
-        { address = "192.168.1.100", comment = "primary web server", ttl = 300 },
-        { address = "192.168.1.101", comment = "backup web server", ttl = 300 }
+        { address = "192.168.1.100", comment = "primary web server" },
+        { address = "192.168.1.101", comment = "backup web server", proxied = false, ttl = 600 }
       ]
     }
     
@@ -88,18 +109,58 @@ output "web_ips" {
 
 ## Usage
 
+### Usage Example with Defaults
+
+Here's how to use the module with defaults as shown in your example:
+
+```terraform
+module "dns_records" {
+  source = "path/to/modules/cloudflare/dns-records"
+
+  ctx     = module.ctx
+  domain  = local.domain
+  zone_id = local.cf_zone_id
+  
+  a_defaults = {
+    proxied = true
+  }
+  
+  records = {
+    ha = {
+      a = [{ 
+        address = local.public_ip, 
+        comment = "home assistant", 
+        ttl     = 600, 
+        proxied = true  # This overrides the default
+      }]
+    }
+  }
+}
+```
+
+In this example:
+- All A records will be proxied by default (`proxied = true`)
+- The `ha` A record explicitly sets `ttl = 600` and `proxied = true`
+- If `proxied` wasn't specified in the record, it would use the default `true`
+
 ### Basic Example
 
 ```terraform
 module "dns_records" {
   source = "path/to/modules/cloudflare/dns-records"
 
-  ctx    = module.ctx
-  domain = "example.com"
+  ctx     = module.ctx
+  domain  = "example.com"
+  zone_id = var.cloudflare_zone_id
+  
+  a_defaults = {
+    proxied = true
+  }
+  
   records = {
     web = {
       a = [
-        { address = "192.168.1.100", comment = "web server", ttl = "1h" }
+        { address = "192.168.1.100", comment = "web server", ttl = 3600 }
       ]
     }
     mail = {
@@ -107,7 +168,7 @@ module "dns_records" {
         { address = "192.168.1.101", comment = "mail server" }
       ]
       mx = [
-        { exchange = "mail.example.com", preference = 10, ttl = "1d" }
+        { exchange = "mail.example.com", preference = 10, ttl = 86400 }
       ]
     }
   }
@@ -164,7 +225,52 @@ module "dns_records" {
 |------|-------------|------|---------|:--------:|
 | ctx | Context object | `any` | n/a | yes |
 | domain | Domain name for the records | `string` | n/a | yes |
+| zone_id | Cloudflare zone ID for the domain | `string` | n/a | yes |
+| a_defaults | Default values for A records | `object({...})` | See below | no |
+| aaaa_defaults | Default values for AAAA records | `object({...})` | See below | no |
+| cname_defaults | Default values for CNAME records | `object({...})` | See below | no |
+| mx_defaults | Default values for MX records | `object({...})` | See below | no |
+| txt_defaults | Default values for TXT records | `object({...})` | See below | no |
 | records | DNS records organized by hostname | `map(object({...}))` | n/a | yes |
+
+### Defaults Structure
+
+The default variables allow you to set default values for each record type, reducing repetition in your configuration:
+
+```terraform
+a_defaults = {
+  ttl     = optional(number)     # Default TTL for A records (default: 3600)
+  comment = optional(string)     # Default comment for A records (default: "")
+  proxied = optional(bool)       # Default proxy setting for A records (default: false)
+}
+
+aaaa_defaults = {
+  ttl     = optional(number)     # Default TTL for AAAA records (default: 3600)
+  comment = optional(string)     # Default comment for AAAA records (default: "")
+  proxied = optional(bool)       # Default proxy setting for AAAA records (default: false)
+}
+
+cname_defaults = {
+  ttl     = optional(number)     # Default TTL for CNAME records (default: 3600)
+  comment = optional(string)     # Default comment for CNAME records (default: "")
+}
+
+mx_defaults = {
+  preference = optional(number)  # Default preference for MX records (default: 10)
+  ttl        = optional(number)  # Default TTL for MX records (default: 3600)
+  comment    = optional(string)  # Default comment for MX records (default: "")
+}
+
+txt_defaults = {
+  ttl     = optional(number)     # Default TTL for TXT records (default: 3600)
+  comment = optional(string)     # Default comment for TXT records (default: "")
+}
+```
+
+Individual record configurations override defaults. The precedence is:
+1. Individual record value (highest priority)
+2. Type default value
+3. Built-in fallback value (lowest priority)
 
 ### Records Structure
 
