@@ -84,7 +84,7 @@ module "dns_records" {
 
 ### Records Structure
 
-Each hostname in the `records` map can contain the following record types:
+Each hostname in the `records` map can contain the following record types as lists. The module automatically generates unique keys based on record content (addresses, targets, etc.) to ensure stable resource identification.
 
 #### A Records
 ```terraform
@@ -187,6 +187,19 @@ module "ha" {
 
 - **Multiple Record Types**: Support for A, AAAA, CNAME, MX, and TXT records
 - **Multiple Records per Hostname**: Each hostname can have multiple records of the same type
+- **Content-Based Unique Keys**: Records are uniquely identified by their content (address, target, etc.) rather than list position
 - **Flexible TTL**: Support for both numeric (seconds) and string formats (e.g., "1h", "1d")
 - **Context Integration**: Automatically appends context tags to comments
 - **Type Safety**: Full Terraform type validation for all record types
+
+## Unique Key Generation
+
+The module automatically generates unique keys for each record based on content to ensure stable resource identification:
+
+- **A/AAAA records**: `{hostname}-{type}-{sanitized-address}`
+- **CNAME records**: `{hostname}-cname-{sanitized-target}`
+- **MX records**: `{hostname}-mx-{preference}-{sanitized-exchange}`
+- **TXT records**: `{hostname}-txt-{first-8-chars-of-md5-hash}`
+
+This approach ensures that records are uniquely identified by their actual content rather than their position in a list, making the configuration more stable and predictable.
+

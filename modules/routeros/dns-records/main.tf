@@ -1,9 +1,9 @@
-# Flatten all A records from the nested structure
+# Flatten all records from the nested structure using content-based unique keys
 locals {
   a_records = flatten([
     for hostname, record in var.records : [
       for idx, a_record in record.a : {
-        key     = "${hostname}-${idx}"
+        key     = "${hostname}-a-${replace(a_record.address, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
         address = a_record.address
         ttl     = a_record.ttl
@@ -15,7 +15,7 @@ locals {
   aaaa_records = flatten([
     for hostname, record in var.records : [
       for idx, aaaa_record in record.aaaa : {
-        key     = "${hostname}-${idx}"
+        key     = "${hostname}-aaaa-${replace(aaaa_record.address, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
         address = aaaa_record.address
         ttl     = aaaa_record.ttl
@@ -27,7 +27,7 @@ locals {
   cname_records = flatten([
     for hostname, record in var.records : [
       for idx, cname_record in record.cname : {
-        key     = "${hostname}-${idx}"
+        key     = "${hostname}-cname-${replace(cname_record.cname, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
         cname   = cname_record.cname
         ttl     = cname_record.ttl
@@ -39,7 +39,7 @@ locals {
   mx_records = flatten([
     for hostname, record in var.records : [
       for idx, mx_record in record.mx : {
-        key        = "${hostname}-${idx}"
+        key        = "${hostname}-mx-${mx_record.preference}-${replace(mx_record.exchange, "/[^a-zA-Z0-9]/", "-")}"
         name       = "${hostname}.${var.domain}"
         exchange   = mx_record.exchange
         preference = mx_record.preference
@@ -52,7 +52,7 @@ locals {
   txt_records = flatten([
     for hostname, record in var.records : [
       for idx, txt_record in record.txt : {
-        key     = "${hostname}-${idx}"
+        key     = "${hostname}-txt-${substr(md5(txt_record.text), 0, 8)}"
         name    = "${hostname}.${var.domain}"
         text    = txt_record.text
         ttl     = txt_record.ttl
