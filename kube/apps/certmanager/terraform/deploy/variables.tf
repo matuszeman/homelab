@@ -1,0 +1,2 @@
+variable "ctx" {}
+variable "release" {}
