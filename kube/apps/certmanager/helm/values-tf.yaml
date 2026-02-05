@@ -1,2 +1,5 @@
+global:
+  leaderElection:
+    namespace: ${namespace}
 app:
   fullnameOverride: ${release}
