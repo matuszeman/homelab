@@ -1,0 +1,19 @@
+{{- $ctx := (set (mustDeepCopy . ) "Values" .Values.issuers) }}
+{{- $values := $ctx.Values }}
+{{- $issuer := $values.letsencryptStaging }}
+{{- if $issuer.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  #name: {{ include "idp-app.fullname" $ctx }}-letsencrypt
+  name: letsencrypt-staging
+spec:
+  acme:
+    email: {{ $issuer.email | required "letsencrypt.email required" | quote }}
+    server: {{ $issuer.server | required "letsencrypt.server required" | quote }}
+    privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key.
+      name: letsencrypt-issuer
+    solvers:
+      {{- toYaml $issuer.solvers | nindent 6 }}
+{{- end }}

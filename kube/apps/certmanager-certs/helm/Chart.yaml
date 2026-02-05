@@ -1,0 +1,9 @@
+apiVersion: v2
+name: app
+type: application
+version: 1.0.0
+dependencies:
+  - name: idp-app
+    alias: issuers
+    version: 4.0.0
+    repository: https://matuszeman.github.io/charts/

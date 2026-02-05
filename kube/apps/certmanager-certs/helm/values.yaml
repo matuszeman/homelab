@@ -1,0 +1,31 @@
+global:
+  cluster: "_"
+  idpAppConfig:
+    clusters:
+      _: {}
+    defaults:
+      configs:
+        annotations: { }
+
+issuers:
+  appName: "certmanager-issuers"
+  appVersion: "1.0.0"
+
+  letsencrypt:
+    enabled: false
+    email: null
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers: []
+
+  letsencryptStaging:
+    enabled: false
+    email: null
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    solvers: []
+
+  configs:
+    secrets:
+      content: {}
+        #cloudfront_api_key: "eee"
+
+
