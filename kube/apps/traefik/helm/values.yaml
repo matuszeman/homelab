@@ -3,3 +3,8 @@
 app:
   global:
     checkNewVersion: false
+  providers:
+    kubernetesCRD:
+      enabled: true
+    kubernetesGateway:
+      enabled: true
