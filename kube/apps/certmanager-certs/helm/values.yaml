@@ -17,7 +17,7 @@ issuers:
     server: https://acme-v02.api.letsencrypt.org/directory
     solvers: []
 
-  letsencryptStaging:
+  letsencrypt-staging:
     enabled: false
     email: null
     server: https://acme-staging-v02.api.letsencrypt.org/directory

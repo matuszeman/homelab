@@ -3,7 +3,7 @@ issuers:
     enabled: true
     email: "test@example.com"
 
-  letsencryptStaging:
+  letsencrypt-staging:
     enabled: true
     email: "test@example.com"
     solvers:

@@ -1,6 +1,6 @@
 {{- $ctx := (set (mustDeepCopy . ) "Values" .Values.issuers) }}
 {{- $values := $ctx.Values }}
-{{- $issuer := $values.letsencryptStaging }}
+{{- $issuer := index $values "letsencrypt-staging" }}
 {{- if $issuer.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Issuer
