@@ -71,6 +71,8 @@ locals {
 
 locals {
   zone_id = var.zone_id
+  tags    = var.record_tags ? [for key, value in var.ctx.tags : "${key}:${value}"] : []
+  comment_tags = var.comment_tags ? " ${var.ctx.tags_string}" : ""
 }
 
 resource "cloudflare_dns_record" "a" {
@@ -82,7 +84,8 @@ resource "cloudflare_dns_record" "a" {
   type    = each.value.type
   ttl     = each.value.proxied ? 1 : each.value.ttl
   proxied = each.value.proxied
-  comment = "${each.value.comment} ${var.ctx.tags_string}"
+  comment = "${each.value.comment}${local.comment_tags}"
+  tags    = local.tags
 }
 
 resource "cloudflare_dns_record" "aaaa" {
@@ -94,7 +97,8 @@ resource "cloudflare_dns_record" "aaaa" {
   type    = each.value.type
   ttl     = each.value.proxied ? 1 : each.value.ttl
   proxied = each.value.proxied
-  comment = "${each.value.comment} ${var.ctx.tags_string}"
+  comment = "${each.value.comment}${local.comment_tags}"
+  tags    = local.tags
 }
 
 resource "cloudflare_dns_record" "cname" {
@@ -105,7 +109,8 @@ resource "cloudflare_dns_record" "cname" {
   content = each.value.content
   type    = each.value.type
   ttl     = each.value.ttl
-  comment = "${each.value.comment} ${var.ctx.tags_string}"
+  comment = "${each.value.comment}${local.comment_tags}"
+  tags    = local.tags
 }
 
 resource "cloudflare_dns_record" "mx" {
@@ -117,7 +122,8 @@ resource "cloudflare_dns_record" "mx" {
   type     = each.value.type
   priority = each.value.priority
   ttl      = each.value.ttl
-  comment  = "${each.value.comment} ${var.ctx.tags_string}"
+  comment  = "${each.value.comment}${local.comment_tags}"
+  tags     = local.tags
 }
 
 resource "cloudflare_dns_record" "txt" {
@@ -128,5 +134,6 @@ resource "cloudflare_dns_record" "txt" {
   content = each.value.content
   type    = each.value.type
   ttl     = each.value.ttl
-  comment = "${each.value.comment} ${var.ctx.tags_string}"
+  comment = "${each.value.comment}${local.comment_tags}"
+  tags    = local.tags
 }

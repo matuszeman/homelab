@@ -5,6 +5,14 @@ variable "domain" {
 }
 
 variable "zone_id" {}
+variable "record_tags" {
+  type = bool
+  default = false
+}
+variable "comment_tags" {
+  type = bool
+  default = true
+}
 
 variable "a_defaults" {
   type = object({
