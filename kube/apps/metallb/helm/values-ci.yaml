@@ -29,3 +29,21 @@ ipAddressPools:
         - matchLabels:
             environment: dev
 
+l2Advertisements:
+  # Example L2 advertisement configuration
+  main:
+    enabled: true
+    # List of IP address pool names to advertise
+    ipAddressPools:
+      - first-pool
+    # Node selectors to limit which nodes announce the IP addresses
+    nodeSelectors:
+      - matchLabels:
+          kubernetes.io/hostname: NodeA
+    # Network interfaces to use for L2 advertisements
+    interfaces:
+      - eth0
+    # Additional labels for the L2Advertisement resource
+    labels: {}
+    # Additional annotations for the L2Advertisement resource
+    annotations: {}
