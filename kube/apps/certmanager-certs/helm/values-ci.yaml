@@ -1,0 +1,35 @@
+issuers:
+  letsencrypt:
+    enabled: true
+    email: "test@example.com"
+
+  letsencryptStaging:
+    enabled: true
+    email: "test@example.com"
+    solvers:
+      - dns01:
+          cloudflare:
+            email: "test@example.com"
+            apiTokenSecretRef:
+              name: certmanager-certs-config-secrets
+              key: cloudflare-api-token
+
+  configs:
+    secrets:
+      secret: {}
+      content:
+        cloudflare-api-token: "TEST-API-TOKEN"
+#      awsSecret:
+#        arn: arn:aws:iam::123456789012:role/secrets
+#      sealedSecret:
+#        encryptedData:
+#          cloudflare-api-token: encryptedvalue
+
+certificates:
+  example-com:
+    enabled: true
+    commonName: example.com
+    dnsNames:
+      - example.com
+      - www.example.com
+    issuer: letsencrypt
