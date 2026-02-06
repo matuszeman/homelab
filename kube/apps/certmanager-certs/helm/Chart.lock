@@ -1,6 +1,6 @@
 dependencies:
 - name: idp-app
   repository: https://matuszeman.github.io/charts/
-  version: 4.0.0
-digest: sha256:1bc32313e8d8c7b6e6a82d9b0e95ea7a87c3e6bde8440fe1ef28f676be403f04
-generated: "2026-02-05T17:08:13.172569+01:00"
+  version: 4.1.0
+digest: sha256:a5320ddb60cd1b4f08c08a8ac031b2f940ac2e935d7fe6c0bd20b1e33482862f
+generated: "2026-02-06T09:43:48.476932+01:00"
