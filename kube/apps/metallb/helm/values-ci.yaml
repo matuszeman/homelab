@@ -1,0 +1,31 @@
+
+# IPAddressPools configuration
+ipAddressPools:
+  production:
+    addresses:
+      - "192.168.1.240-192.168.1.250"
+      - "192.168.1.100/32"
+    autoAssign: true
+    avoidBuggyIPs: true
+    labels:
+      environment: production
+    annotations:
+      metallb.universe.tf/pool-description: "Production load balancer IP pool"
+    serviceAllocation:
+      priority: 100
+      namespaces:
+        - "default"
+        - "production"
+  development:
+    addresses:
+      - "10.0.0.100-10.0.0.110"
+    autoAssign: false
+    avoidBuggyIPs: false
+    labels:
+      environment: development
+    serviceAllocation:
+      priority: 50
+      serviceSelectors:
+        - matchLabels:
+            environment: dev
+
