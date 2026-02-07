@@ -25,6 +25,16 @@ issuers:
 #        encryptedData:
 #          cloudflare-api-token: encryptedvalue
 
+secretsReferenceGrants:
+  my-gateway:
+    kind: Gateway
+    namespace: certmanager-certs
+    labels:
+      app: gateway
+      environment: ci
+    annotations:
+      description: "CI environment gateway reference grant"
+
 certificates:
   example-com:
     enabled: true

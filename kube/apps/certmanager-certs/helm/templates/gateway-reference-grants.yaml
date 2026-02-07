@@ -1,0 +1,25 @@
+{{- range $name, $grant := .Values.secretsReferenceGrants }}
+---
+# https://gateway-api.sigs.k8s.io/guides/tls/#cross-namespace-certificate-references
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: {{ $name }}-secrets-ref-grant
+  namespace: {{ $.Release.Namespace }}
+  {{- with $grant.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $grant.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: {{ $grant.kind | default "Gateway" }}
+      namespace: {{ $grant.namespace }}
+  to:
+    - group: ""
+      kind: Secret
+{{- end }}
