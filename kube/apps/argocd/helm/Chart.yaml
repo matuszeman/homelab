@@ -6,9 +6,9 @@ dependencies:
   - name: argo-cd
     alias: app
     # keep in sync with kube/apps/argocd/terraform/bootstrap/variables.tf version
-    version: 9.3.7
+    version: 9.4.1
     repository: https://argoproj.github.io/argo-helm
   - name: idp-app
     alias: config
-    version: 3.1.0
+    version: 4.1.0
     repository: https://matuszeman.github.io/charts/

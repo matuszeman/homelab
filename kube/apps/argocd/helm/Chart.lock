@@ -1,9 +1,9 @@
 dependencies:
 - name: argo-cd
   repository: https://argoproj.github.io/argo-helm
-  version: 9.3.7
+  version: 9.4.1
 - name: idp-app
   repository: https://matuszeman.github.io/charts/
-  version: 3.1.0
-digest: sha256:f7cb4f3579976750141a77e737189f4ed5801755c4b905ae6b9e3a027e9f7986
-generated: "2026-02-01T10:28:38.12575+01:00"
+  version: 4.1.0
+digest: sha256:5810382bad390fdeb079f7cf15a6a0949c7091e6522eb3fa4a9a68ea1b43b252
+generated: "2026-02-10T11:00:27.87178+01:00"
