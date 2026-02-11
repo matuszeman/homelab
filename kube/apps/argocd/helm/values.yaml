@@ -14,3 +14,7 @@ app:
     ingress:
       # use gateway idp-app for ingress/http-route configuration
       enabled: false
+
+gateway:
+  appName: argocd-gateway
+  appVersion: 1.0.0
