@@ -6,8 +6,8 @@ locals {
         key     = "${hostname}-${replace(a_record.address, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
         address = a_record.address
-        ttl     = a_record.ttl
-        comment = a_record.comment
+        ttl     = coalesce(a_record.ttl, var.a_defaults.ttl)
+        comment = coalesce(a_record.comment, var.a_defaults.comment)
       }
     ]
   ])
@@ -18,8 +18,8 @@ locals {
         key     = "${hostname}-${replace(aaaa_record.address, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
         address = aaaa_record.address
-        ttl     = aaaa_record.ttl
-        comment = aaaa_record.comment
+        ttl     = coalesce(aaaa_record.ttl, var.aaaa_defaults.ttl)
+        comment = coalesce(aaaa_record.comment, var.aaaa_defaults.comment)
       }
     ]
   ])
@@ -30,8 +30,8 @@ locals {
         key     = "${hostname}-${replace(cname_record.cname, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
         cname   = cname_record.cname
-        ttl     = cname_record.ttl
-        comment = cname_record.comment
+        ttl     = coalesce(cname_record.ttl, var.cname_defaults.ttl)
+        comment = coalesce(cname_record.comment, var.cname_defaults.comment)
       }
     ]
   ])
@@ -39,12 +39,12 @@ locals {
   mx_records = flatten([
     for hostname, record in var.records : [
       for idx, mx_record in record.mx : {
-        key        = "${hostname}-${mx_record.preference}-${replace(mx_record.exchange, "/[^a-zA-Z0-9]/", "-")}"
+        key        = "${hostname}-${coalesce(mx_record.preference, var.mx_defaults.preference)}-${replace(mx_record.exchange, "/[^a-zA-Z0-9]/", "-")}"
         name       = "${hostname}.${var.domain}"
         exchange   = mx_record.exchange
-        preference = mx_record.preference
-        ttl        = mx_record.ttl
-        comment    = mx_record.comment
+        preference = coalesce(mx_record.preference, var.mx_defaults.preference)
+        ttl        = coalesce(mx_record.ttl, var.mx_defaults.ttl)
+        comment    = coalesce(mx_record.comment, var.mx_defaults.comment)
       }
     ]
   ])
@@ -55,8 +55,8 @@ locals {
         key     = "${hostname}-${substr(md5(txt_record.text), 0, 8)}"
         name    = "${hostname}.${var.domain}"
         text    = txt_record.text
-        ttl     = txt_record.ttl
-        comment = txt_record.comment
+        ttl     = coalesce(txt_record.ttl, var.txt_defaults.ttl)
+        comment = coalesce(txt_record.comment, var.txt_defaults.comment)
       }
     ]
   ])
