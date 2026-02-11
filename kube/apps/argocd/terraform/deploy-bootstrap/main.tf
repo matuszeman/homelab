@@ -11,6 +11,6 @@ resource "helm_release" "this" {
   max_history = 2
 
   values = [
-    templatefile("${path.module}/../../helm/values-bootstrap.yaml", {})
+    yamlencode(yamldecode(templatefile("${path.module}/../../helm/values-tf-bootstrap.yaml", {}))["app"])
   ]
 }

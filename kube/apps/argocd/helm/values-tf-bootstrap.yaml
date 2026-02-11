@@ -1,5 +1,4 @@
 app:
-  #fullnameOverride: argocd
   configs:
     params:
       # we access server using ingress over https, but on http server port.
@@ -9,8 +8,3 @@ app:
       #application.namespaces: "*"
   dex:
     enabled: false
-
-  server:
-    ingress:
-      # use gateway idp-app for ingress/http-route configuration
-      enabled: false
