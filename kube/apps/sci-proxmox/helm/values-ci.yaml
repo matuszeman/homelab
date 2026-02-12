@@ -1,0 +1,41 @@
+app:
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      effect: NoSchedule
+
+  storageClass:
+    - name: proxmox-data-xfs
+      storage: data
+      reclaimPolicy: Delete
+      fstype: xfs
+    - name: proxmox-data
+      storage: data
+      reclaimPolicy: Delete
+
+config:
+  appName: sci-proxmox-config
+  appVersion: 1.0.0
+  configs:
+    # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#install-the-plugin-by-using-kubectl
+    secret:
+      content:
+        config.yaml:
+          clusters:
+            # List of Proxmox clusters
+            - url: https://cluster-api-1.exmple.com:8006/api2/json
+              # Skip the certificate verification, if needed
+              insecure: false
+              # Proxmox api token
+              token_id: "kubernetes-csi@pve!csi"
+              token_secret: "secret"
+              # Region name, which is cluster name
+              region: Region-1
+
+            # Add more clusters if needed
+            - url: https://cluster-api-2.exmple.com:8006/api2/json
+              insecure: false
+              token_id: "kubernetes-csi@pve!csi"
+              token_secret: "secret"
+              region: Region-2

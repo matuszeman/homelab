@@ -1,0 +1,13 @@
+apiVersion: v2
+name: sci-proxmox
+type: application
+version: 1.0.0
+dependencies:
+  - name: proxmox-csi-plugin
+    alias: app
+    version: 0.5.5
+    repository: oci://ghcr.io/sergelogvinov/charts
+  - name: idp-app
+    alias: config
+    version: 4.1.0
+    repository: https://matuszeman.github.io/charts
