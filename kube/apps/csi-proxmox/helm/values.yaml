@@ -8,10 +8,10 @@ idpAppConfig:
 
 # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#prepare-kubernetes-cluster
 app:
-  nameOverride: sci-proxmox
-  fullnameOverride: sci-proxmox
+  nameOverride: csi-proxmox
+  fullnameOverride: csi-proxmox
 
-  existingConfigSecret: sci-proxmox-config-secret
+  existingConfigSecret: csi-proxmox-config-secret
   existingConfigSecretKey: config.yaml
 
   config:
@@ -19,28 +19,11 @@ app:
     clusters: []
 
 config:
-  appName: sci-proxmox
+  appName: csi-proxmox
   appVersion: 1.0.0
   configs:
     # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#install-the-plugin-by-using-kubectl
     secret:
-      secret: {}
+      #secret: {}
       content:
-        config.yaml:
-          clusters:
-            # List of Proxmox clusters
-            - url: https://cluster-api-1.exmple.com:8006/api2/json
-              # Skip the certificate verification, if needed
-              insecure: false
-              # Proxmox api token
-              token_id: "kubernetes-csi@pve!csi"
-              token_secret: "secret"
-              # Region name, which is cluster name
-              region: Region-1
-
-            # Add more clusters if needed
-            - url: https://cluster-api-2.exmple.com:8006/api2/json
-              insecure: false
-              token_id: "kubernetes-csi@pve!csi"
-              token_secret: "secret"
-              region: Region-2
+        config.yaml: null

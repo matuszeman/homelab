@@ -20,6 +20,8 @@ config:
   configs:
     # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#install-the-plugin-by-using-kubectl
     secret:
+      # create opaque secret
+      secret: {}
       content:
         config.yaml:
           clusters:
