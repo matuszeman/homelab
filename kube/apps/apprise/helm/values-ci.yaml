@@ -1,0 +1,26 @@
+global:
+  cluster: _
+
+app:
+  configs:
+    app:
+      content:
+        apprise.yml:
+          version: 1
+          groups:
+            - us: john, jane
+          urls:
+            - hassio://hassio.local.:80/TOKEN:
+                tag: john
+smtp:
+  configs:
+    app:
+      templated: true
+      content:
+        mailrise.conf:
+          listen:
+            port: 8025
+          configs:
+            "*@*":
+              urls:
+                - "apprise://{{.Release.Name}}:80/apprise/?tags=john"

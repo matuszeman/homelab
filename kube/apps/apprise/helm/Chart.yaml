@@ -1,0 +1,13 @@
+apiVersion: v2
+name: app
+type: application
+version: 1.0.0
+dependencies:
+  - name: idp-app
+    alias: app
+    version: "4.2.1"
+    repository: "https://matuszeman.github.io/charts"
+  - name: idp-app
+    alias: smtp
+    version: "4.2.1"
+    repository: "https://matuszeman.github.io/charts"

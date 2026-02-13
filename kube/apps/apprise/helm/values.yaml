@@ -1,0 +1,120 @@
+# idp-app - this should be fixed in idp-app
+global:
+  idpAppConfig:
+    clusters:
+      _: {}
+    imageRepositories:
+      docker.io: docker.io
+    defaults:
+      imageRepository: docker.io
+      configs:
+        annotations: {}
+# END
+
+app:
+  appName: apprise
+  appVersion: 1.3.1
+
+  podDisruptionBudget:
+    enabled: false
+  serviceAccount:
+    create: true
+  deployment:
+    enabled: true
+  service:
+    enabled: true
+    port: 80
+  containers:
+    app:
+      resources:
+        requests:
+          memory: 50Mi
+          cpu: 1m
+      containerPort: 8000
+      # https://hub.docker.com/r/caronc/apprise
+      # use this instead?
+      # https://hub.docker.com/r/linuxserver/apprise-api
+      imageRepository: docker.io
+      image: caronc/apprise
+      imageTag: 1.3.1
+      # https://github.com/caronc/apprise-api
+      # https://github.com/caronc/apprise-api?tab=readme-ov-file#environment-variables
+      #  Start it up:
+      ## /config is used for a persistent store, you do not have to mount
+      ##         this if you don't intend to use it.
+      configDirs:
+        app: /config
+      volumeMounts:
+        attach:
+          mountPath: /attach
+        storage:
+          mountPath: /storage
+      env:
+        PUID: 3000
+        GUID: 3000
+        # https://github.com/caronc/apprise-api/blob/c571bb067130d3987b4521c77a7d5fb740bbdfa0/apprise_api/core/settings/__init__.py#L150
+        IPV4_ONLY: true
+        APPRISE_WORKER_COUNT: 1
+        APPRISE_STATEFUL_MODE: simple
+        APPRISE_CONFIG_DIR: /config
+        APPRISE_CONFIG_LOCK: yes
+        APPRISE_ATTACH_DIR: /attach
+        APPRISE_STORAGE_DIR: /storage
+
+        LOG_LEVEL: debug
+
+        #HASSIO_APPRISE_TOKEN: {config: {name: secrets, key: HASSIO_APPRISE_TOKEN }}
+  volumes:
+    storage:
+      emptyDir:
+        sizeLimit: 50Mi
+        medium: Memory
+    attach:
+      emptyDir:
+        sizeLimit: 50Mi
+        medium: Memory
+  configs:
+    app:
+      restartPodOnUpdate: true
+      content:
+        # https://github.com/caronc/apprise/wiki/config_yaml
+        # https://github.com/caronc/apprise/wiki/Notify_homeassistant
+        #
+        # Secrets - apprise does not support secrets from env until this is implemented
+        # https://github.com/caronc/apprise/issues/1156
+        apprise.yml: null
+
+# https://github.com/YoRyan/mailrise?tab=readme-ov-file
+smtp:
+  appName: mailrise
+  appVersion: 1.3.0
+  resourceNameSuffix: smtp
+
+  podDisruptionBudget:
+    enabled: false
+  serviceAccount:
+    create: true
+  deployment:
+    enabled: true
+  service:
+    enabled: true
+    port: 25
+  containers:
+    app:
+      resources:
+        requests:
+          memory: 50Mi
+          cpu: 1m
+      containerPort: 8025
+      imageRepository: docker.io
+      image: yoryan/mailrise
+      imageTag: 1.3.0
+      configFiles:
+        app:
+          mailrise.conf: /etc/mailrise.conf
+  configs:
+    app:
+      restartPodOnUpdate: true
+      content:
+        # https://github.com/caronc/apprise/wiki/config_yaml
+        mailrise.conf: null
