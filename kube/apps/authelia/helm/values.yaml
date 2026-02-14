@@ -31,7 +31,8 @@ app:
       image: authelia/authelia
       imageTag: 4.39.15
       configDirs:
-        app: /config/app
+        config: /config/config
+        secrets: /config/secrets
       # https://www.authelia.com/configuration/methods/files/
       env:
         # https://www.authelia.com/integration/deployment/docker/#environment-variables
@@ -41,16 +42,17 @@ app:
         # https://www.authelia.com/configuration/methods/environment/
         # https://github.com/authelia/chartrepo/blob/master/charts/authelia/templates/configMap.yaml
         X_AUTHELIA_CONFIG_FILTERS: template
-        X_AUTHELIA_CONFIG: /config/app
+        X_AUTHELIA_CONFIG: /config/config
         AUTHELIA_LOG_LEVEL: info
         AUTHELIA_LOG_KEEP_STDOUT: true
 
   configs:
-    app:
+    secrets:
+      restartOnUpdate: true
+      content: {}
+    config:
       restartPodOnUpdate: true
-      content:
+      content: {}
         # https://github.com/authelia/authelia/blob/v4.39.5/config.template.yml
         # https://www.authelia.com/reference/guides/templating/
         # https://www.authelia.com/configuration/prologue/security-sensitive-values/#template-example
-        config.yaml: null
-        users.yaml: null
