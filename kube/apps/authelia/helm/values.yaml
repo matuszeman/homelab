@@ -15,12 +15,16 @@ app:
   appName: authelia
   appVersion: 4.39.15
 
+  service:
+    enabled: true
+    port: 80
   serviceAccount:
     create: true
   deployment:
     enabled: true
   containers:
     app:
+      containerPort: 9091
       resources:
         requests:
           memory: 50Mi
