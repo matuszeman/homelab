@@ -30,14 +30,16 @@ app:
       imageRepository: docker.io
       image: authelia/authelia
       imageTag: 4.39.15
+#      configFiles:
+#        users: /config/users/users.yaml
       configDirs:
         config: /config/config
         secrets: /config/secrets
       # https://www.authelia.com/configuration/methods/files/
       env:
         # https://www.authelia.com/integration/deployment/docker/#environment-variables
-        #PUID: 3000
-        #PGID: 3000
+        PUID: 3000
+        PGID: 3000
         # https://www.authelia.com/configuration/methods/files/
         # https://www.authelia.com/configuration/methods/environment/
         # https://github.com/authelia/chartrepo/blob/master/charts/authelia/templates/configMap.yaml
@@ -50,6 +52,12 @@ app:
     secrets:
       restartOnUpdate: true
       content: {}
+#    users:
+#      content:
+#        users.yaml:
+#          # https://www.authelia.com/configuration/first-factor/file/
+#          # https://www.authelia.com/reference/guides/passwords/#yaml-format
+#          users: {}
     config:
       restartPodOnUpdate: true
       content: {}
