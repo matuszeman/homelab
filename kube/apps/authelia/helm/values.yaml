@@ -22,6 +22,11 @@ app:
     create: true
   deployment:
     enabled: true
+
+  securityContext:
+    runAsUser: 3000
+    runAsGroup: 3000
+    fsGroup: 3000
   containers:
     app:
       containerPort: 9091
@@ -42,8 +47,8 @@ app:
       # https://www.authelia.com/configuration/methods/files/
       env:
         # https://www.authelia.com/integration/deployment/docker/#environment-variables
-        PUID: 3000
-        PGID: 3000
+        #PUID: 3000
+        #PGID: 3000
         # https://www.authelia.com/configuration/methods/files/
         # https://www.authelia.com/configuration/methods/environment/
         # https://github.com/authelia/chartrepo/blob/master/charts/authelia/templates/configMap.yaml
