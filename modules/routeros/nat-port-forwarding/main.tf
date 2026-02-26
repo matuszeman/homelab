@@ -4,6 +4,9 @@ resource "routeros_ip_firewall_nat" "rule" {
   for_each = var.port_forwards
 
   comment           = "tf - ${each.key}"
+  log = each.value.log
+  log_prefix = each.value.log_prefix
+
   disabled = !each.value.enabled
   chain             = "dstnat"
   in_interface_list = var.in_interface_list
@@ -13,7 +16,7 @@ resource "routeros_ip_firewall_nat" "rule" {
 
   action       = "dst-nat"
   to_addresses = var.server_address
-  #to_ports = "443"
+  to_ports = each.value.port
 }
 
 resource "routeros_ip_firewall_nat" "hairpin" {

@@ -3,6 +3,8 @@ variable "port_forwards" {
   type = map(object({
     port: number
     enabled: optional(bool, true)
+    log: optional(bool, false)
+    log_prefix: optional(string, "")
   }))
 }
 variable "public_address" {}
