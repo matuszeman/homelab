@@ -10,9 +10,9 @@ dependencies:
     repository: https://argoproj.github.io/argo-helm
   - name: idp-app
     alias: config
-    version: 4.2.1
+    version: 5.3.0
     repository: https://matuszeman.github.io/charts
   - name: idp-app
     alias: gateway
-    version: 4.2.1
+    version: 5.3.0
     repository: https://matuszeman.github.io/charts
