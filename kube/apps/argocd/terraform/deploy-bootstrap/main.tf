@@ -1,3 +1,7 @@
+locals {
+  values = yamldecode(templatefile("${path.module}/../../helm/values-tf-bootstrap.yaml", {}))["app"]
+}
+
 resource "helm_release" "this" {
   name      = var.release
   namespace = var.namespace
@@ -11,6 +15,6 @@ resource "helm_release" "this" {
   max_history = 2
 
   values = [
-    yamlencode(yamldecode(templatefile("${path.module}/../../helm/values-tf-bootstrap.yaml", {}))["app"])
+    yamlencode(local.values)
   ]
 }

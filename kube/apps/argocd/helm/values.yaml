@@ -15,6 +15,26 @@ app:
       # use gateway idp-app for ingress/http-route configuration
       enabled: false
 
+config:
+  appName: argocd
+  appVersion: "v3.3.0"
+#  configs:
+#    hml-cl1:
+#      templated: true
+#      secret: {}
+#      values:
+#        name: hml-cl1
+#        server: https://kubernetes.default.svc
+#        config:
+#          tlsClientConfig:
+#            insecure: false
+#      labels:
+#        argocd.argoproj.io/secret-type: cluster
+#      content:
+#        name: '{{ .configSpec.values.name }}'
+#        server: '{{ .configSpec.values.server }}'
+#        config: '{{ toPrettyJson .configSpec.values.config }}'
+
 gateway:
   appName: argocd-gateway
   appVersion: 1.0.0

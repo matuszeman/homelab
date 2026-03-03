@@ -5,6 +5,6 @@ app:
       # if insecure=false, argocd server would try to redirect to https even we access it on https via ingress.
       server.insecure: true
       # https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#reconfigure-argo-cd-to-allow-certain-namespaces
-      #application.namespaces: "*"
+      application.namespaces: "*"
   dex:
     enabled: false
