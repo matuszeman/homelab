@@ -15,6 +15,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if not (or $l2ad.ipAddressPools $l2ad.nodeSelectors $l2ad.interfaces) }}
+  {}
+  {{- else }}
   {{- if $l2ad.ipAddressPools }}
   ipAddressPools:
     {{- range $l2ad.ipAddressPools }}
@@ -31,5 +34,6 @@ spec:
     - {{ . }}
     {{- end }}
   {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
