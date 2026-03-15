@@ -7,9 +7,9 @@ locals {
         name    = "${hostname}.${var.domain}"
         content = a_record.address
         type    = "A"
-        ttl     = coalesce(a_record.ttl, var.a_defaults.ttl, 3600)
-        proxied = coalesce(a_record.proxied, var.a_defaults.proxied, false)
-        comment = coalesce(a_record.comment, var.a_defaults.comment, "")
+        ttl     = coalesce(a_record.ttl, var.defaults.a.ttl, 3600)
+        proxied = coalesce(a_record.proxied, var.defaults.a.proxied, false)
+        comment = coalesce(a_record.comment, var.defaults.a.comment, "")
       }
     ]
   ])
@@ -21,9 +21,9 @@ locals {
         name    = "${hostname}.${var.domain}"
         content = aaaa_record.address
         type    = "AAAA"
-        ttl     = coalesce(aaaa_record.ttl, var.aaaa_defaults.ttl, 3600)
-        proxied = coalesce(aaaa_record.proxied, var.aaaa_defaults.proxied, false)
-        comment = coalesce(aaaa_record.comment, var.aaaa_defaults.comment, "")
+        ttl     = coalesce(aaaa_record.ttl, var.defaults.aaaa.ttl, 3600)
+        proxied = coalesce(aaaa_record.proxied, var.defaults.aaaa.proxied, false)
+        comment = coalesce(aaaa_record.comment, var.defaults.aaaa.comment, "")
       }
     ]
   ])
@@ -35,8 +35,8 @@ locals {
         name    = "${hostname}.${var.domain}"
         content = cname_record.cname
         type    = "CNAME"
-        ttl     = coalesce(cname_record.ttl, var.cname_defaults.ttl, 3600)
-        comment = coalesce(cname_record.comment, var.cname_defaults.comment, "")
+        ttl     = coalesce(cname_record.ttl, var.defaults.cname.ttl, 3600)
+        comment = coalesce(cname_record.comment, var.defaults.cname.comment, "")
       }
     ]
   ])
@@ -44,13 +44,13 @@ locals {
   mx_records = flatten([
     for hostname, record in var.records : [
       for idx, mx_record in record.mx : {
-        key      = "${hostname}-${coalesce(mx_record.preference, var.mx_defaults.preference, 10)}-${replace(mx_record.exchange, "/[^a-zA-Z0-9]/", "-")}"
+        key      = "${hostname}-${coalesce(mx_record.preference, var.defaults.mx.preference, 10)}-${replace(mx_record.exchange, "/[^a-zA-Z0-9]/", "-")}"
         name     = "${hostname}.${var.domain}"
         content  = mx_record.exchange
         type     = "MX"
-        priority = coalesce(mx_record.preference, var.mx_defaults.preference, 10)
-        ttl      = coalesce(mx_record.ttl, var.mx_defaults.ttl, 3600)
-        comment  = coalesce(mx_record.comment, var.mx_defaults.comment, "")
+        priority = coalesce(mx_record.preference, var.defaults.mx.preference, 10)
+        ttl      = coalesce(mx_record.ttl, var.defaults.mx.ttl, 3600)
+        comment  = coalesce(mx_record.comment, var.defaults.mx.comment, "")
       }
     ]
   ])
@@ -62,8 +62,8 @@ locals {
         name    = "${hostname}.${var.domain}"
         content = txt_record.text
         type    = "TXT"
-        ttl     = coalesce(txt_record.ttl, var.txt_defaults.ttl, 3600)
-        comment = coalesce(txt_record.comment, var.txt_defaults.comment, "")
+        ttl     = coalesce(txt_record.ttl, var.defaults.txt.ttl, 3600)
+        comment = coalesce(txt_record.comment, var.defaults.txt.comment, "")
       }
     ]
   ])

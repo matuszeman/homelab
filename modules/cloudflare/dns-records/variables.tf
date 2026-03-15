@@ -14,70 +14,34 @@ variable "comment_tags" {
   default = true
 }
 
-variable "a_defaults" {
+variable "defaults" {
   type = object({
-    ttl     = optional(number)
-    comment = optional(string)
-    proxied = optional(bool)
+    a = optional(object({
+      ttl     = optional(number)
+      comment = optional(string)
+      proxied = optional(bool)
+    }), { ttl = 3600, comment = "", proxied = false })
+    aaaa = optional(object({
+      ttl     = optional(number)
+      comment = optional(string)
+      proxied = optional(bool)
+    }), { ttl = 3600, comment = "", proxied = false })
+    cname = optional(object({
+      ttl     = optional(number)
+      comment = optional(string)
+    }), { ttl = 3600, comment = "" })
+    mx = optional(object({
+      preference = optional(number)
+      ttl        = optional(number)
+      comment    = optional(string)
+    }), { preference = 10, ttl = 3600, comment = "" })
+    txt = optional(object({
+      ttl     = optional(number)
+      comment = optional(string)
+    }), { ttl = 3600, comment = "" })
   })
-  default = {
-    ttl     = 3600
-    comment = ""
-    proxied = false
-  }
-  description = "Default values for A records"
-}
-
-variable "aaaa_defaults" {
-  type = object({
-    ttl     = optional(number)
-    comment = optional(string)
-    proxied = optional(bool)
-  })
-  default = {
-    ttl     = 3600
-    comment = ""
-    proxied = false
-  }
-  description = "Default values for AAAA records"
-}
-
-variable "cname_defaults" {
-  type = object({
-    ttl     = optional(number)
-    comment = optional(string)
-  })
-  default = {
-    ttl     = 3600
-    comment = ""
-  }
-  description = "Default values for CNAME records"
-}
-
-variable "mx_defaults" {
-  type = object({
-    preference = optional(number)
-    ttl        = optional(number)
-    comment    = optional(string)
-  })
-  default = {
-    preference = 10
-    ttl        = 3600
-    comment    = ""
-  }
-  description = "Default values for MX records"
-}
-
-variable "txt_defaults" {
-  type = object({
-    ttl     = optional(number)
-    comment = optional(string)
-  })
-  default = {
-    ttl     = 3600
-    comment = ""
-  }
-  description = "Default values for TXT records"
+  default     = {}
+  description = "Default values for each record type"
 }
 
 variable "records" {
