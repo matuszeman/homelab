@@ -5,7 +5,7 @@ locals {
       for idx, a_record in record.a : {
         key     = "${hostname}-${replace(a_record.value, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
-        content = a_record.value
+        content = templatestring(a_record.value, var.placeholders)
         type    = "A"
         ttl     = coalesce(a_record.ttl, var.defaults.a.ttl, 3600)
         proxied = coalesce(a_record.proxied, var.defaults.a.proxied, false)
@@ -19,7 +19,7 @@ locals {
       for idx, aaaa_record in record.aaaa : {
         key     = "${hostname}-${replace(aaaa_record.value, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
-        content = aaaa_record.value
+        content = templatestring(aaaa_record.value, var.placeholders)
         type    = "AAAA"
         ttl     = coalesce(aaaa_record.ttl, var.defaults.aaaa.ttl, 3600)
         proxied = coalesce(aaaa_record.proxied, var.defaults.aaaa.proxied, false)
@@ -33,7 +33,7 @@ locals {
       for idx, cname_record in record.cname : {
         key     = "${hostname}-${replace(cname_record.value, "/[^a-zA-Z0-9]/", "-")}"
         name    = "${hostname}.${var.domain}"
-        content = cname_record.value
+        content = templatestring(cname_record.value, var.placeholders)
         type    = "CNAME"
         ttl     = coalesce(cname_record.ttl, var.defaults.cname.ttl, 3600)
         comment = coalesce(cname_record.comment, var.defaults.cname.comment, "")
@@ -46,7 +46,7 @@ locals {
       for idx, mx_record in record.mx : {
         key      = "${hostname}-${coalesce(mx_record.preference, var.defaults.mx.preference, 10)}-${replace(mx_record.value, "/[^a-zA-Z0-9]/", "-")}"
         name     = "${hostname}.${var.domain}"
-        content  = mx_record.value
+        content  = templatestring(mx_record.value, var.placeholders)
         type     = "MX"
         priority = coalesce(mx_record.preference, var.defaults.mx.preference, 10)
         ttl      = coalesce(mx_record.ttl, var.defaults.mx.ttl, 3600)
@@ -60,7 +60,7 @@ locals {
       for idx, txt_record in record.txt : {
         key     = "${hostname}-${substr(md5(txt_record.value), 0, 8)}"
         name    = "${hostname}.${var.domain}"
-        content = txt_record.value
+        content = templatestring(txt_record.value, var.placeholders)
         type    = "TXT"
         ttl     = coalesce(txt_record.ttl, var.defaults.txt.ttl, 3600)
         comment = coalesce(txt_record.comment, var.defaults.txt.comment, "")

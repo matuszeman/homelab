@@ -14,7 +14,7 @@ locals {
       for idx, a_record in record.a : {
         key          = "${hostname}-${replace(a_record.value, "/[^a-zA-Z0-9]/", "-")}"
         name         = local.clean_wildcard_name[hostname]
-        address      = a_record.value
+        address      = templatestring(a_record.value, var.placeholders)
         ttl          = coalesce(a_record.ttl, var.defaults.a.ttl)
         comment      = coalesce(a_record.comment, var.defaults.a.comment)
         is_wildcard  = startswith(hostname, "*")
@@ -27,7 +27,7 @@ locals {
       for idx, aaaa_record in record.aaaa : {
         key          = "${hostname}-${replace(aaaa_record.value, "/[^a-zA-Z0-9]/", "-")}"
         name         = local.clean_wildcard_name[hostname]
-        address      = aaaa_record.value
+        address      = templatestring(aaaa_record.value, var.placeholders)
         ttl          = coalesce(aaaa_record.ttl, var.defaults.aaaa.ttl)
         comment      = coalesce(aaaa_record.comment, var.defaults.aaaa.comment)
         is_wildcard  = startswith(hostname, "*")
@@ -40,7 +40,7 @@ locals {
       for idx, cname_record in record.cname : {
         key          = "${hostname}-${replace(cname_record.value, "/[^a-zA-Z0-9]/", "-")}"
         name         = local.clean_wildcard_name[hostname]
-        cname        = cname_record.value
+        cname        = templatestring(cname_record.value, var.placeholders)
         ttl          = coalesce(cname_record.ttl, var.defaults.cname.ttl)
         comment      = coalesce(cname_record.comment, var.defaults.cname.comment)
         is_wildcard  = startswith(hostname, "*")
@@ -53,7 +53,7 @@ locals {
       for idx, mx_record in record.mx : {
         key          = "${hostname}-${coalesce(mx_record.preference, var.defaults.mx.preference)}-${replace(mx_record.value, "/[^a-zA-Z0-9]/", "-")}"
         name         = local.clean_wildcard_name[hostname]
-        exchange     = mx_record.value
+        exchange     = templatestring(mx_record.value, var.placeholders)
         preference   = coalesce(mx_record.preference, var.defaults.mx.preference)
         ttl          = coalesce(mx_record.ttl, var.defaults.mx.ttl)
         comment      = coalesce(mx_record.comment, var.defaults.mx.comment)
@@ -67,7 +67,7 @@ locals {
       for idx, txt_record in record.txt : {
         key          = "${hostname}-${substr(md5(txt_record.value), 0, 8)}"
         name         = local.clean_wildcard_name[hostname]
-        text         = txt_record.value
+        text         = templatestring(txt_record.value, var.placeholders)
         ttl          = coalesce(txt_record.ttl, var.defaults.txt.ttl)
         comment      = coalesce(txt_record.comment, var.defaults.txt.comment)
         is_wildcard  = startswith(hostname, "*")

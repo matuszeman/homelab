@@ -35,6 +35,12 @@ variable "defaults" {
   description = "Default values for each record type"
 }
 
+variable "placeholders" {
+  type        = map(string)
+  default     = {}
+  description = "Map of placeholder keys to replacement values. Use $${KEY} in record values to reference (e.g. placeholders = { PUBLIC_IP = \"1.2.3.4\" } resolves $${PUBLIC_IP} in values)."
+}
+
 variable "records" {
   type = map(object({
     a = optional(list(object({
