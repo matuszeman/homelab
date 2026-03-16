@@ -38,28 +38,28 @@ variable "defaults" {
 variable "records" {
   type = map(object({
     a = optional(list(object({
-      address = string
+      value   = string
       ttl     = optional(number)
       comment = optional(string)
     })), [])
     aaaa = optional(list(object({
-      address = string
+      value   = string
       ttl     = optional(number)
       comment = optional(string)
     })), [])
     cname = optional(list(object({
-      cname   = string
+      value   = string
       ttl     = optional(number)
       comment = optional(string)
     })), [])
     mx = optional(list(object({
-      exchange   = string
+      value      = string
       preference = optional(number)
       ttl        = optional(number)
       comment    = optional(string)
     })), [])
     txt = optional(list(object({
-      text    = string
+      value   = string
       ttl     = optional(number)
       comment = optional(string)
     })), [])
