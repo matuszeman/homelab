@@ -1,7 +1,14 @@
 variable "ctx" {}
 
+variable "zone_name" {
+  type        = string
+  description = "DNS zone root (e.g. \"example.com\")"
+}
+
 variable "domain" {
-  type = string
+  type        = string
+  default     = null
+  description = "Optional subdomain scope. When set, all records are placed under $${domain}.$${zone_name} and @ resolves to that base."
 }
 
 

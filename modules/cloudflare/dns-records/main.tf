@@ -1,10 +1,17 @@
 # Flatten all records from the nested structure using content-based unique keys
 locals {
+  base_domain = var.domain != null ? "${var.domain}.${var.zone_name}" : var.zone_name
+
+  clean_name = {
+    for hostname in keys(var.records) : hostname =>
+      hostname == "@" ? (var.domain != null ? local.base_domain : "@") : "${hostname}.${local.base_domain}"
+  }
+
   a_records = flatten([
     for hostname, record in var.records : [
       for idx, a_record in record.a : {
         key     = "${hostname}-${replace(a_record.value, "/[^a-zA-Z0-9]/", "-")}"
-        name    = "${hostname}.${var.domain}"
+        name    = local.clean_name[hostname]
         content = templatestring(a_record.value, var.placeholders)
         type    = "A"
         ttl     = coalesce(a_record.ttl, var.defaults.a.ttl, 3600)
@@ -18,7 +25,7 @@ locals {
     for hostname, record in var.records : [
       for idx, aaaa_record in record.aaaa : {
         key     = "${hostname}-${replace(aaaa_record.value, "/[^a-zA-Z0-9]/", "-")}"
-        name    = "${hostname}.${var.domain}"
+        name    = local.clean_name[hostname]
         content = templatestring(aaaa_record.value, var.placeholders)
         type    = "AAAA"
         ttl     = coalesce(aaaa_record.ttl, var.defaults.aaaa.ttl, 3600)
@@ -32,7 +39,7 @@ locals {
     for hostname, record in var.records : [
       for idx, cname_record in record.cname : {
         key     = "${hostname}-${replace(cname_record.value, "/[^a-zA-Z0-9]/", "-")}"
-        name    = "${hostname}.${var.domain}"
+        name    = local.clean_name[hostname]
         content = templatestring(cname_record.value, var.placeholders)
         type    = "CNAME"
         ttl     = coalesce(cname_record.ttl, var.defaults.cname.ttl, 3600)
@@ -45,7 +52,7 @@ locals {
     for hostname, record in var.records : [
       for idx, mx_record in record.mx : {
         key      = "${hostname}-${coalesce(mx_record.preference, var.defaults.mx.preference, 10)}-${replace(mx_record.value, "/[^a-zA-Z0-9]/", "-")}"
-        name     = "${hostname}.${var.domain}"
+        name     = local.clean_name[hostname]
         content  = templatestring(mx_record.value, var.placeholders)
         type     = "MX"
         priority = coalesce(mx_record.preference, var.defaults.mx.preference, 10)
@@ -59,8 +66,8 @@ locals {
     for hostname, record in var.records : [
       for idx, txt_record in record.txt : {
         key     = "${hostname}-${substr(md5(txt_record.value), 0, 8)}"
-        name    = "${hostname}.${var.domain}"
-        content = templatestring(txt_record.value, var.placeholders)
+        name    = local.clean_name[hostname]
+        content = "\"${templatestring(txt_record.value, var.placeholders)}\""
         type    = "TXT"
         ttl     = coalesce(txt_record.ttl, var.defaults.txt.ttl, 3600)
         comment = coalesce(txt_record.comment, var.defaults.txt.comment, "")

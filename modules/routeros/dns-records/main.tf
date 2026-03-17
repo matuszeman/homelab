@@ -1,11 +1,15 @@
 # Flatten all records from the nested structure using content-based unique keys
 locals {
+  base_domain = var.domain != null ? "${var.domain}.${var.zone_name}" : var.zone_name
+
   # Helper function to clean wildcard hostnames
   clean_wildcard_name = {
     for hostname in keys(var.records) : hostname => (
-      startswith(hostname, "*") ? (
-        hostname == "*" ? var.domain : "${trimprefix(trimprefix(hostname, "*"), ".")}.${var.domain}"
-      ) : "${hostname}.${var.domain}"
+      hostname == "@" ? local.base_domain : (
+        startswith(hostname, "*") ? (
+          hostname == "*" ? local.base_domain : "${trimprefix(trimprefix(hostname, "*"), ".")}.${local.base_domain}"
+        ) : "${hostname}.${local.base_domain}"
+      )
     )
   }
 
