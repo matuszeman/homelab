@@ -10,6 +10,8 @@ app:
       # https://argo-cd.readthedocs.io/en/latest/operator-manual/applicationset/Appset-Any-Namespace/#reconfigure-argo-cd-to-allow-certain-namespaces
       applicationsetcontroller.namespaces: "*"
       applicationsetcontroller.enable.scm.providers: false
+  applicationSet:
+    allowAnyNamespace: true
   dex:
     enabled: false
 
