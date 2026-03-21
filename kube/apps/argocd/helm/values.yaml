@@ -7,6 +7,8 @@ app:
       server.insecure: true
       # https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#reconfigure-argo-cd-to-allow-certain-namespaces
       application.namespaces: "*"
+      # https://argo-cd.readthedocs.io/en/latest/operator-manual/applicationset/Appset-Any-Namespace/#reconfigure-argo-cd-to-allow-certain-namespaces
+      applicationsetcontroller.namespaces: "*"
   dex:
     enabled: false
 
