@@ -1,5 +1,5 @@
 module "image" {
-  source = "../talos-image"
+  source = "../talos/image"
   talos_version = var.talos_version
   extensions = concat([
     "qemu-guest-agent",

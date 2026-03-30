@@ -1,23 +1,16 @@
-variable "pve_node" {}
-variable "pve_cloudinit_storage" {}
-
+#variable "hostname" {}
+variable "ip" {}
+variable "nics" {}
 variable "cluster_config" {}
+variable "kubernetes_version" {}
 variable "bootstrap" {
   type = bool
   default = false
 }
-variable "talos_version" {}
-variable "talos_image_versions" {
-  type = map(object({
-    iso_file_id = string
-    installer = string
-  }))
-}
+variable "talos_image" {}
+variable "install_disk" {}
 variable "talos_machine_type" {
   type = string
-}
-variable "cluster_nic" {
-  default = null
 }
 variable "node_labels" {
   type = map(string)

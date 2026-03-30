@@ -17,3 +17,4 @@ variable "vcpu" {
 variable "nics" {
   type = any
 }
+

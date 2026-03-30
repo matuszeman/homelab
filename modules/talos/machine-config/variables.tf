@@ -10,9 +10,12 @@ variable "cluster_config" {
       cidr = string
     })
     vip_ip = string
+    vip_dns = string
     registries_config = any
   })
 }
+# https://docs.siderolabs.com/talos/v1.12/getting-started/support-matrix
+variable "kubernetes_version" {}
 variable "machine_type" {
   type = string
 }
@@ -21,18 +24,15 @@ variable "bootstrap" {
 }
 variable "install_disk" {}
 variable "install_image" {}
-variable "hostname" {}
-variable "cluster_nic_name" {
-  type = string
-}
+#variable "hostname" {}
 variable "nics" {
   type = map(object({
     mac: string
-    static_ip = optional(string)
-    route_metric = optional(number, 0)
+    #static_ip = optional(string)
+    #route_metric = optional(number, 0)
     network: object({
-      nameservers = set(string)
-      gateway = string
+      #nameservers = set(string)
+      #gateway = string
       cidr = string
     })
   }))
