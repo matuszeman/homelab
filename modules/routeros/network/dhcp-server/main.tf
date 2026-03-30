@@ -25,4 +25,5 @@ resource "routeros_ip_dhcp_server_network" "this" {
   dns_server = var.network.nameservers
   # https://en.wikipedia.org/wiki/Search_domain
   domain = var.network.domain
+  ntp_server = var.ntp_server_ips
 }

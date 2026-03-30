@@ -16,4 +16,5 @@ module "dhcp-server" {
   address = var.network.dhcp_server
   address_pool = var.network.address_pools[var.dhcp_server.adress_pool_name]
   lease_time = var.dhcp_server.lease_time
+  ntp_server_ips = var.dhcp_server.ntp_server_ips
 }

@@ -13,6 +13,10 @@ variable "lease_time" {
 }
 
 variable "address" {}
+variable "ntp_server_ips" {
+  type = list(string)
+  default = []
+}
 
 variable "address_pool" {
   type = object({

@@ -8,12 +8,6 @@ resource "routeros_zerotier_interface" "this" {
   network       = var.zerotier_network.id
 }
 
-# resource "routeros_ip_address" "this" {
-#   comment   = "tf: zerotier ${var.zerotier_member_name} ip"
-#   address   = "${var.interface_ip}/${split("/", var.zerotier_network.cidr)[1]}"
-#   interface = routeros_zerotier_interface.this.name
-# }
-
 resource "zerotier_member" "this" {
   name                    = var.zerotier_member_name
   member_id               = var.zerotier_instance.member_id
