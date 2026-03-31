@@ -11,6 +11,8 @@ resource "helm_release" "this" {
   chart      = "argo-cd"
   version    = var.helm_version
 
+  create_namespace = true
+
   wait = true
   max_history = 2
 
