@@ -5,5 +5,5 @@ version: 1.0.0
 dependencies:
   - name: idp-app
     alias: app
-    version: "5.0.0"
+    version: "5.9.0"
     repository: "https://matuszeman.github.io/charts"
