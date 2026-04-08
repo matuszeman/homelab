@@ -37,3 +37,7 @@ output "metrics_server_enabled" {
 output "registries_config" {
   value = var.registries_config
 }
+
+output "oidc" {
+  value = var.oidc
+}

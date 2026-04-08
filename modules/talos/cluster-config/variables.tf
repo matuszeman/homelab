@@ -15,3 +15,16 @@ variable "metrics_server_enabled" {
 variable "registries_config" {
   default = {}
 }
+
+# https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens
+variable "oidc" {
+  default = null
+  type = object({
+    issuer_url      = string
+    client_id       = string
+    username_claim  = optional(string)
+    groups_claim    = optional(string)
+    username_prefix = optional(string)
+    groups_prefix   = optional(string)
+  })
+}

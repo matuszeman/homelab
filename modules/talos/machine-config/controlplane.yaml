@@ -10,6 +10,22 @@ cluster:
   apiServer:
     extraArgs:
       feature-gates: "UserNamespacesSupport=true"
+      #%{ if cluster_config.oidc != null }
+      oidc-issuer-url: "${cluster_config.oidc.issuer_url}"
+      oidc-client-id: "${cluster_config.oidc.client_id}"
+      #%{ if cluster_config.oidc.username_claim != null }
+      oidc-username-claim: "${cluster_config.oidc.username_claim}"
+      #%{ endif }
+      #%{ if cluster_config.oidc.groups_claim != null }
+      oidc-groups-claim: "${cluster_config.oidc.groups_claim}"
+      #%{ endif }
+      #%{ if cluster_config.oidc.username_prefix != null }
+      oidc-username-prefix: "${cluster_config.oidc.username_prefix}"
+      #%{ endif }
+      #%{ if cluster_config.oidc.groups_prefix != null }
+      oidc-groups-prefix: "${cluster_config.oidc.groups_prefix}"
+      #%{ endif }
+      #%{ endif }
     certSANs:
       - 127.0.0.1
       - ${cluster_config.vip_dns}

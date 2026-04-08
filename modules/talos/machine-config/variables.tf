@@ -12,6 +12,14 @@ variable "cluster_config" {
     vip_ip = string
     vip_dns = string
     registries_config = any
+    oidc = optional(object({
+      issuer_url      = string
+      client_id       = string
+      username_claim  = optional(string)
+      groups_claim    = optional(string)
+      username_prefix = optional(string)
+      groups_prefix   = optional(string)
+    }))
   })
 }
 # https://docs.siderolabs.com/talos/v1.12/getting-started/support-matrix
