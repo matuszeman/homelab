@@ -1,9 +1,9 @@
 dependencies:
-- name: alloy
-  repository: https://grafana.github.io/helm-charts
-  version: 1.7.0
+- name: k8s-monitoring
+  repository: oci://ghcr.io/grafana/helm-charts
+  version: 4.0.1
 - name: idp-app
   repository: https://matuszeman.github.io/charts
   version: 5.10.1
-digest: sha256:3569a47b5ef14d358e866a91f2e16d5cfc2462f262172937d288760a8984757a
-generated: "2026-04-14T18:11:49.633436+02:00"
+digest: sha256:32c0a84fa8d6cdefc87424d5b72922119d35756b3be4b06450cfa2811b153019
+generated: "2026-04-14T22:04:59.996546+02:00"

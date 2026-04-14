@@ -1,0 +1,35 @@
+# Example: scrape pod logs and push to Grafana Cloud
+app:
+  cluster:
+    name: homelab
+
+  destinations:
+    grafana-cloud-logs:
+      type: loki
+      url: https://logs-prod-012.grafana.net/loki/api/v1/push
+      secret:
+        create: false
+        name: release-name-config-grafana-cloud
+      auth:
+        type: basic
+        usernameKey: loki_username
+        passwordKey: access_token
+
+  podLogsViaLoki:
+    enabled: true
+
+  collectors:
+    logs:
+      presets:
+        - daemonset
+        - filesystem-log-reader
+
+config:
+  appName: alloy
+  appVersion: "1.0.0"
+  configs:
+    grafana-cloud:
+      secret: {}
+      content:
+        loki_username: "123456"
+        access_token: "glc_xxxxxxxxxxxxxxxxxxxx"

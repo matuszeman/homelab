@@ -1,7 +1,0 @@
-suite: test alloy pod logs to stdout configuration
-values:
-  - values/pod-logs-stdout.yaml
-tests:
-  - it: should render with pod logs stdout configuration
-    asserts:
-      - matchSnapshot: {}

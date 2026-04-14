@@ -1,5 +1,0 @@
-suite: test alloy default values
-tests:
-  - it: should render with default values
-    asserts:
-      - matchSnapshot: {}

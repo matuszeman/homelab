@@ -3,10 +3,10 @@ name: alloy
 type: application
 version: 1.0.0
 dependencies:
-  - name: alloy
+  - name: k8s-monitoring
     alias: app
-    version: 1.7.0
-    repository: https://grafana.github.io/helm-charts
+    version: 4.0.1
+    repository: oci://ghcr.io/grafana/helm-charts
   - name: idp-app
     alias: config
     version: 5.10.1

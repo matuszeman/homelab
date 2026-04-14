@@ -1,45 +1,101 @@
+# k8s-monitoring subchart configuration (Grafana Alloy Kubernetes Monitoring)
+# Reference: https://github.com/grafana/k8s-monitoring-helm/blob/main/charts/k8s-monitoring/values.yaml
+#
+# This chart requires at least one destination, one feature, and one collector to be enabled.
+# Set app.cluster.name and destinations in your environment-specific values file.
+#
 app:
-  # -- Override the chart name to ensure app.kubernetes.io/name=alloy
-  nameOverride: alloy
+  # -- Cluster name (required, set in environment-specific values file)
+  # cluster:
+  #   name: "my-cluster"
 
-  configMap:
-    # -- Create a new ConfigMap for the config file.
-    create: true
+  # -- Destinations for sending telemetry (metrics, logs, traces, profiles).
+  # At least one destination must be configured.
+  # destinations is a map keyed by destination name; each entry requires a `type`.
+  #
+  # Example for Grafana Cloud:
+  destinations: {}
+    # grafana-cloud-metrics:
+    #   type: prometheus
+    #   url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
+    #   secret:
+    #     create: false
+    #     name: <release>-config-grafana-cloud
+    #   auth:
+    #     type: basic
+    #     usernameKey: prometheus_username
+    #     passwordKey: access_token
+    # grafana-cloud-logs:
+    #   type: loki
+    #   url: https://logs-prod-012.grafana.net/loki/api/v1/push
+    #   secret:
+    #     create: false
+    #     name: <release>-config-grafana-cloud
+    #   auth:
+    #     type: basic
+    #     usernameKey: loki_username
+    #     passwordKey: access_token
 
-  stabilityLevel: "generally-available"
+  # -- Features: enable the monitoring features you need.
+  # Each feature requires compatible destinations and a collector.
 
-  # -- Enables Grafana Alloy container's http server port.
-  enableHttpServerPort: true
-
-  # -- Port to listen for traffic on.
-  listenPort: 12345
-
-  # -- Enable clustering for distributed Alloy deployments.
-  clustering:
+  clusterMetrics:
     enabled: false
-    # name: "alloy-cluster"
 
-  # -- Enable sending Grafana Labs anonymous usage stats to help improve Grafana Alloy.
-  enableReporting: false
+  annotationAutodiscovery:
+    enabled: false
 
-  # -- Resource requests and limits
-  # resources:
-  #   requests:
-  #     cpu: 100m
-  #     memory: 128Mi
-  #   limits:
-  #     cpu: 500m
-  #     memory: 512Mi
+  prometheusOperatorObjects:
+    enabled: false
 
-# idp-app (config) subchart for secret injection
-# Uses idp-app to manage and inject secrets into Alloy configuration
+  clusterEvents:
+    enabled: false
+
+  nodeLogs:
+    enabled: false
+
+  # -- Pod logs in Loki format (uses filesystem log reader)
+  podLogsViaLoki:
+    enabled: false
+
+  # -- Pod logs via Kubernetes API (no filesystem access needed)
+  podLogsViaKubernetesApi:
+    enabled: false
+
+  applicationObservability:
+    enabled: false
+
+  autoInstrumentation:
+    enabled: false
+
+  profiling:
+    enabled: false
+
+  # -- Collectors: named Alloy collector instances.
+  # Each collector uses `presets` to configure its behaviour.
+  # Available presets: daemonset, singleton, deployment, statefulset,
+  #                    filesystem-log-reader, privileged, clustered
+  # See: https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring/docs/collectors
+  collectors: {}
+    # logs:
+    #   presets:
+    #     - daemonset
+    #     - filesystem-log-reader
+    # metrics:
+    #   presets:
+    #     - singleton
+
+# idp-app (config) subchart — use to create Secrets for destination credentials.
+# Reference: https://github.com/matuszeman/charts
 config:
   appName: alloy
   appVersion: "{{ .Chart.AppVersion }}"
-  # -- Configs section - uncomment to create Secrets via idp-app
+  # -- Uncomment to create a Secret with Grafana Cloud credentials:
   # configs:
   #   grafana-cloud:
-  #     secret: {}  # Creates a Secret instead of ConfigMap
+  #     secret: {}
   #     content:
-  #       GRAFANA_CLOUD_USER: "user@example.com"
-  #       GRAFANA_CLOUD_TOKEN: "glc_xxxxxxxxxxxxxxxxxxxx"
+  #       loki_username: "123456"
+  #       prometheus_username: "123456"
+  #       tempo_username: "123456"
+  #       access_token: "glc_xxxxxxxxxxxxxxxxxxxx"
