@@ -1,4 +1,4 @@
-should render with default values:
+should render with pod logs stdout configuration:
   1: |
     raw: |
       Welcome to Grafana Alloy!

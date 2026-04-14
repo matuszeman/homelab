@@ -1,0 +1,42 @@
+# Test values for alloy scraping pod logs and printing to stdout
+app:
+  configMap:
+    create: true
+    content: |
+      logging {
+        level  = "info"
+        format = "logfmt"
+      }
+
+      discovery.kubernetes "pod_logs" {
+        role = "pod"
+      }
+
+      loki.source.kubernetes "pod_logs" {
+        targets    = discovery.kubernetes.pod_logs.targets
+        forward_to = [loki.write.stdout.receiver]
+      }
+
+      loki.write "stdout" {
+        endpoint {
+          url = "http://localhost"
+        }
+      }
+
+      loki.source.file "stdout" {
+        targets = [{
+          __path__ = "/proc/self/fd/1",
+          job      = "alloy",
+        }]
+        forward_to = [loki.write.stdout.receiver]
+      }
+  stabilityLevel: "generally-available"
+  enableHttpServerPort: true
+  listenPort: 12345
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

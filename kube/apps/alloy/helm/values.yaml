@@ -1,0 +1,32 @@
+app:
+  # -- Override the chart name to ensure app.kubernetes.io/name=alloy
+  nameOverride: alloy
+
+  configMap:
+    # -- Create a new ConfigMap for the config file.
+    create: true
+
+  stabilityLevel: "generally-available"
+
+  # -- Enables Grafana Alloy container's http server port.
+  enableHttpServerPort: true
+
+  # -- Port to listen for traffic on.
+  listenPort: 12345
+
+  # -- Enable clustering for distributed Alloy deployments.
+  clustering:
+    enabled: false
+    # name: "alloy-cluster"
+
+  # -- Enable sending Grafana Labs anonymous usage stats to help improve Grafana Alloy.
+  enableReporting: false
+
+  # -- Resource requests and limits
+  # resources:
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
+  #   limits:
+  #     cpu: 500m
+  #     memory: 512Mi
