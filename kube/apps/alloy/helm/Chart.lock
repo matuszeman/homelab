@@ -2,5 +2,8 @@ dependencies:
 - name: alloy
   repository: https://grafana.github.io/helm-charts
   version: 1.7.0
-digest: sha256:18c069634b912e85453d406683cb2997b551689794f086230829ba485ba73195
-generated: "2026-04-14T16:27:55.94852+02:00"
+- name: idp-app
+  repository: https://matuszeman.github.io/charts
+  version: 5.10.1
+digest: sha256:3569a47b5ef14d358e866a91f2e16d5cfc2462f262172937d288760a8984757a
+generated: "2026-04-14T18:11:49.633436+02:00"

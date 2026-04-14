@@ -1,0 +1,7 @@
+suite: test alloy sending logs to Grafana Cloud
+values:
+  - values/grafana-cloud.yaml
+tests:
+  - it: should render Grafana Cloud configuration with secret injection
+    asserts:
+      - matchSnapshot: {}

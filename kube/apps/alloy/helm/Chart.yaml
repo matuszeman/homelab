@@ -7,3 +7,7 @@ dependencies:
     alias: app
     version: 1.7.0
     repository: https://grafana.github.io/helm-charts
+  - name: idp-app
+    alias: config
+    version: 5.10.1
+    repository: https://matuszeman.github.io/charts

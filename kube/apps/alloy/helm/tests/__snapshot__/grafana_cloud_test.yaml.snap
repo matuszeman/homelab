@@ -1,4 +1,4 @@
-should render with pod logs stdout configuration:
+should render Grafana Cloud configuration with secret injection:
   1: |
     raw: |
       Welcome to Grafana Alloy!
@@ -11,18 +11,22 @@ should render with pod logs stdout configuration:
           format = "logfmt"
         }
 
-        discovery.kubernetes "pod_logs" {
+        discovery.kubernetes "pods" {
           role = "pod"
         }
 
-        loki.source.kubernetes "pod_logs" {
-          targets    = discovery.kubernetes.pod_logs.targets
-          forward_to = [loki.write.stdout.receiver]
+        loki.source.kubernetes "pods" {
+          targets    = discovery.kubernetes.pods.targets
+          forward_to = [loki.write.grafana_cloud.receiver]
         }
 
-        loki.write "stdout" {
+        loki.write "grafana_cloud" {
           endpoint {
-            url = "http://localhost"
+            url = "https://logs-prod-us-central1.grafana.net/loki/api/v1/push"
+          }
+          basic_auth {
+            username = "${GRAFANA_CLOUD_USER}"
+            password = "${GRAFANA_CLOUD_TOKEN}"
           }
         }
     kind: ConfigMap
@@ -82,6 +86,9 @@ should render with pod logs stdout configuration:
                   valueFrom:
                     fieldRef:
                       fieldPath: spec.nodeName
+              envFrom:
+                - secretRef:
+                    name: release-name-config-grafana-cloud
               image: docker.io/grafana/alloy:v1.15.0
               imagePullPolicy: IfNotPresent
               name: alloy
@@ -95,6 +102,13 @@ should render with pod logs stdout configuration:
                   scheme: HTTP
                 initialDelaySeconds: 10
                 timeoutSeconds: 1
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
               volumeMounts:
                 - mountPath: /etc/alloy
                   name: config
@@ -304,3 +318,17 @@ should render with pod logs stdout configuration:
         helm.sh/chart: app-1.7.0
       name: RELEASE-NAME-alloy
       namespace: NAMESPACE
+  8: |
+    apiVersion: v1
+    data:
+      GRAFANA_CLOUD_TOKEN: Z2xjX3h4eHh4eHh4eHh4eHh4eHh4eHh4
+      GRAFANA_CLOUD_USER: dXNlckBleGFtcGxlLmNvbQ==
+    kind: Secret
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy
+        app.kubernetes.io/version: 1.0.0
+      name: RELEASE-NAME-config-grafana-cloud
+    type: Opaque
