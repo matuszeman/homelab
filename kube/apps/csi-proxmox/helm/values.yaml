@@ -1,29 +1,51 @@
-cluster: _
-idpAppConfig:
-  clusters:
-    _: {}
-  defaults:
-    configs:
-      annotations: {}
-
 # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#prepare-kubernetes-cluster
 app:
   nameOverride: csi-proxmox
   fullnameOverride: csi-proxmox
 
+  # Name and key of the Secret holding Proxmox API credentials.
+  # Always managed by the config sub-chart (idp-app) below.
   existingConfigSecret: csi-proxmox-config-secret
   existingConfigSecretKey: config.yaml
 
+  # klog verbosity level (0 = errors only, 5 = full debug)
+  logVerbosityLevel: 2
+
+  # Do not list clusters here — credentials belong in the secret managed by idp-app below.
   config:
-    # so it does not generate own config secret - we use idp-app for configs
     clusters: []
 
+  # Node selector and tolerations for the CSI controller Deployment.
+  # Pin to control-plane nodes so the controller does not run on worker nodes.
+  # nodeSelector:
+  #   node-role.kubernetes.io/control-plane: ""
+  # tolerations:
+  #   - key: node-role.kubernetes.io/control-plane
+  #     effect: NoSchedule
+
+  # StorageClass definitions — one entry per Proxmox storage pool. # required
+  # storageClass:
+  #   - name: proxmox-data-xfs   # required
+  #     storage: data             # required — Proxmox storage pool name
+  #     reclaimPolicy: Delete     # required — Delete | Retain
+  #     fstype: xfs               # xfs | ext4 (default: ext4)
+
+# idp-app config block — manages the Proxmox API credentials Secret.
+# See: https://matuszeman.github.io/charts
 config:
   appName: csi-proxmox
-  appVersion: 1.0.0
+  appVersion: v0.18.1 # kept in sync with app dependency .Chart.AppVersion
   configs:
     # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#install-the-plugin-by-using-kubectl
     secret:
-      #secret: {}
+      secret: {}  # required — creates an Opaque Secret
       content:
+        # config.yaml content is set per-environment in the environment values file. # required
+        # Example:
+        #   config.yaml:
+        #     clusters:
+        #       - url: https://proxmox.example.com:8006/api2/json  # required
+        #         token_id: "kubernetes-csi@pve!csi"               # required
+        #         token_secret: "changeme"                          # required
+        #         region: my-cluster                                # required
         config.yaml: null
