@@ -5,6 +5,8 @@
 # Set app.cluster.name and destinations in your environment-specific values file.
 #
 app:
+  fullnameOverwrite: alloy
+  nameOverwrite: alloy
   # -- Cluster name (required, set in environment-specific values file)
   # cluster:
   #   name: "my-cluster"
@@ -15,26 +17,23 @@ app:
   #
   # Example for Grafana Cloud:
   destinations: {}
-    # grafana-cloud-metrics:
-    #   type: prometheus
-    #   url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
-    #   secret:
-    #     create: false
-    #     name: <release>-config-grafana-cloud
-    #   auth:
-    #     type: basic
-    #     usernameKey: prometheus_username
-    #     passwordKey: access_token
-    # grafana-cloud-logs:
-    #   type: loki
-    #   url: https://logs-prod-012.grafana.net/loki/api/v1/push
-    #   secret:
-    #     create: false
-    #     name: <release>-config-grafana-cloud
-    #   auth:
-    #     type: basic
-    #     usernameKey: loki_username
-    #     passwordKey: access_token
+#    grafana-cloud-otlp:
+#      type: otlp
+#      url: https://otlp-gateway-prod-eu-west-2.grafana.net./otlp
+#      protocol: http
+#      secret:
+#        create: false
+#        name: alloy-config-grafana-cloud
+#      auth:
+#        type: basic
+#        usernameKey: otlp_username
+#        passwordKey: access_token
+#      metrics:
+#        enabled: true
+#      logs:
+#        enabled: true
+#      traces:
+#        enabled: true
 
   # -- Features: enable the monitoring features you need.
   # Each feature requires compatible destinations and a collector.
@@ -70,6 +69,15 @@ app:
 
   applicationObservability:
     enabled: false
+    collector: receiver # References the receiver collector defined above
+    receivers:
+      otlp:
+        grpc:
+          enabled: true
+          port: 4317 # OTLP gRPC endpoint
+        http:
+          enabled: true
+          port: 4318 # OTLP HTTP endpoint
 
   autoInstrumentation:
     enabled: false
@@ -89,7 +97,7 @@ app:
         argocd.argoproj.io/sync-wave: "1"
 
   # -- Collectors: named Alloy collector instances.
-  # See: https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring/docs/collectors
+  # See: https://grafana.com/docs/grafana-cloud/monitor-infrastructure/kubernetes-monitoring/configuration/helm-chart-config/helm-chart/collector-reference/
 #  collectors:
 #    metrics:
 #      presets: [ clustered, statefulset ]
@@ -97,6 +105,10 @@ app:
 #      presets: [ filesystem-log-reader, daemonset ]
 #    singleton:
 #      presets: [ singleton ]
+#    receiver:
+#      presets: [ daemonset ]
+#    profiles-collector:
+#      presets: [ privileged, daemonset ]
 
 
 # idp-app (config) subchart — use to create Secrets for destination credentials.
@@ -109,7 +121,5 @@ config:
   #   grafana-cloud:
   #     secret: {}
   #     content:
-  #       loki_username: "123456"
-  #       prometheus_username: "123456"
-  #       tempo_username: "123456"
+  #       otlp_username: "123456"
   #       access_token: "glc_xxxxxxxxxxxxxxxxxxxx"
