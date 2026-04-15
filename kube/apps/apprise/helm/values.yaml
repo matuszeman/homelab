@@ -11,6 +11,10 @@ global:
         annotations: {}
 # END
 
+# ---------------------------------------------------------------------------
+# app — Apprise API (caronc/apprise)
+# https://github.com/caronc/apprise-api
+# ---------------------------------------------------------------------------
 app:
   appName: apprise
   appVersion: 1.3.1
@@ -32,16 +36,11 @@ app:
           cpu: 1m
       containerPort: 8000
       # https://hub.docker.com/r/caronc/apprise
-      # use this instead?
-      # https://hub.docker.com/r/linuxserver/apprise-api
       imageRepository: docker.io
       image: caronc/apprise
       imageTag: 1.3.1
-      # https://github.com/caronc/apprise-api
-      # https://github.com/caronc/apprise-api?tab=readme-ov-file#environment-variables
-      #  Start it up:
-      ## /config is used for a persistent store, you do not have to mount
-      ##         this if you don't intend to use it.
+      # configDirs mounts the entire "app" ConfigMap as /config directory.
+      # The apprise.yml file inside will be loaded by APPRISE_CONFIG_DIR.
       configDirs:
         app: /config
       volumeMounts:
@@ -49,6 +48,7 @@ app:
           mountPath: /attach
         storage:
           mountPath: /storage
+      # https://github.com/caronc/apprise-api?tab=readme-ov-file#environment-variables
       env:
         PUID: 3000
         GUID: 3000
@@ -60,11 +60,10 @@ app:
         APPRISE_CONFIG_LOCK: yes
         APPRISE_ATTACH_DIR: /attach
         APPRISE_STORAGE_DIR: /storage
-
         LOG_LEVEL: debug
-
         #HASSIO_APPRISE_TOKEN: {config: {name: secrets, key: HASSIO_APPRISE_TOKEN }}
   volumes:
+    # Ephemeral in-memory volumes for attachments and notification storage.
     storage:
       emptyDir:
         sizeLimit: 50Mi
@@ -75,19 +74,25 @@ app:
         medium: Memory
   configs:
     app:
+      # Triggers a rolling restart whenever apprise.yml changes.
       restartPodOnUpdate: true
       content:
         # https://github.com/caronc/apprise/wiki/config_yaml
         # https://github.com/caronc/apprise/wiki/Notify_homeassistant
         #
-        # Secrets - apprise does not support secrets from env until this is implemented
-        # https://github.com/caronc/apprise/issues/1156
+        # Note: Apprise does not support injecting secrets from env vars until
+        # https://github.com/caronc/apprise/issues/1156 is resolved.
+        # Set to null here; override in a separate values file or sealed secret.
         apprise.yml: null
 
-# https://github.com/YoRyan/mailrise?tab=readme-ov-file
+# ---------------------------------------------------------------------------
+# smtp — Mailrise SMTP-to-Apprise gateway (yoryan/mailrise)
+# https://github.com/YoRyan/mailrise
+# ---------------------------------------------------------------------------
 smtp:
   appName: mailrise
   appVersion: 1.3.0
+  # resourceNameSuffix prevents resource name collisions with the "app" release.
   resourceNameSuffix: smtp
 
   podDisruptionBudget:
@@ -98,6 +103,7 @@ smtp:
     enabled: true
   service:
     enabled: true
+    # Mailrise listens on the standard SMTP port.
     port: 25
   containers:
     app:
@@ -109,12 +115,16 @@ smtp:
       imageRepository: docker.io
       image: yoryan/mailrise
       imageTag: 1.3.0
+      # configFiles mounts mailrise.conf from the "app" ConfigMap at the exact path
+      # expected by the mailrise binary.
       configFiles:
         app:
           mailrise.conf: /etc/mailrise.conf
   configs:
     app:
+      # Triggers a rolling restart whenever mailrise.conf changes.
       restartPodOnUpdate: true
       content:
-        # https://github.com/caronc/apprise/wiki/config_yaml
+        # https://github.com/YoRyan/mailrise#configuration
+        # Set to null here; override in a separate values file.
         mailrise.conf: null
