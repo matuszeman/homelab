@@ -41,6 +41,7 @@ app:
 
   clusterMetrics:
     enabled: false
+    collector: alloy-metrics
 
   annotationAutodiscovery:
     enabled: false
@@ -50,13 +51,18 @@ app:
 
   clusterEvents:
     enabled: false
+    collector: alloy-singleton
 
   nodeLogs:
     enabled: false
+    collector: alloy-logs
 
   # -- Pod logs in Loki format (uses filesystem log reader)
   podLogsViaLoki:
     enabled: false
+    collector: alloy-logs
+    structuredMetadata:
+      pod: ""
 
   # -- Pod logs via Kubernetes API (no filesystem access needed)
   podLogsViaKubernetesApi:
