@@ -1,3 +1,8 @@
+issuers:
+  configs:
+    secrets:
+      secret: {}
+
 certificates:
   my-cert:
     enabled: true

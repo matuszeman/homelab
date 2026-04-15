@@ -30,7 +30,7 @@ issuers:
   # AWS Secrets Manager, existing secret reference) — see idp-app `configs` for all options.
   configs:
     secrets:
-      secret: {}
+      # secret: {}   # uncomment for inline Secret; see idp-app `configs` for all supported types
       content: {}
         # cloudflare-api-token: "<token>"
 
