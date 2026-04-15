@@ -1,0 +1,7 @@
+suite: example - certificates
+tests:
+  - it: renders a Certificate resource
+    values:
+      - example/certificates.yaml
+    asserts:
+      - matchSnapshot: {}

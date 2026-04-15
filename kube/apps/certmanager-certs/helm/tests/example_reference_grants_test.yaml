@@ -1,0 +1,7 @@
+suite: example - gateway reference grants
+tests:
+  - it: renders a ReferenceGrant for cross-namespace secret access
+    values:
+      - example/reference_grants.yaml
+    asserts:
+      - matchSnapshot: {}

@@ -1,0 +1,4 @@
+secretsReferenceGrants:
+  traefik-gateway:
+    kind: Gateway
+    namespace: traefik-system

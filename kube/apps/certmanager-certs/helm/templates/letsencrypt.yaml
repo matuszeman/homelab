@@ -5,7 +5,6 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  #name: {{ include "idp-app.fullname" $ctx }}-letsencrypt
   name: letsencrypt
 spec:
   acme:

@@ -5,5 +5,5 @@ version: 1.0.0
 dependencies:
   - name: idp-app
     alias: issuers
-    version: 4.1.0
+    version: 5.10.1
     repository: https://matuszeman.github.io/charts/

@@ -1,0 +1,32 @@
+renders letsencrypt issuer with cloudflare dns01 solver and secret:
+  1: |
+    apiVersion: v1
+    data:
+      cloudflare-api-token: bXktdG9rZW4=
+    kind: Secret
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: certmanager-issuers
+        app.kubernetes.io/version: 1.0.0
+      name: RELEASE-NAME-config-secrets
+    type: Opaque
+  2: |
+    apiVersion: cert-manager.io/v1
+    kind: Issuer
+    metadata:
+      name: letsencrypt
+    spec:
+      acme:
+        email: admin@example.com
+        privateKeySecretRef:
+          name: letsencrypt-issuer
+        server: https://acme-v02.api.letsencrypt.org/directory
+        solvers:
+          - dns01:
+              cloudflare:
+                apiTokenSecretRef:
+                  key: cloudflare-api-token
+                  name: certmanager-certs-config-secrets
+                email: admin@example.com

@@ -1,0 +1,8 @@
+certificates:
+  my-cert:
+    enabled: true
+    commonName: example.com
+    dnsNames:
+      - example.com
+      - "*.example.com"
+    issuer: letsencrypt

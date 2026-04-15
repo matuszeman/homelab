@@ -1,79 +1,69 @@
-# CertManager Certificates Helm Chart
+# certmanager-certs
 
-This chart provides certificate management configuration for Kubernetes clusters using cert-manager.
+Helm chart for managing cert-manager `Issuer` and `Certificate` resources, with optional API credentials via a sealed/plain secret and Gateway API `ReferenceGrant` support.
 
-## Configuration
+## Features
 
-### Gateway Reference Grants
+- Let's Encrypt (production + staging) `Issuer` resources
+- `Certificate` resources referencing those issuers
+- Cloudflare (or any DNS01/HTTP01) solver configuration via a managed secret
+- `ReferenceGrant` resources for cross-namespace secret access (Gateway API)
 
-Gateway Reference Grants allow gateways in other namespaces to reference TLS secrets managed by cert-manager. This is required when using Gateway API with certificates stored in a different namespace than the gateway.
+## Let's Encrypt issuers
 
-#### Configuration Options
-
-Configure reference grants through the `secretsReferenceGrants` section in `values.yaml`:
+Full example: [tests/example/issuers.yaml](tests/example/issuers.yaml)
 
 ```yaml
-secretsReferenceGrants:
-  my-gateway:
-    kind: Gateway           # Type of resource (Gateway, HTTPRoute, etc.)
-    namespace: traefik-system  # Namespace where the gateway is located
-    labels: {}              # Additional labels for the ReferenceGrant
-    annotations: {}         # Additional annotations for the ReferenceGrant
+issuers:
+  letsencrypt:
+    enabled: true
+    email: "admin@example.com"
+    solvers:
+      - dns01:
+          cloudflare:
+            email: "admin@example.com"
+            apiTokenSecretRef:
+              name: certmanager-certs-config-secrets
+              key: cloudflare-api-token
+
+  configs:
+    secrets:
+      content:
+        cloudflare-api-token: "<token>"
 ```
 
-#### Configuration Fields
+Enable `letsencrypt-staging` the same way for testing before switching to production.
 
-| Field | Type | Description | Default |
-|-------|------|-------------|---------|
-| `kind` | string | The kind of resource requesting access | `Gateway` |
-| `namespace` | string | The namespace where the requesting resource is located | Required |
-| `labels` | object | Additional labels for the ReferenceGrant resource | `{}` |
-| `annotations` | object | Additional annotations for the ReferenceGrant resource | `{}` |
+## Certificates
 
-#### Example Configuration
+Full example: [tests/example/certificates.yaml](tests/example/certificates.yaml)
+
+```yaml
+certificates:
+  my-cert:
+    enabled: true
+    commonName: example.com
+    dnsNames:
+      - example.com
+      - "*.example.com"
+    issuer: letsencrypt   # or letsencrypt-staging
+```
+
+Each entry creates a `Certificate` resource. The generated TLS secret has the same name as the map key (`my-cert`).
+
+## Gateway ReferenceGrants
+
+Full example: [tests/example/reference_grants.yaml](tests/example/reference_grants.yaml)
+
+Required when a Gateway in another namespace needs to reference TLS secrets from this chart's namespace.
 
 ```yaml
 secretsReferenceGrants:
-  # Allow Traefik gateway to reference certificates
   traefik-gateway:
     kind: Gateway
     namespace: traefik-system
-    labels:
-      app: traefik
-    annotations:
-      description: "Allow Traefik gateway to access certificates"
-  
-  # Allow Istio gateway to reference certificates
-  istio-gateway:
-    kind: Gateway
-    namespace: istio-system
-    labels:
-      app: istio
-  
-  # Allow HTTPRoute to reference certificates
-  api-routes:
-    kind: HTTPRoute
-    namespace: api-system
-    labels:
-      tier: api
 ```
 
-This configuration creates ReferenceGrant resources that allow:
-- `traefik-gateway` in `traefik-system` namespace to access secrets
-- `istio-gateway` in `istio-system` namespace to access secrets  
-- `api-routes` HTTPRoute in `api-system` namespace to access secrets
+Creates a `ReferenceGrant` named `traefik-gateway-secrets` allowing the specified namespace to read `Secret` resources.
 
-#### Generated Resources
-
-Each entry in `secretsReferenceGrants` generates a ReferenceGrant with the name pattern: `{key}-secrets-ref-grant`
-
-For example, `traefik-gateway` would create: `traefik-gateway-secrets-ref-grant`
-
-#### Use Case
-
-This is particularly useful when:
-1. Your certificates are managed in a dedicated namespace (e.g., `cert-manager`)
-2. Your gateways are in different namespaces (e.g., `traefik-system`, `istio-system`)
-3. You need to reference the TLS secrets across namespace boundaries
-
-The ReferenceGrant provides the necessary RBAC permissions for cross-namespace secret access in Gateway API.
+Optional fields: `labels`, `annotations`. `kind` defaults to `Gateway`.
