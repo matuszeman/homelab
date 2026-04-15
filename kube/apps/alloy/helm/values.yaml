@@ -71,19 +71,27 @@ app:
   profiling:
     enabled: false
 
+  collectorCommon:
+    alloy:
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"
+
+
+  telemetryServices:
+    opencost:
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"
+
   # -- Collectors: named Alloy collector instances.
-  # Each collector uses `presets` to configure its behaviour.
-  # Available presets: daemonset, singleton, deployment, statefulset,
-  #                    filesystem-log-reader, privileged, clustered
   # See: https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring/docs/collectors
-  collectors: {}
-    # logs:
-    #   presets:
-    #     - daemonset
-    #     - filesystem-log-reader
-    # metrics:
-    #   presets:
-    #     - singleton
+  collectors:
+    alloy-metrics:
+      presets: [ clustered, statefulset ]
+    alloy-logs:
+      presets: [ filesystem-log-reader, daemonset ]
+    alloy-singleton:
+      presets: [ singleton ]
+
 
 # idp-app (config) subchart — use to create Secrets for destination credentials.
 # Reference: https://github.com/matuszeman/charts
