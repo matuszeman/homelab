@@ -41,7 +41,7 @@ app:
 
   clusterMetrics:
     enabled: false
-    #collector: alloy-metrics
+    collector: metrics
 
   annotationAutodiscovery:
     enabled: false
@@ -51,16 +51,16 @@ app:
 
   clusterEvents:
     enabled: false
-    #collector: alloy-singleton
+    collector: singleton
 
   nodeLogs:
     enabled: false
-    #collector: alloy-logs
+    collector: logs
 
   # -- Pod logs in Loki format (uses filesystem log reader)
   podLogsViaLoki:
     enabled: false
-    #collector: alloy-logs
+    collector: logs
     structuredMetadata:
       pod: ""
 
@@ -91,11 +91,11 @@ app:
   # -- Collectors: named Alloy collector instances.
   # See: https://github.com/grafana/k8s-monitoring-helm/tree/main/charts/k8s-monitoring/docs/collectors
 #  collectors:
-#    alloy-metrics:
+#    metrics:
 #      presets: [ clustered, statefulset ]
-#    alloy-logs:
+#    logs:
 #      presets: [ filesystem-log-reader, daemonset ]
-#    alloy-singleton:
+#    singleton:
 #      presets: [ singleton ]
 
 
