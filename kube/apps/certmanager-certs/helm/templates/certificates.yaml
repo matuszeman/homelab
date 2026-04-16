@@ -18,6 +18,17 @@ spec:
   issuerRef:
     name: {{ $cert.issuer | required "cert.issuer required" }}
     kind: Issuer
+  {{- with $cert.secretTemplate }}
+  secretTemplate:
+    {{- with .annotations }}
+    annotations:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .labels }}
+    labels:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 {{- end }}
 
