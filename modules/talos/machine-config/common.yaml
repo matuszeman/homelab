@@ -43,3 +43,7 @@ machine:
     #%{ for k, v in node_taints }
     ${k}: ${v}
     #%{ endfor }
+  registries:
+    config:
+      ${indent(6, yamlencode(cluster_config.registries_config))}
+
