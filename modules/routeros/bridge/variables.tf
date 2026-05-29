@@ -14,3 +14,9 @@ variable "ports" {
 variable "vlan_filtering" {
   type = bool
 }
+variable "stp" {
+  type = object({
+    priority = optional(string, "0x8000")
+  })
+  default = {}
+}

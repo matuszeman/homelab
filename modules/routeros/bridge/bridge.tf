@@ -2,6 +2,7 @@ resource "routeros_interface_bridge" "bridge" {
   name           = var.name
   comment        = format(local.comment_format, "")
   vlan_filtering = var.vlan_filtering
+  priority       = var.stp.priority
   #frame_types = var.vlan_filtering ? "admit-all" :
 }
 
