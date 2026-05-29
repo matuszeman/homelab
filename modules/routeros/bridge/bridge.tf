@@ -8,10 +8,10 @@ resource "routeros_interface_bridge" "bridge" {
 resource "routeros_interface_bridge_port" "ports" {
   for_each  = var.ports
   bridge    = routeros_interface_bridge.bridge.name
-  comment   = format(local.comment_format, "")
+  comment   = each.value.comment != null ? format(local.comment_format, each.value.comment) : format(local.comment_format, "")
   interface = each.key
   # Ensure PVID is set as a number, not string
-  pvid      = each.value.vlan_access_port != null ? each.value.vlan_access_port : 1
+  pvid      = each.value.vlan_access_port != null ? each.value.vlan_access_port : (each.value.vlan_hybrid_port != null ? each.value.vlan_hybrid_port.native_vlan : 1)
   # Set frame_types based on port type:
   # - Access ports: admit only untagged and priority-tagged frames
   # - Trunk ports: admit only VLAN-tagged frames
