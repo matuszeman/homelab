@@ -27,3 +27,12 @@ variable "address_pool" {
     }))
   })
 }
+
+variable "dhcp_options" {
+  type = list(object({
+    code  = number
+    name  = string
+    value = string
+  }))
+  default = []
+}

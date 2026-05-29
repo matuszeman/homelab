@@ -18,12 +18,26 @@ resource "routeros_ip_dhcp_server" "this" {
   lease_time   = var.lease_time
 }
 
+resource "routeros_ip_dhcp_server_option" "options" {
+  for_each = { for o in var.dhcp_options : o.name => o }
+  code     = each.value.code
+  name     = each.value.name
+  value    = each.value.value
+}
+
+resource "routeros_ip_dhcp_server_option_sets" "options" {
+  count   = length(var.dhcp_options) > 0 ? 1 : 0
+  name    = "${var.network.name}-options"
+  options = join(",", [for o in routeros_ip_dhcp_server_option.options : o.name])
+}
+
 resource "routeros_ip_dhcp_server_network" "this" {
   comment    = format(local.comment_format, "")
   address    = var.network.cidr
   gateway    = var.network.gateway
   dns_server = var.network.nameservers
   # https://en.wikipedia.org/wiki/Search_domain
-  domain = var.network.domain
-  ntp_server = var.ntp_server_ips
+  domain      = var.network.domain
+  ntp_server  = var.ntp_server_ips
+  dhcp_option_set = length(var.dhcp_options) > 0 ? routeros_ip_dhcp_server_option_sets.options[0].name : null
 }
