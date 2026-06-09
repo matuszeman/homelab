@@ -1,9 +1,12 @@
 dependencies:
 - name: longhorn
   repository: https://charts.longhorn.io
-  version: 1.11.0
+  version: 1.12.0
 - name: idp-app
   repository: https://matuszeman.github.io/charts
-  version: 4.1.0
-digest: sha256:5f5a232ef1e69ac7d102829b1c08e938f435422e7acb7db135fe5a7ea9bb7fc7
-generated: "2026-02-12T19:50:58.351823+01:00"
+  version: 5.15.0
+- name: idp-app
+  repository: https://matuszeman.github.io/charts
+  version: 5.15.0
+digest: sha256:58e61a7102e9567720bbcc55d0e733f34e40260ccfb3958e856eeec96c522a61
+generated: "2026-06-09T16:40:28.400469+02:00"

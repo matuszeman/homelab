@@ -19,14 +19,10 @@ app:
 
   #namespaceOverride: sci-longhorn
 
-global:
-  cluster: _
-  idpAppConfig:
-    clusters:
-      _: {}
-    defaults:
-      configs:
-        annotations: {}
+gateway:
+  appName: sci-longhorn-gateway
+  appVersion: 1.0.0
+
 config:
   appName: sci-longhorn-config
   appVersion: 1.0.0
