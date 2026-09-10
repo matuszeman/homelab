@@ -1,0 +1,9 @@
+dependencies:
+- name: proxmox-csi-plugin
+  repository: oci://ghcr.io/sergelogvinov/charts
+  version: 0.5.6
+- name: idp-app
+  repository: https://matuszeman.github.io/charts
+  version: 5.10.1
+digest: sha256:890080ce2e25e7051959e5bb89a0c8176278c06941d776b55ab6851e426a0571
+generated: "2026-04-15T08:39:07.572078+02:00"

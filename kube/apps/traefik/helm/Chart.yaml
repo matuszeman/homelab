@@ -1,0 +1,10 @@
+apiVersion: v2
+name: app
+type: application
+version: 1.0.0
+dependencies:
+  - name: traefik
+    alias: app
+    # keep in sync with kube/apps/argocd/terraform/bootstrap/variables.tf version
+    version: 39.0.0
+    repository: https://traefik.github.io/charts

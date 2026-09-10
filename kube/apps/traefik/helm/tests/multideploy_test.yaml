@@ -1,0 +1,7 @@
+suite: multideploy
+values:
+  - values/multideploy.yaml
+tests:
+  - it: renders
+    asserts:
+      - matchSnapshot: {}

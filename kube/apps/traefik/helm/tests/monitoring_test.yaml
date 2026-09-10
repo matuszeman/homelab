@@ -1,0 +1,7 @@
+suite: monitoring
+values:
+  - values/monitoring.yaml
+tests:
+  - it: renders
+    asserts:
+      - matchSnapshot: {}

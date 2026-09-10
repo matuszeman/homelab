@@ -1,0 +1,61 @@
+# Common Talos machine config patch
+machine:
+  network:
+    interfaces:
+      #%{ for name, nic in nics }
+      - deviceSelector:
+          hardwareAddr: ${nic.mac}
+      #%{ if machine_type == "controlplane" && cluster_config.network.cidr == nic.network.cidr }
+        vip:
+          ip: ${cluster_config.vip_ip}
+      #%{ endif }
+      #%{ endfor }
+  install:
+    disk: ${install_disk}
+    image: ${install_image}
+  sysctls:
+    # feature-gate: UserNamespacesSupport=true
+    user.max_user_namespaces: "11255"
+  kubelet:
+    #registerWithFQDN: true
+    extraArgs:
+      rotate-server-certificates: ${cluster_config.metrics_server_enabled}
+    #%{ if length(extra_mounts) > 0 }
+    extraMounts:
+      #%{ for m in extra_mounts }
+      - destination: ${m.destination}
+        type: ${m.type}
+        source: ${m.source}
+        options:
+          #%{ for o in m.options }
+          - ${o}
+          #%{ endfor }
+      #%{ endfor }
+    #%{ endif }
+    nodeIP:
+      validSubnets:
+        - ${cluster_config.network.cidr}
+    extraConfig:
+      # https://docs.siderolabs.com/kubernetes-guides/advanced-guides/node-labels#apply-taints
+      registerWithTaints:
+      #%{ for k, v in node_taints }
+        - key: ${k}
+          value: ${split(":", v)[0]}
+          effect: ${split(":", v)[1]}
+      #%{ endfor }
+  nodeLabels:
+    #%{ for k, v in node_labels }
+    ${k}: ${v}
+    #%{ endfor }
+  nodeAnnotations:
+    #%{ for k, v in node_annotations }
+    ${k}: ${v}
+    #%{ endfor }
+  nodeTaints:
+    #%{ for k, v in node_taints }
+    ${k}: ${v}
+    #%{ endfor }
+  registries:
+    config:
+      ${indent(6, yamlencode(cluster_config.registries_config))}
+

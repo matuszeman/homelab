@@ -1,0 +1,7 @@
+suite: CI values example
+tests:
+  - it: renders all resources
+    values:
+      - values/ci.yaml
+    asserts:
+      - matchSnapshot: {}

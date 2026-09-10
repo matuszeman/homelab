@@ -1,0 +1,27 @@
+app:
+  # values don't meet the specifications of the schema(s) in the following chart(s):
+  # additional properties 'fullnameOverride', 'nameOverride' not allowed
+  #fullnameOverride: traefik-public
+  #nameOverride: traefik
+  instanceLabelOverride: traefik-public
+
+  commonLabels:
+    traefik.io/controller: traefik-public
+
+  ingressClass:
+    enabled: true
+    isDefaultClass: false
+    name: traefik-public
+
+  providers:
+    kubernetesCRD:
+      enabled: true
+      ingressClass: traefik-public
+      labelSelector: "traefik.io/controller=traefik-public"
+    kubernetesIngress:
+      enabled: true
+      ingressClass: traefik-public
+      labelSelector: "traefik.io/controller=traefik-public"
+    kubernetesGateway:
+      enabled: true
+      labelSelector: "traefik.io/controller=traefik-public"

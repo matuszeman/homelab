@@ -1,0 +1,125 @@
+# k8s-monitoring subchart configuration (Grafana Alloy Kubernetes Monitoring)
+# Reference: https://github.com/grafana/k8s-monitoring-helm/blob/main/charts/k8s-monitoring/values.yaml
+#
+# This chart requires at least one destination, one feature, and one collector to be enabled.
+# Set app.cluster.name and destinations in your environment-specific values file.
+#
+app:
+  fullnameOverwrite: alloy
+  nameOverwrite: alloy
+  # -- Cluster name (required, set in environment-specific values file)
+  # cluster:
+  #   name: "my-cluster"
+
+  # -- Destinations for sending telemetry (metrics, logs, traces, profiles).
+  # At least one destination must be configured.
+  # destinations is a map keyed by destination name; each entry requires a `type`.
+  #
+  # Example for Grafana Cloud:
+  destinations: {}
+#    grafana-cloud-otlp:
+#      type: otlp
+#      url: https://otlp-gateway-prod-eu-west-2.grafana.net./otlp
+#      protocol: http
+#      secret:
+#        create: false
+#        name: alloy-config-grafana-cloud
+#      auth:
+#        type: basic
+#        usernameKey: otlp_username
+#        passwordKey: access_token
+#      metrics:
+#        enabled: true
+#      logs:
+#        enabled: true
+#      traces:
+#        enabled: true
+
+  # -- Features: enable the monitoring features you need.
+  # Each feature requires compatible destinations and a collector.
+
+  clusterMetrics:
+    enabled: false
+    collector: metrics
+
+  annotationAutodiscovery:
+    enabled: false
+
+  prometheusOperatorObjects:
+    enabled: false
+
+  clusterEvents:
+    enabled: false
+    collector: singleton
+
+  nodeLogs:
+    enabled: false
+    collector: logs
+
+  # -- Pod logs in Loki format (uses filesystem log reader)
+  podLogsViaLoki:
+    enabled: false
+    collector: logs
+    structuredMetadata:
+      pod: ""
+
+  # -- Pod logs via Kubernetes API (no filesystem access needed)
+  podLogsViaKubernetesApi:
+    enabled: false
+
+  applicationObservability:
+    enabled: false
+    collector: receiver # References the receiver collector defined above
+    receivers:
+      otlp:
+        grpc:
+          enabled: true
+          port: 4317 # OTLP gRPC endpoint
+        http:
+          enabled: true
+          port: 4318 # OTLP HTTP endpoint
+
+  autoInstrumentation:
+    enabled: false
+
+  profiling:
+    enabled: false
+
+  collectorCommon:
+    alloy:
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"
+
+
+  telemetryServices:
+    opencost:
+      annotations:
+        argocd.argoproj.io/sync-wave: "1"
+
+  # -- Collectors: named Alloy collector instances.
+  # See: https://grafana.com/docs/grafana-cloud/monitor-infrastructure/kubernetes-monitoring/configuration/helm-chart-config/helm-chart/collector-reference/
+#  collectors:
+#    metrics:
+#      presets: [ clustered, statefulset ]
+#    logs:
+#      presets: [ filesystem-log-reader, daemonset ]
+#    singleton:
+#      presets: [ singleton ]
+#    receiver:
+#      presets: [ daemonset ]
+#    profiles-collector:
+#      presets: [ privileged, daemonset ]
+
+
+# idp-app (config) subchart — use to create Secrets for destination credentials.
+# Reference: https://github.com/matuszeman/charts
+config:
+  appName: alloy
+  appVersion: "{{ .Chart.AppVersion }}"
+  # -- Uncomment to create a Secret with Grafana Cloud credentials:
+  # configs:
+  #   grafana-cloud:
+  #     secret: {}
+  #     content:
+  #       otlp_username: "123456"
+  #       access_token: "glc_xxxxxxxxxxxxxxxxxxxx"

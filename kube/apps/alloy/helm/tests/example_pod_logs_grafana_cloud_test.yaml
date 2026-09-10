@@ -1,0 +1,7 @@
+suite: example - pod logs to Grafana Cloud
+values:
+  - values/examples/pod-logs-grafana-cloud.yaml
+tests:
+  - it: should render pod logs and Grafana Cloud secret
+    asserts:
+      - matchSnapshot: {}

@@ -1,0 +1,20 @@
+app: {}
+
+#gateway:
+#  appName: sci-longhorn-gateway
+#  appVersion: 1.0.0
+#  httpRoutes:
+#    public:
+#      enabled: true
+#      gatewayName: _
+#      service:
+#        name: longhorn-frontend
+#        port: 80
+#      host: longhorn
+#      domain: sci.lo
+#      path: /
+
+config:
+  appName: sci-proxmox-config
+  appVersion: 1.0.0
+  configs: {}

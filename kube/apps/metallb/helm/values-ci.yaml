@@ -1,0 +1,49 @@
+
+# IPAddressPools configuration
+ipAddressPools:
+  production:
+    addresses:
+      - "192.168.1.240-192.168.1.250"
+      - "192.168.1.100/32"
+    autoAssign: true
+    avoidBuggyIPs: true
+    labels:
+      environment: production
+    annotations:
+      metallb.universe.tf/pool-description: "Production load balancer IP pool"
+    serviceAllocation:
+      priority: 100
+      namespaces:
+        - "default"
+        - "production"
+  development:
+    addresses:
+      - "10.0.0.100-10.0.0.110"
+    autoAssign: false
+    avoidBuggyIPs: false
+    labels:
+      environment: development
+    serviceAllocation:
+      priority: 50
+      serviceSelectors:
+        - matchLabels:
+            environment: dev
+
+l2Advertisements:
+  # Example L2 advertisement configuration
+  main:
+    enabled: true
+    # List of IP address pool names to advertise
+    ipAddressPools:
+      - first-pool
+    # Node selectors to limit which nodes announce the IP addresses
+    nodeSelectors:
+      - matchLabels:
+          kubernetes.io/hostname: NodeA
+    # Network interfaces to use for L2 advertisements
+    interfaces:
+      - eth0
+    # Additional labels for the L2Advertisement resource
+    labels: {}
+    # Additional annotations for the L2Advertisement resource
+    annotations: {}

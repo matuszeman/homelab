@@ -1,0 +1,3 @@
+variable "release" {}
+variable "namespace" {}
+

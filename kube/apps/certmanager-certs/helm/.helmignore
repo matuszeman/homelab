@@ -1,0 +1,3 @@
+tests/*_test.yaml
+tests/__snapshot__/
+tests/values/

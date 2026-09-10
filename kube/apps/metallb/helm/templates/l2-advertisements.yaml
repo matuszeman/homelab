@@ -1,0 +1,39 @@
+{{- range $name, $l2ad := .Values.l2Advertisements }}
+{{- if $l2ad.enabled }}
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: {{ template "metallb.fullname" $ }}-{{ $name }}
+  namespace: {{ $.Release.Namespace | quote }}
+  {{- with $l2ad.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $l2ad.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not (or $l2ad.ipAddressPools $l2ad.nodeSelectors $l2ad.interfaces) }}
+  {}
+  {{- else }}
+  {{- if $l2ad.ipAddressPools }}
+  ipAddressPools:
+    {{- range $l2ad.ipAddressPools }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+  {{- if $l2ad.nodeSelectors }}
+  nodeSelectors:
+    {{- toYaml $l2ad.nodeSelectors | nindent 4 }}
+  {{- end }}
+  {{- if $l2ad.interfaces }}
+  interfaces:
+    {{- range $l2ad.interfaces }}
+    - {{ . }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

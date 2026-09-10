@@ -1,0 +1,25 @@
+app:
+  logs:
+    general:
+      level: INFO
+      format: json
+      noColor: true
+    access:
+      enabled: true
+      format: json
+      filters:
+        statuscodes: "400-499,500-599"
+      fields:
+        defaultmode: "keep"
+        names:
+          ClientHost: "drop"
+      headers:
+        defaultmode: "drop"
+        names:
+          "User-Agent": "keep"
+          "Referer": "keep"
+          "X-Forwarded-For": "keep"
+          "X-Request-Id": "keep"
+          "X-Forwarded-Host":  "keep"
+          "X-Forwarded-Proto": "keep"
+          "Host": "keep"

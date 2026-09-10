@@ -1,0 +1,29 @@
+# https://artifacthub.io/packages/helm/longhorn/longhorn
+# https://github.com/longhorn/charts/tree/master/charts/longhorn
+app:
+  nameOverride: sci-longhorn
+  preUpgradeChecker:
+    jobEnabled: false
+  longhornUI:
+    replicas: 1
+
+  persistence:
+    defaultClass: false
+    # one node deployment
+    defaultClassReplicaCount: 1
+  csi:
+    attacherReplicaCount: 1
+    provisionerReplicaCount: 1
+    resizerReplicaCount: 1
+    snapshotterReplicaCount: 1
+
+  #namespaceOverride: sci-longhorn
+
+gateway:
+  appName: sci-longhorn-gateway
+  appVersion: 1.0.0
+
+config:
+  appName: sci-longhorn-config
+  appVersion: 1.0.0
+  configs: {}

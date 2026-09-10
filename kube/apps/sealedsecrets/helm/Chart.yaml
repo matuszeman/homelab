@@ -1,0 +1,9 @@
+apiVersion: v2
+name: app
+type: application
+version: 1.0.0
+dependencies:
+  - name: sealed-secrets
+    alias: app
+    version: 2.18.1
+    repository: https://bitnami-labs.github.io/sealed-secrets

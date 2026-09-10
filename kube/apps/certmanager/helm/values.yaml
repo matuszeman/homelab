@@ -1,0 +1,6 @@
+# https://cert-manager.io/docs/installation/helm/#helm-installation
+# https://artifacthub.io/packages/helm/cert-manager/cert-manager
+app:
+  fullnameOverride: certmanager
+  crds:
+    enabled: true

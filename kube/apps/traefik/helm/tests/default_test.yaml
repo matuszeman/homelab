@@ -1,0 +1,5 @@
+suite: default
+tests:
+  - it: renders
+    asserts:
+      - matchSnapshot: {}

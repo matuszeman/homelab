@@ -1,0 +1,13 @@
+apiVersion: v2
+name: alloy
+type: application
+version: 1.0.0
+dependencies:
+  - name: k8s-monitoring
+    alias: app
+    version: 4.0.1
+    repository: oci://ghcr.io/grafana/helm-charts
+  - name: idp-app
+    alias: config
+    version: 5.10.1
+    repository: https://matuszeman.github.io/charts

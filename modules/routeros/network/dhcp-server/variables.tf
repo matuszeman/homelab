@@ -1,0 +1,38 @@
+variable "ctx" {}
+variable "disabled" {
+    default = false
+}
+
+variable "interface" {
+  type = string
+}
+
+variable "lease_time" {
+  type = string
+  default = "30m"
+}
+
+variable "address" {}
+variable "ntp_server_ips" {
+  type = list(string)
+  default = []
+}
+
+variable "address_pool" {
+  type = object({
+    cidr = optional(string)
+    range = optional(object({
+      start = string
+      end = string
+    }))
+  })
+}
+
+variable "dhcp_options" {
+  type = list(object({
+    code  = number
+    name  = string
+    value = string
+  }))
+  default = []
+}

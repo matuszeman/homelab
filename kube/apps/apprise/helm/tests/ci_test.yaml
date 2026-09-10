@@ -1,0 +1,7 @@
+suite: ci values - full render (apprise + mailrise)
+values:
+  - ../values-ci.yaml
+tests:
+  - it: renders all resources
+    asserts:
+      - matchSnapshot: {}

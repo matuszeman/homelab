@@ -1,0 +1,9 @@
+issuers:
+  configs:
+    secrets:
+      secret: {}
+
+secretsReferenceGrants:
+  traefik-gateway:
+    kind: Gateway
+    namespace: traefik-system

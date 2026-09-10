@@ -1,0 +1,6 @@
+# https://artifacthub.io/packages/helm/metallb/metallb
+# https://github.com/metallb/metallb/tree/main/charts/metallb
+app:
+  nameOverride: metallb
+  crds:
+    enabled: true

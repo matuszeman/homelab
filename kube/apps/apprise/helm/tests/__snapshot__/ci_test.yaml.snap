@@ -1,0 +1,263 @@
+renders all resources:
+  1: |
+    apiVersion: v1
+    data:
+      apprise.yml: |-
+        groups:
+        - us: john, jane
+        urls:
+        - hassio://hassio.local.:80/TOKEN:
+            tag: john
+        version: 1
+    kind: ConfigMap
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: apprise
+        app.kubernetes.io/version: 1.3.1
+      name: RELEASE-NAME-config-app
+  2: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: apprise
+        app.kubernetes.io/version: 1.3.1
+      name: RELEASE-NAME
+    spec:
+      replicas: 1
+      revisionHistoryLimit: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: RELEASE-NAME
+          app.kubernetes.io/name: apprise
+      template:
+        metadata:
+          annotations:
+            config-hash-app: b7e5e750b29c32d72270a6773c223e1d68249024
+          labels:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: apprise
+        spec:
+          containers:
+            - env:
+                - name: APPRISE_ATTACH_DIR
+                  value: /attach
+                - name: APPRISE_CONFIG_DIR
+                  value: /config
+                - name: APPRISE_CONFIG_LOCK
+                  value: "true"
+                - name: APPRISE_STATEFUL_MODE
+                  value: simple
+                - name: APPRISE_STORAGE_DIR
+                  value: /storage
+                - name: APPRISE_WORKER_COUNT
+                  value: "1"
+                - name: GUID
+                  value: "3000"
+                - name: IPV4_ONLY
+                  value: "true"
+                - name: LOG_LEVEL
+                  value: debug
+                - name: PUID
+                  value: "3000"
+              image: docker.io/caronc/apprise:1.3.1
+              imagePullPolicy: IfNotPresent
+              name: app
+              ports:
+                - containerPort: 8000
+                  name: app
+                  protocol: TCP
+              resources:
+                requests:
+                  cpu: 1m
+                  memory: 50Mi
+              volumeMounts:
+                - mountPath: /config
+                  name: config-app
+                  readOnly: true
+                - mountPath: /attach
+                  name: attach
+                  readOnly: false
+                - mountPath: /storage
+                  name: storage
+                  readOnly: false
+          enableServiceLinks: false
+          nodeSelector: null
+          serviceAccountName: RELEASE-NAME
+          tolerations: null
+          topologySpreadConstraints:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: RELEASE-NAME
+                  app.kubernetes.io/name: apprise
+              maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: ScheduleAnyway
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: RELEASE-NAME
+                  app.kubernetes.io/name: apprise
+              maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+          volumes:
+            - configMap:
+                name: RELEASE-NAME-config-app
+              name: config-app
+            - emptyDir:
+                medium: Memory
+                sizeLimit: 50Mi
+              name: attach
+            - emptyDir:
+                medium: Memory
+                sizeLimit: 50Mi
+              name: storage
+  3: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: apprise
+        app.kubernetes.io/version: 1.3.1
+      name: RELEASE-NAME
+    spec:
+      ports:
+        - name: app
+          port: 80
+          protocol: TCP
+          targetPort: app
+      selector:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/name: apprise
+      type: ClusterIP
+  4: |
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      annotations: null
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: apprise
+        app.kubernetes.io/version: 1.3.1
+      name: RELEASE-NAME
+  5: |
+    apiVersion: v1
+    data:
+      mailrise.conf: |-
+        configs:
+          '*@*':
+            urls:
+            - apprise://RELEASE-NAME:80/apprise/?tags=john
+        listen:
+          port: 8025
+    kind: ConfigMap
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME-smtp
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: mailrise
+        app.kubernetes.io/version: 1.3.0
+      name: RELEASE-NAME-smtp-config-app
+  6: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME-smtp
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: mailrise
+        app.kubernetes.io/version: 1.3.0
+      name: RELEASE-NAME-smtp
+    spec:
+      replicas: 1
+      revisionHistoryLimit: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: RELEASE-NAME-smtp
+          app.kubernetes.io/name: mailrise
+      template:
+        metadata:
+          annotations:
+            config-hash-app: e2cbd60bcfa53ef548ca6b37aa121760ff2faf55
+          labels:
+            app.kubernetes.io/instance: RELEASE-NAME-smtp
+            app.kubernetes.io/name: mailrise
+        spec:
+          containers:
+            - image: docker.io/yoryan/mailrise:1.3.0
+              imagePullPolicy: IfNotPresent
+              name: app
+              ports:
+                - containerPort: 8025
+                  name: app
+                  protocol: TCP
+              resources:
+                requests:
+                  cpu: 1m
+                  memory: 50Mi
+              volumeMounts:
+                - mountPath: /etc/mailrise.conf
+                  name: config-app
+                  readOnly: true
+                  subPath: mailrise.conf
+          enableServiceLinks: false
+          nodeSelector: null
+          serviceAccountName: RELEASE-NAME-smtp
+          tolerations: null
+          topologySpreadConstraints:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: RELEASE-NAME-smtp
+                  app.kubernetes.io/name: mailrise
+              maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              whenUnsatisfiable: ScheduleAnyway
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: RELEASE-NAME-smtp
+                  app.kubernetes.io/name: mailrise
+              maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: ScheduleAnyway
+          volumes:
+            - configMap:
+                name: RELEASE-NAME-smtp-config-app
+              name: config-app
+  7: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME-smtp
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: mailrise
+        app.kubernetes.io/version: 1.3.0
+      name: RELEASE-NAME-smtp
+    spec:
+      ports:
+        - name: app
+          port: 25
+          protocol: TCP
+          targetPort: app
+      selector:
+        app.kubernetes.io/instance: RELEASE-NAME-smtp
+        app.kubernetes.io/name: mailrise
+      type: ClusterIP
+  8: |
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      annotations: null
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME-smtp
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: mailrise
+        app.kubernetes.io/version: 1.3.0
+      name: RELEASE-NAME-smtp

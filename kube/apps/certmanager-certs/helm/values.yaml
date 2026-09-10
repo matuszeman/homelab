@@ -1,0 +1,65 @@
+issuers:
+  appName: "certmanager-issuers"
+  appVersion: "1.0.0"
+
+  # Let's Encrypt production issuer
+  letsencrypt:
+    enabled: false
+    email: null         # required — ACME account email
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # solvers: ACME challenge solvers; see cert-manager docs for full options
+    # Example — Cloudflare DNS01:
+    # solvers:
+    #   - dns01:
+    #       cloudflare:
+    #         email: "admin@example.com"
+    #         apiTokenSecretRef:
+    #           name: certmanager-certs-config-secrets
+    #           key: cloudflare-api-token
+    solvers: []
+
+  # Let's Encrypt staging issuer (use for testing to avoid rate limits)
+  letsencrypt-staging:
+    enabled: false
+    email: null         # required — ACME account email
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    solvers: []
+
+  # Secrets passed to the ACME solver (e.g. DNS provider API tokens).
+  # idp-app implements multiple ways to create config secrets (inline, SealedSecret,
+  # AWS Secrets Manager, existing secret reference) — see idp-app `configs` for all options.
+  configs:
+    secrets:
+      # secret: {}   # uncomment for inline Secret; see idp-app `configs` for all supported types
+      content: {}
+        # cloudflare-api-token: "<token>"
+
+# Gateway API ReferenceGrants — allow gateways in other namespaces to read TLS secrets
+# from this chart's namespace. Required for cross-namespace certificate references.
+# https://gateway-api.sigs.k8s.io/guides/tls/#cross-namespace-certificate-references
+#
+# secretsReferenceGrants:
+#   traefik-gateway:
+#     kind: Gateway           # resource kind requesting access (default: Gateway)
+#     namespace: traefik-system  # namespace where the requesting resource lives  # required
+#     labels: {}
+#     annotations: {}
+secretsReferenceGrants: {}
+
+# cert-manager Certificate resources
+#
+# certificates:
+#   my-cert:
+#     enabled: true
+#     commonName: example.com
+#     dnsNames:               # required
+#       - example.com
+#       - "*.example.com"
+#     issuer: letsencrypt     # required — name of the Issuer resource (letsencrypt | letsencrypt-staging)
+#     secretTemplate:         # optional — annotations/labels applied to the generated TLS secret
+#       annotations:
+#         reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+#         reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "my-app"
+#       labels:
+#         my-label: my-value
+certificates: {}

@@ -1,0 +1,76 @@
+# idp-app - this should be fixed in idp-app
+global:
+  idpAppConfig:
+    clusters:
+      _: {}
+    imageRepositories:
+      docker.io: docker.io
+    defaults:
+      imageRepository: docker.io
+      configs:
+        annotations: {}
+# END
+
+app:
+  appName: authelia
+  appVersion: 4.39.15
+
+  service:
+    enabled: true
+    port: 80
+  serviceAccount:
+    create: true
+  deployment:
+    enabled: true
+
+  securityContext:
+    runAsUser: 3000
+    runAsGroup: 3000
+    fsGroup: 3000
+    fsGroupChangePolicy: "OnRootMismatch"
+  containers:
+    app:
+      containerPort: 9091
+      resources:
+        requests:
+          memory: 50Mi
+          cpu: 1m
+
+      # https://hub.docker.com/r/authelia/authelia
+      imageRepository: docker.io
+      image: authelia/authelia
+      imageTag: 4.39.15
+#      configFiles:
+#        users: /config/users/users.yaml
+      configDirs:
+        config: /config/config
+        secrets: /config/secrets
+      # https://www.authelia.com/configuration/methods/files/
+      env:
+        # https://www.authelia.com/integration/deployment/docker/#environment-variables
+        #PUID: 3000
+        #PGID: 3000
+        # https://www.authelia.com/configuration/methods/files/
+        # https://www.authelia.com/configuration/methods/environment/
+        # https://github.com/authelia/chartrepo/blob/master/charts/authelia/templates/configMap.yaml
+        X_AUTHELIA_CONFIG_FILTERS: template
+        X_AUTHELIA_CONFIG: /config/config
+        AUTHELIA_LOG_LEVEL: info
+        AUTHELIA_LOG_KEEP_STDOUT: true
+
+  configs:
+    secrets:
+      restartOnUpdate: true
+      content: {}
+#    users:
+#      content:
+#        users.yaml:
+#          # https://www.authelia.com/configuration/first-factor/file/
+#          # https://www.authelia.com/reference/guides/passwords/#yaml-format
+#          users: {}
+    config:
+      restartPodOnUpdate: true
+      content: {}
+        # https://github.com/authelia/authelia/blob/v4.39.5/config.template.yml
+        # https://www.authelia.com/reference/guides/templating/
+        # https://www.authelia.com/configuration/prologue/security-sensitive-values/#template-example

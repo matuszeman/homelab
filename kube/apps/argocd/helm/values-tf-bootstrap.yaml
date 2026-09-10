@@ -1,0 +1,20 @@
+app:
+  configs:
+    params:
+      # we access server using ingress over https, but on http server port.
+      # if insecure=false, argocd server would try to redirect to https even we access it on https via ingress.
+      server.insecure: true
+      # https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/#reconfigure-argo-cd-to-allow-certain-namespaces
+      application.namespaces: "*"
+      # https://argo-cd.readthedocs.io/en/latest/operator-manual/applicationset/Appset-Any-Namespace/#reconfigure-argo-cd-to-allow-certain-namespaces
+      applicationsetcontroller.namespaces: "*"
+      applicationsetcontroller.enable.scm.providers: false
+  applicationSet:
+    allowAnyNamespace: true
+  dex:
+    enabled: false
+
+  server:
+    ingress:
+      # use gateway idp-app for ingress/http-route configuration
+      enabled: false

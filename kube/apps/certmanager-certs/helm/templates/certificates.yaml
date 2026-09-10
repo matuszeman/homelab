@@ -1,0 +1,34 @@
+{{- range $certName, $cert := .Values.certificates }}
+{{- if $cert.enabled }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ $certName }}
+  namespace: {{ $.Release.Namespace }}
+spec:
+  secretName: {{ $certName }}
+  {{- with $cert.commonName }}
+  commonName: {{ . | quote }}
+  {{- end }}
+  dnsNames:
+    {{- range $cert.dnsNames }}
+    - {{ . | quote }}
+    {{- end }}
+  issuerRef:
+    name: {{ $cert.issuer | required "cert.issuer required" }}
+    kind: Issuer
+  {{- with $cert.secretTemplate }}
+  secretTemplate:
+    {{- with .annotations }}
+    annotations:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    {{- with .labels }}
+    labels:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}
+

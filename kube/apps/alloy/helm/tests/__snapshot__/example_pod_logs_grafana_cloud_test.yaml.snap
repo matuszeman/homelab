@@ -1,0 +1,831 @@
+should render pod logs and Grafana Cloud secret:
+  1: |
+    raw: Thanks for trying out the alloy-operator!
+  2: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy-operator
+        app.kubernetes.io/version: 1.7.0
+        helm.sh/chart: alloy-operator-0.5.3
+      name: RELEASE-NAME-alloy-operator
+      namespace: NAMESPACE
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: RELEASE-NAME
+          app.kubernetes.io/name: alloy-operator
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: alloy-operator
+            app.kubernetes.io/version: 1.7.0
+            helm.sh/chart: alloy-operator-0.5.3
+        spec:
+          containers:
+            - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-bind-address=:8082
+                - --leader-elect
+                - --leader-election-id=RELEASE-NAME-alloy-operator
+              image: ghcr.io/grafana/alloy-operator:1.7.0
+              imagePullPolicy: IfNotPresent
+              livenessProbe:
+                httpGet:
+                  path: /healthz
+                  port: 8081
+                initialDelaySeconds: 15
+                periodSeconds: 20
+              name: alloy-operator
+              ports:
+                - containerPort: 8081
+                  name: http
+                  protocol: TCP
+                - containerPort: 8082
+                  name: metrics
+                  protocol: TCP
+              readinessProbe:
+                httpGet:
+                  path: /readyz
+                  port: 8081
+                initialDelaySeconds: 5
+                periodSeconds: 10
+              resources:
+                limits: {}
+                requests: {}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+          nodeSelector:
+            kubernetes.io/os: linux
+          securityContext:
+            runAsNonRoot: true
+          serviceAccountName: RELEASE-NAME-alloy-operator
+  3: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy-operator
+        app.kubernetes.io/version: 1.7.0
+        helm.sh/chart: alloy-operator-0.5.3
+      name: RELEASE-NAME-alloy-operator-alloy-manager
+    rules:
+      - apiGroups:
+          - collectors.grafana.com
+        resources:
+          - alloys
+          - alloys/status
+          - alloys/finalizers
+        verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+  4: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy-operator
+        app.kubernetes.io/version: 1.7.0
+        helm.sh/chart: alloy-operator-0.5.3
+      name: RELEASE-NAME-alloy-operator-alloy-manager
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: RELEASE-NAME-alloy-operator-alloy-manager
+    subjects:
+      - kind: ServiceAccount
+        name: RELEASE-NAME-alloy-operator
+        namespace: NAMESPACE
+  5: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: RELEASE-NAME-alloy-operator
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+          - secrets
+          - serviceaccounts
+          - services
+        verbs:
+          - '*'
+      - apiGroups:
+          - apps
+        resources:
+          - daemonsets
+          - deployments
+          - statefulsets
+        verbs:
+          - '*'
+      - apiGroups:
+          - autoscaling
+        resources:
+          - horizontalpodautoscalers
+        verbs:
+          - '*'
+      - apiGroups:
+          - networking.k8s.io
+        resources:
+          - ingresses
+          - networkpolicies
+        verbs:
+          - '*'
+      - apiGroups:
+          - policy
+        resources:
+          - poddisruptionbudgets
+        verbs:
+          - '*'
+      - apiGroups:
+          - rbac.authorization.k8s.io
+        resources:
+          - clusterroles
+          - clusterrolebindings
+          - roles
+          - rolebindings
+        verbs:
+          - '*'
+  6: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy-operator
+        app.kubernetes.io/version: 1.7.0
+        helm.sh/chart: alloy-operator-0.5.3
+      name: RELEASE-NAME-alloy-operator
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: RELEASE-NAME-alloy-operator
+    subjects:
+      - kind: ServiceAccount
+        name: RELEASE-NAME-alloy-operator
+        namespace: NAMESPACE
+  7: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy-operator
+        app.kubernetes.io/version: 1.7.0
+        helm.sh/chart: alloy-operator-0.5.3
+      name: RELEASE-NAME-alloy-operator-leader-election-role
+      namespace: NAMESPACE
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+      - apiGroups:
+          - coordination.k8s.io
+        resources:
+          - leases
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+      - apiGroups:
+          - ""
+        resources:
+          - events
+        verbs:
+          - create
+          - patch
+  8: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy-operator
+        app.kubernetes.io/version: 1.7.0
+        helm.sh/chart: alloy-operator-0.5.3
+      name: RELEASE-NAME-alloy-operator-leader-election-rolebinding
+      namespace: NAMESPACE
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: RELEASE-NAME-alloy-operator-leader-election-role
+    subjects:
+      - kind: ServiceAccount
+        name: RELEASE-NAME-alloy-operator
+        namespace: NAMESPACE
+  9: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy-operator
+        app.kubernetes.io/version: 1.7.0
+        helm.sh/chart: alloy-operator-0.5.3
+      name: RELEASE-NAME-alloy-operator
+      namespace: NAMESPACE
+    spec:
+      ports:
+        - name: http
+          port: 8081
+          protocol: TCP
+          targetPort: http
+        - name: metrics
+          port: 8082
+          protocol: TCP
+          targetPort: metrics
+      selector:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/name: alloy-operator
+      type: ClusterIP
+  10: |
+    apiVersion: v1
+    automountServiceAccountToken: true
+    kind: ServiceAccount
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy-operator
+        app.kubernetes.io/version: 1.7.0
+        helm.sh/chart: alloy-operator-0.5.3
+      name: RELEASE-NAME-alloy-operator
+      namespace: NAMESPACE
+  11: |
+    raw: |
+      Grafana app Helm chart deployed!
+
+      This chart will install the following components:
+      * Grafana Alloy Operator
+      * Grafana Alloy "logs" (daemonset)
+
+      It will:
+      * Gather logs from Kubernetes Pods in Loki format and send data to grafana-cloud-logs.
+  12: |
+    apiVersion: v1
+    data:
+      config.alloy: |
+        // Feature: Pod Logs (Loki)
+        declare "pod_logs_via_loki" {
+          argument "logs_destinations" {
+            comment = "Must be a list of log destinations where collected logs should be forwarded to"
+          }
+
+          discovery.kubernetes "pods" {
+            role = "pod"
+            selectors {
+              role = "pod"
+              field = "spec.nodeName=" + sys.env("HOSTNAME")
+            }
+          }
+
+          discovery.relabel "filtered_pods" {
+            targets = discovery.kubernetes.pods.targets
+            rule {
+              source_labels = ["__meta_kubernetes_namespace"]
+              action = "replace"
+              target_label = "namespace"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_name"]
+              action = "replace"
+              target_label = "pod"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_container_name"]
+              action = "replace"
+              target_label = "container"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_namespace", "__meta_kubernetes_pod_container_name"]
+              separator = "/"
+              action = "replace"
+              replacement = "$1"
+              target_label = "job"
+            }
+
+            // set the container runtime as a label
+            rule {
+              action = "replace"
+              source_labels = ["__meta_kubernetes_pod_container_id"]
+              regex = "^(\\S+):\\/\\/.+$"
+              replacement = "$1"
+              target_label = "tmp_container_runtime"
+            }
+
+            // explicitly set service_name. if not set, loki will automatically try to populate a default.
+            // see https://grafana.com/docs/loki/latest/get-started/labels/#default-labels-for-all-users
+            //
+            // choose the first value found from the following ordered list:
+            // - pod.annotation[resource.opentelemetry.io/service.name]
+            // - pod.label[app.kubernetes.io/name]
+            // - k8s.container.name
+            rule {
+              action = "replace"
+              source_labels = [
+                "__meta_kubernetes_pod_annotation_resource_opentelemetry_io_service_name",
+                "__meta_kubernetes_pod_label_app_kubernetes_io_name",
+                "__meta_kubernetes_pod_container_name",
+              ]
+              separator = ";"
+              regex = "^(?:;*)?([^;]+).*$"
+              replacement = "$1"
+              target_label = "service_name"
+            }
+
+            // explicitly set service_namespace.
+            //
+            // choose the first value found from the following ordered list:
+            // - pod.annotation[resource.opentelemetry.io/service.namespace]
+            // - pod.namespace
+            rule {
+              action = "replace"
+              source_labels = [
+                "__meta_kubernetes_pod_annotation_resource_opentelemetry_io_service_namespace",
+                "namespace",
+              ]
+              separator = ";"
+              regex = "^(?:;*)?([^;]+).*$"
+              replacement = "$1"
+              target_label = "service_namespace"
+            }
+
+            // explicitly set service_instance_id.
+            //
+            // choose the first value found from the following ordered list:
+            // - pod.annotation[resource.opentelemetry.io/service.instance.id]
+            // - concat([k8s.namespace.name, k8s.pod.name, k8s.container.name], '.')
+            rule {
+              source_labels = ["__meta_kubernetes_pod_annotation_resource_opentelemetry_io_service_instance_id"]
+              target_label = "service_instance_id"
+            }
+            rule {
+              source_labels = ["service_instance_id", "namespace", "pod", "container"]
+              separator = "."
+              regex = "^\\.([^.]+\\.[^.]+\\.[^.]+)$"
+              target_label = "service_instance_id"
+            }
+
+            // set resource attributes
+            rule {
+              action = "labelmap"
+              regex = "__meta_kubernetes_pod_annotation_resource_opentelemetry_io_(.+)"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_annotation_k8s_grafana_com_logs_job"]
+              regex = "(.+)"
+              target_label = "job"
+            }
+            rule {
+              source_labels = ["__meta_kubernetes_pod_label_app_kubernetes_io_name"]
+              regex = "(.+)"
+              target_label = "app_kubernetes_io_name"
+            }
+
+            // Set the pod log path.
+            rule {
+              source_labels = ["__meta_kubernetes_pod_uid", "__meta_kubernetes_pod_container_name"]
+              separator = "/"
+              action = "replace"
+              replacement = "/var/log/pods/*$1/*.log"
+              target_label = "__path__"
+            }
+
+            // If kubernetes.io/config.mirror is set, this is a static pod, created by the kubelet.
+            // It's logs live on a different path.
+            rule {
+              source_labels = ["__meta_kubernetes_pod_annotation_kubernetes_io_config_mirror", "__meta_kubernetes_pod_container_name"]
+              separator = "/"
+              regex = "(.+/.+)"
+              action = "replace"
+              replacement = "/var/log/pods/*$1/*.log"
+              target_label = "__path__"
+            }
+          }
+
+          local.file_match "pod_logs" {
+            path_targets = discovery.relabel.filtered_pods.output
+          }
+
+          loki.source.file "pod_logs" {
+            targets    = local.file_match.pod_logs.targets
+            tail_from_end = true
+            forward_to = [loki.process.pod_logs.receiver]
+          }
+
+          loki.process "pod_logs" {
+            stage.match {
+              selector = "{tmp_container_runtime=~\"containerd|cri-o|\"}"
+              // the cri processing stage extracts the following k/v pairs: log, stream, time, flags
+              stage.cri {
+                max_partial_lines = 100
+              }
+
+              // Set the extract flags and stream values as labels
+              stage.labels {
+                values = {
+                  flags  = "",
+                  stream  = "",
+                }
+              }
+            }
+
+            stage.match {
+              selector = "{tmp_container_runtime=\"docker\"}"
+              // the docker processing stage extracts the following k/v pairs: log, stream, time
+              stage.docker {}
+
+              // Set the extract stream value as a label
+              stage.labels {
+                values = {
+                  stream  = "",
+                }
+              }
+            }
+
+            // Drop the filename label, since it's not really useful in the context of Kubernetes, where we already have cluster,
+            // namespace, pod, and container labels. Drop any structured metadata. Also drop the temporary
+            // container runtime label as it is no longer needed.
+            stage.label_drop {
+              values = [
+                "filename",
+                "tmp_container_runtime",
+              ]
+            }
+            stage.structured_metadata {
+              values = {
+                "k8s_pod_name" = "k8s_pod_name",
+                "pod" = "pod",
+                "service_instance_id" = "service_instance_id",
+              }
+            }
+
+            forward_to = argument.logs_destinations.value
+          }
+        }
+        pod_logs_via_loki "feature" {
+          logs_destinations = [
+            loki.write.grafana_cloud_logs.receiver,
+          ]
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        // Destination: grafana-cloud-logs (loki)
+        otelcol.exporter.loki "grafana_cloud_logs" {
+          forward_to = [loki.write.grafana_cloud_logs.receiver]
+        }
+
+        loki.write "grafana_cloud_logs" {
+          endpoint {
+            url = "https://logs-prod-012.grafana.net/loki/api/v1/push"
+            retry_on_http_429 = true
+            tenant_id = convert.nonsensitive(remote.kubernetes.secret.grafana_cloud_logs.data["tenantId"])
+            basic_auth {
+              username = convert.nonsensitive(remote.kubernetes.secret.grafana_cloud_logs.data["loki_username"])
+              password = remote.kubernetes.secret.grafana_cloud_logs.data["access_token"]
+            }
+            tls_config {
+              insecure_skip_verify = false
+              ca_pem = convert.nonsensitive(remote.kubernetes.secret.grafana_cloud_logs.data["ca"])
+              cert_pem = convert.nonsensitive(remote.kubernetes.secret.grafana_cloud_logs.data["cert"])
+              key_pem = remote.kubernetes.secret.grafana_cloud_logs.data["key"]
+            }
+            min_backoff_period = "500ms"
+            max_backoff_period = "5m"
+            max_backoff_retries = "10"
+          }
+          external_labels = {
+            "cluster" = "homelab",
+            "k8s_cluster_name" = "homelab",
+          }
+        }
+
+        remote.kubernetes.secret "grafana_cloud_logs" {
+          name      = "release-name-config-grafana-cloud"
+          namespace = "NAMESPACE"
+        }
+    kind: ConfigMap
+    metadata:
+      name: RELEASE-NAME-logs
+      namespace: NAMESPACE
+  13: |
+    apiVersion: collectors.grafana.com/v1alpha1
+    kind: Alloy
+    metadata:
+      annotations:
+        helm.sdk.operatorframework.io/uninstall-wait: "true"
+      name: RELEASE-NAME-logs
+      namespace: NAMESPACE
+    spec:
+      alloy:
+        configMap:
+          create: false
+        mounts:
+          dockercontainers: true
+          varlog: true
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+              - CHOWN
+              - DAC_OVERRIDE
+              - FOWNER
+              - FSETID
+              - KILL
+              - SETGID
+              - SETUID
+              - SETPCAP
+              - NET_BIND_SERVICE
+              - NET_RAW
+              - SYS_CHROOT
+              - MKNOD
+              - AUDIT_WRITE
+              - SETFCAP
+            drop:
+              - ALL
+          seccompProfile:
+            type: RuntimeDefault
+      controller:
+        nodeSelector:
+          kubernetes.io/os: linux
+        podAnnotations:
+          k8s.grafana.com/logs.job: integrations/alloy
+        tolerations:
+          - effect: NoSchedule
+            operator: Exists
+        type: daemonset
+      crds:
+        create: false
+      nameOverride: logs
+  14: |
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      annotations:
+        helm.sh/hook: post-install,post-upgrade
+        helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+        helm.sh/hook-weight: "15"
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/name: release-name-app-add-finalizer
+        helm.sh/chart: app-4.0.1
+      name: release-name-app-add-finalizer
+      namespace: NAMESPACE
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: release-name-app
+            linkerd.io/inject: disabled
+            sidecar.istio.io/inject: "false"
+          name: release-name-app-add-finalizer
+        spec:
+          containers:
+            - command:
+                - /bin/bash
+                - -ce
+                - |
+                  kubectl patch \
+                    --namespace=NAMESPACE \
+                    --patch='{"metadata":{"finalizers":["k8s.grafana.com/finalizer"]}}' \
+                    deployment/RELEASE-NAME-alloy-operator
+              image: ghcr.io/grafana/helm-chart-toolbox-kubectl:0.1.2
+              imagePullPolicy: IfNotPresent
+              name: add-finalizers
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 4242
+                seccompProfile:
+                  type: RuntimeDefault
+          nodeSelector:
+            kubernetes.io/os: linux
+          restartPolicy: Never
+          serviceAccountName: release-name-app-add-finalizer
+      ttlSecondsAfterFinished: 300
+  15: |
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      annotations:
+        helm.sh/hook: post-install,post-upgrade
+        helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+        helm.sh/hook-weight: "5"
+      name: release-name-app-add-finalizer
+      namespace: NAMESPACE
+  16: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      annotations:
+        helm.sh/hook: post-install,post-upgrade
+        helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+        helm.sh/hook-weight: "5"
+      name: release-name-app-add-finalizer
+      namespace: NAMESPACE
+    rules:
+      - apiGroups:
+          - apps
+        resources:
+          - deployments
+        verbs:
+          - get
+          - list
+          - watch
+          - patch
+  17: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      annotations:
+        helm.sh/hook: post-install,post-upgrade
+        helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+        helm.sh/hook-weight: "5"
+      name: release-name-app-add-finalizer
+      namespace: NAMESPACE
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: release-name-app-add-finalizer
+    subjects:
+      - kind: ServiceAccount
+        name: release-name-app-add-finalizer
+        namespace: NAMESPACE
+  18: |
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      annotations:
+        helm.sh/hook: pre-delete
+        helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/name: release-name-app-remove-alloy-and-finalizer
+        helm.sh/chart: app-4.0.1
+      name: release-name-app-remove-alloy-and-finalizer
+      namespace: NAMESPACE
+    spec:
+      backoffLimit: 3
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: release-name-app
+            linkerd.io/inject: disabled
+            sidecar.istio.io/inject: "false"
+          name: release-name-app-remove-alloy-and-finalizer
+        spec:
+          containers:
+            - command:
+                - /bin/bash
+                - -ce
+                - |
+                  echo "Deleting Alloy instance: alloy/RELEASE-NAME-logs..."
+                  kubectl delete alloy/RELEASE-NAME-logs --ignore-not-found=true --wait
+                  kubectl wait --for=delete alloy/RELEASE-NAME-logs --timeout=60s || echo "Timed out waiting for deletion of alloy/RELEASE-NAME-logs or it may not exist."
+
+                  kubectl patch \
+                    --namespace=NAMESPACE \
+                    --type merge \
+                    --patch='{"metadata":{"finalizers":null}}' \
+                    deployment/RELEASE-NAME-alloy-operator
+              image: ghcr.io/grafana/helm-chart-toolbox-kubectl:0.1.2
+              imagePullPolicy: IfNotPresent
+              name: remove-finalizers
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 4242
+                seccompProfile:
+                  type: RuntimeDefault
+          nodeSelector:
+            kubernetes.io/os: linux
+          restartPolicy: Never
+          serviceAccountName: release-name-app-remove-alloy-and-finalizer
+      ttlSecondsAfterFinished: 300
+  19: |
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      annotations:
+        helm.sh/hook: pre-delete
+        helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+      name: release-name-app-remove-alloy-and-finalizer
+      namespace: NAMESPACE
+  20: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      annotations:
+        helm.sh/hook: pre-delete
+        helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+      name: release-name-app-remove-alloy-and-finalizer
+      namespace: NAMESPACE
+    rules:
+      - apiGroups:
+          - apps
+        resources:
+          - deployments
+        verbs:
+          - get
+          - list
+          - watch
+          - patch
+      - apiGroups:
+          - collectors.grafana.com
+        resources:
+          - alloys
+        verbs:
+          - get
+          - list
+          - watch
+          - delete
+  21: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      annotations:
+        helm.sh/hook: pre-delete
+        helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+      name: release-name-app-remove-alloy-and-finalizer
+      namespace: NAMESPACE
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: release-name-app-remove-alloy-and-finalizer
+    subjects:
+      - kind: ServiceAccount
+        name: release-name-app-remove-alloy-and-finalizer
+        namespace: NAMESPACE
+  22: |
+    apiVersion: v1
+    data:
+      access_token: Z2xjX3h4eHh4eHh4eHh4eHh4eHh4eHh4
+      loki_username: MTIzNDU2
+    kind: Secret
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: alloy
+        app.kubernetes.io/version: 1.0.0
+      name: RELEASE-NAME-config-grafana-cloud
+    type: Opaque

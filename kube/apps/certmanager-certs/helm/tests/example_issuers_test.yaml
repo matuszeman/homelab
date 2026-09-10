@@ -1,0 +1,7 @@
+suite: example - letsencrypt issuers
+tests:
+  - it: renders letsencrypt issuer with cloudflare dns01 solver and secret
+    values:
+      - example/issuers.yaml
+    asserts:
+      - matchSnapshot: {}
