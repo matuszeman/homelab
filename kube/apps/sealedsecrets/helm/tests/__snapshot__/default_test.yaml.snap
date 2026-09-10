@@ -7,7 +7,7 @@ renders:
 
       1. Install the client-side tool (kubeseal) as explained in the docs below:
 
-          https://github.com/bitnami-labs/sealed-secrets#installation-from-source
+          https://github.com/bitnami/sealed-secrets#installation-from-source
 
       2. Create a sealed secret file running the command below:
 
@@ -51,8 +51,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets
     roleRef:
       apiGroup: rbac.authorization.k8s.io
@@ -73,8 +73,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: secrets-unsealer
     rules:
       - apiGroups:
@@ -119,8 +119,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets
       namespace: NAMESPACE
     spec:
@@ -147,7 +147,7 @@ renders:
               command:
                 - controller
               env: null
-              image: docker.io/bitnami/sealed-secrets-controller:0.35.0
+              image: docker.io/bitnami/sealed-secrets-controller:0.40.0
               imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 3
@@ -162,8 +162,10 @@ renders:
               ports:
                 - containerPort: 8080
                   name: http
+                  protocol: TCP
                 - containerPort: 8081
                   name: metrics
+                  protocol: TCP
               readinessProbe:
                 failureThreshold: 3
                 httpGet:
@@ -177,6 +179,7 @@ renders:
                 limits: {}
                 requests: {}
               securityContext:
+                allowPrivilegeEscalation: false
                 capabilities:
                   drop:
                     - ALL
@@ -188,6 +191,8 @@ renders:
                   name: tmp
           securityContext:
             fsGroup: 65534
+            seccompProfile:
+              type: RuntimeDefault
           serviceAccountName: sealedsecrets
           volumes:
             - emptyDir: {}
@@ -202,8 +207,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets-key-admin
       namespace: NAMESPACE
     roleRef:
@@ -225,8 +230,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets-service-proxier
       namespace: NAMESPACE
     roleRef:
@@ -247,8 +252,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets-key-admin
       namespace: NAMESPACE
     rules:
@@ -276,8 +281,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets-service-proxier
       namespace: NAMESPACE
     rules:
@@ -309,8 +314,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets
       namespace: NAMESPACE
   10: |
@@ -322,8 +327,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets
       namespace: NAMESPACE
     spec:
@@ -331,6 +336,7 @@ renders:
         - name: http
           nodePort: null
           port: 8080
+          protocol: TCP
           targetPort: http
       selector:
         app.kubernetes.io/instance: RELEASE-NAME
@@ -346,8 +352,8 @@ renders:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: sealedsecrets
         app.kubernetes.io/part-of: sealed-secrets
-        app.kubernetes.io/version: 0.35.0
-        helm.sh/chart: app-2.18.1
+        app.kubernetes.io/version: 0.40.0
+        helm.sh/chart: app-2.20.0
       name: sealedsecrets-metrics
       namespace: NAMESPACE
     spec:
@@ -355,6 +361,7 @@ renders:
         - name: metrics
           nodePort: null
           port: 8081
+          protocol: TCP
           targetPort: metrics
       selector:
         app.kubernetes.io/instance: RELEASE-NAME
