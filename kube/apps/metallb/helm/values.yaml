@@ -4,3 +4,54 @@ app:
   nameOverride: metallb
   crds:
     enabled: true
+
+# IPAddressPool resources. Each key becomes a separate IPAddressPool resource.
+# ipAddressPools:
+#   my-pool:
+#     # required — list of IP addresses/ranges (CIDR, range, or single IP)
+#     addresses:
+#       - "192.168.1.240-192.168.1.250"
+#       - "192.168.1.100/32"
+#     # automatically assign IPs from this pool (default: true)
+#     autoAssign: true
+#     # avoid .0 and .255 addresses (default: false)
+#     avoidBuggyIPs: false
+#     # additional labels for the IPAddressPool resource
+#     labels: {}
+#     # additional annotations for the IPAddressPool resource
+#     annotations: {}
+#     # constrain which services can use this pool
+#     serviceAllocation:
+#       # higher value = higher priority when multiple pools match
+#       priority: 100
+#       # restrict to specific namespaces (by name)
+#       namespaces:
+#         - default
+#       # restrict to namespaces matching selectors
+#       namespaceSelectors:
+#         - matchLabels:
+#             kubernetes.io/metadata.name: staging
+#       # restrict to services matching selectors
+#       serviceSelectors:
+#         - matchLabels:
+#             app: web
+
+# L2Advertisement resources. Each key becomes a separate L2Advertisement resource.
+# l2Advertisements:
+#   my-ad:
+#     # required — enable/disable this advertisement
+#     enabled: true
+#     # list of IPAddressPool names to advertise; omit to advertise all pools
+#     ipAddressPools:
+#       - my-pool
+#     # limit which nodes announce the IPs; omit to use all nodes
+#     nodeSelectors:
+#       - matchLabels:
+#           kubernetes.io/hostname: node1
+#     # network interfaces to use; omit to use all interfaces
+#     interfaces:
+#       - eth0
+#     # additional labels for the L2Advertisement resource
+#     labels: {}
+#     # additional annotations for the L2Advertisement resource
+#     annotations: {}
