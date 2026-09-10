@@ -1,20 +1,19 @@
 app:
-  logs:
-    general:
-      level: INFO
-      format: json
-      noColor: true
-    access:
-      enabled: true
-      format: json
-      filters:
-        statuscodes: "400-499,500-599"
-      fields:
-        defaultmode: "keep"
-        names:
-          ClientHost: "drop"
+  log:
+    level: INFO
+    format: common
+    noColor: true
+  accessLog:
+    enabled: true
+    format: common
+    filters:
+      statusCodes: "400-499,500-599"
+    fields:
+      defaultMode: "keep"
+      names:
+        ClientHost: "drop"
       headers:
-        defaultmode: "drop"
+        defaultMode: "drop"
         names:
           "User-Agent": "keep"
           "Referer": "keep"

@@ -3,7 +3,7 @@ renders:
     raw: |2
 
 
-      RELEASE-NAME with docker.io/traefik:v3.6.7 has been deployed successfully on NAMESPACE namespace!
+      RELEASE-NAME with docker.io/traefik:v3.7.12 has been deployed successfully on NAMESPACE namespace!
   2: |
     apiVersion: apps/v1
     kind: Deployment
@@ -13,7 +13,7 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        helm.sh/chart: app-39.0.0
+        helm.sh/chart: app-41.4.0
       name: RELEASE-NAME-app
       namespace: NAMESPACE
     spec:
@@ -38,7 +38,7 @@ renders:
             app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: app
-            helm.sh/chart: app-39.0.0
+            helm.sh/chart: app-41.4.0
         spec:
           automountServiceAccountToken: true
           containers:
@@ -59,13 +59,22 @@ renders:
                 - --providers.kubernetesingress.allowEmptyServices=true
                 - --providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-app
                 - --entryPoints.websecure.http.tls=true
-                - --log.format=json
+                - --log.format=common
+                - --log.noColor=true
                 - --log.level=INFO
                 - --accesslog=true
-                - --accesslog.format=json
+                - --accesslog.format=common
                 - --accesslog.filters.statuscodes=400-499,500-599
                 - --accesslog.fields.defaultmode=keep
+                - --accesslog.fields.names.ClientHost=drop
                 - --accesslog.fields.headers.defaultmode=drop
+                - --accesslog.fields.headers.names.Host=keep
+                - --accesslog.fields.headers.names.Referer=keep
+                - --accesslog.fields.headers.names.User-Agent=keep
+                - --accesslog.fields.headers.names.X-Forwarded-For=keep
+                - --accesslog.fields.headers.names.X-Forwarded-Host=keep
+                - --accesslog.fields.headers.names.X-Forwarded-Proto=keep
+                - --accesslog.fields.headers.names.X-Request-Id=keep
               env:
                 - name: POD_NAME
                   valueFrom:
@@ -77,7 +86,7 @@ renders:
                       fieldPath: metadata.namespace
                 - name: USER
                   value: traefik
-              image: docker.io/traefik:v3.6.7
+              image: docker.io/traefik:v3.7.12
               imagePullPolicy: IfNotPresent
               lifecycle: null
               livenessProbe:
@@ -150,7 +159,7 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        helm.sh/chart: app-39.0.0
+        helm.sh/chart: app-41.4.0
       name: RELEASE-NAME-app
     spec:
       controller: traefik.io/ingress-controller
@@ -162,7 +171,7 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        helm.sh/chart: app-39.0.0
+        helm.sh/chart: app-41.4.0
       name: RELEASE-NAME-app-NAMESPACE
     rules:
       - apiGroups:
@@ -245,7 +254,7 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        helm.sh/chart: app-39.0.0
+        helm.sh/chart: app-41.4.0
       name: RELEASE-NAME-app-NAMESPACE
     roleRef:
       apiGroup: rbac.authorization.k8s.io
@@ -265,7 +274,7 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        helm.sh/chart: app-39.0.0
+        helm.sh/chart: app-41.4.0
       name: RELEASE-NAME-app
       namespace: NAMESPACE
   7: |
@@ -277,7 +286,7 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        helm.sh/chart: app-39.0.0
+        helm.sh/chart: app-41.4.0
       name: RELEASE-NAME-app
       namespace: NAMESPACE
     spec:
