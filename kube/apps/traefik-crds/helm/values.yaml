@@ -1,6 +1,10 @@
 # https://artifacthub.io/packages/helm/traefik/traefik-crds
 # https://github.com/traefik/traefik-helm-chart/tree/master/traefik-crds
 app:
+  # explicitly set this even when it's default
+  # we'll be removing helm release later
+  deleteOnUninstall: false
+
   traefik: true
   # -- Set it to true to install GatewayAPI CRDs.
   # Needed if you set providers.kubernetesGateway.enabled to true in main chart
