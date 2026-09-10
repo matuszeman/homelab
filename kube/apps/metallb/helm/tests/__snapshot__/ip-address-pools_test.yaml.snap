@@ -1,0 +1,35 @@
+renders:
+  1: |
+    apiVersion: metallb.io/v1beta1
+    kind: IPAddressPool
+    metadata:
+      annotations:
+        metallb.universe.tf/pool-description: Production load balancer IP pool
+      labels:
+        environment: production
+      name: RELEASE-NAME-app-full-pool
+    spec:
+      addresses:
+        - 192.168.1.240-192.168.1.250
+        - 192.168.1.100/32
+      autoAssign: true
+      avoidBuggyIPs: true
+      serviceAllocation:
+        namespaceSelectors:
+          - matchLabels:
+              kubernetes.io/metadata.name: staging
+        namespaces:
+          - default
+          - production
+        priority: 100
+        serviceSelectors:
+          - matchLabels:
+              app: web
+  2: |
+    apiVersion: metallb.io/v1beta1
+    kind: IPAddressPool
+    metadata:
+      name: RELEASE-NAME-app-minimal-pool
+    spec:
+      addresses:
+        - 10.0.0.100-10.0.0.110

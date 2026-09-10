@@ -1,0 +1,9 @@
+suite: l2-advertisements
+values:
+  - values/l2-advertisements.yaml
+tests:
+  - it: renders
+    templates:
+      - templates/l2-advertisements.yaml
+    asserts:
+      - matchSnapshot: {}

@@ -1,0 +1,26 @@
+ipAddressPools:
+  full-pool:
+    addresses:
+      - "192.168.1.240-192.168.1.250"
+      - "192.168.1.100/32"
+    autoAssign: true
+    avoidBuggyIPs: true
+    labels:
+      environment: production
+    annotations:
+      metallb.universe.tf/pool-description: "Production load balancer IP pool"
+    serviceAllocation:
+      priority: 100
+      namespaces:
+        - default
+        - production
+      namespaceSelectors:
+        - matchLabels:
+            kubernetes.io/metadata.name: staging
+      serviceSelectors:
+        - matchLabels:
+            app: web
+
+  minimal-pool:
+    addresses:
+      - "10.0.0.100-10.0.0.110"

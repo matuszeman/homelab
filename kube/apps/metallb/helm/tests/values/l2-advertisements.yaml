@@ -1,0 +1,20 @@
+l2Advertisements:
+  full-ad:
+    enabled: true
+    ipAddressPools:
+      - full-pool
+    nodeSelectors:
+      - matchLabels:
+          kubernetes.io/hostname: node1
+    interfaces:
+      - eth0
+    labels:
+      tier: lb
+    annotations:
+      example.com/note: "full advertisement"
+
+  minimal-ad:
+    enabled: true
+
+  disabled-ad:
+    enabled: false

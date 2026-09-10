@@ -1,0 +1,26 @@
+renders:
+  1: |
+    apiVersion: metallb.io/v1beta1
+    kind: L2Advertisement
+    metadata:
+      annotations:
+        example.com/note: full advertisement
+      labels:
+        tier: lb
+      name: RELEASE-NAME-app-full-ad
+      namespace: NAMESPACE
+    spec:
+      interfaces:
+        - eth0
+      ipAddressPools:
+        - full-pool
+      nodeSelectors:
+        - matchLabels:
+            kubernetes.io/hostname: node1
+  2: |
+    apiVersion: metallb.io/v1beta1
+    kind: L2Advertisement
+    metadata:
+      name: RELEASE-NAME-app-minimal-ad
+      namespace: NAMESPACE
+    spec: {}

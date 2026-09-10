@@ -1,0 +1,9 @@
+suite: ip-address-pools
+values:
+  - values/ip-address-pools.yaml
+tests:
+  - it: renders
+    templates:
+      - templates/ip-address-pools.yaml
+    asserts:
+      - matchSnapshot: {}
