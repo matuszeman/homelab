@@ -1,0 +1,356 @@
+renders:
+  1: |
+    raw: |2
+
+
+      RELEASE-NAME with docker.io/traefik:v3.6.7 has been deployed successfully on NAMESPACE namespace!
+  2: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      annotations: null
+      labels:
+        app.kubernetes.io/instance: traefik-public
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        helm.sh/chart: app-39.0.0
+        traefik.io/controller: traefik-public
+      name: RELEASE-NAME-app
+      namespace: NAMESPACE
+    spec:
+      minReadySeconds: 0
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/instance: traefik-public
+          app.kubernetes.io/name: app
+      strategy:
+        rollingUpdate:
+          maxSurge: 1
+          maxUnavailable: 0
+        type: RollingUpdate
+      template:
+        metadata:
+          annotations:
+            prometheus.io/path: /metrics
+            prometheus.io/port: "9100"
+            prometheus.io/scrape: "true"
+          labels:
+            app.kubernetes.io/instance: traefik-public
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: app
+            helm.sh/chart: app-39.0.0
+            traefik.io/controller: traefik-public
+        spec:
+          automountServiceAccountToken: true
+          containers:
+            - args:
+                - --global.checkNewVersion=false
+                - --entryPoints.metrics.address=:9100/tcp
+                - --entryPoints.traefik.address=:8080/tcp
+                - --entryPoints.web.address=:8000/tcp
+                - --entryPoints.websecure.address=:8443/tcp
+                - --api.dashboard=true
+                - --ping=true
+                - --metrics.prometheus=true
+                - --metrics.prometheus.entrypoint=metrics
+                - --experimental.abortonpluginfailure=true
+                - --providers.kubernetescrd
+                - --providers.kubernetescrd.labelSelector=traefik.io/controller=traefik-public
+                - --providers.kubernetescrd.ingressClass=traefik-public
+                - --providers.kubernetescrd.allowEmptyServices=true
+                - --providers.kubernetesingress
+                - --providers.kubernetesingress.allowEmptyServices=true
+                - --providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-app
+                - --providers.kubernetesingress.labelSelector=traefik.io/controller=traefik-public
+                - --providers.kubernetesingress.ingressClass=traefik-public
+                - --providers.kubernetesgateway
+                - --providers.kubernetesgateway.statusaddress.service.name=RELEASE-NAME-app
+                - --providers.kubernetesgateway.statusaddress.service.namespace=NAMESPACE
+                - --providers.kubernetesgateway.labelSelector=traefik.io/controller=traefik-public
+                - --entryPoints.websecure.http.tls=true
+                - --log.level=INFO
+              env:
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: POD_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: USER
+                  value: traefik
+              image: docker.io/traefik:v3.6.7
+              imagePullPolicy: IfNotPresent
+              lifecycle: null
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: /ping
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 2
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 2
+              name: RELEASE-NAME-app
+              ports:
+                - containerPort: 9100
+                  name: metrics
+                  protocol: TCP
+                - containerPort: 8080
+                  name: traefik
+                  protocol: TCP
+                - containerPort: 8000
+                  name: web
+                  protocol: TCP
+                - containerPort: 8443
+                  name: websecure
+                  protocol: TCP
+              readinessProbe:
+                failureThreshold: 1
+                httpGet:
+                  path: /ping
+                  port: 8080
+                  scheme: HTTP
+                initialDelaySeconds: 2
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 2
+              resources: null
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+              volumeMounts:
+                - mountPath: /data
+                  name: data
+                - mountPath: /tmp
+                  name: tmp
+          hostNetwork: false
+          securityContext:
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          serviceAccountName: RELEASE-NAME-app
+          terminationGracePeriodSeconds: 60
+          volumes:
+            - emptyDir: {}
+              name: data
+            - emptyDir: {}
+              name: tmp
+  3: |
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: GatewayClass
+    metadata:
+      labels:
+        app.kubernetes.io/instance: traefik-public
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        helm.sh/chart: app-39.0.0
+        traefik.io/controller: traefik-public
+      name: traefik
+    spec:
+      controllerName: traefik.io/gateway-controller
+  4: |
+    apiVersion: networking.k8s.io/v1
+    kind: IngressClass
+    metadata:
+      annotations:
+        ingressclass.kubernetes.io/is-default-class: "false"
+      labels:
+        app.kubernetes.io/instance: traefik-public
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        helm.sh/chart: app-39.0.0
+        traefik.io/controller: traefik-public
+      name: traefik-public
+    spec:
+      controller: traefik.io/ingress-controller
+  5: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      labels:
+        app.kubernetes.io/instance: traefik-public
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        helm.sh/chart: app-39.0.0
+        traefik.io/controller: traefik-public
+      name: RELEASE-NAME-app-NAMESPACE
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - configmaps
+          - nodes
+          - services
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - discovery.k8s.io
+        resources:
+          - endpointslices
+        verbs:
+          - list
+          - watch
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+        verbs:
+          - get
+      - apiGroups:
+          - ""
+        resources:
+          - secrets
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - extensions
+          - networking.k8s.io
+        resources:
+          - ingressclasses
+          - ingresses
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - extensions
+          - networking.k8s.io
+        resources:
+          - ingresses/status
+        verbs:
+          - update
+      - apiGroups:
+          - ""
+        resources:
+          - namespaces
+        verbs:
+          - list
+          - watch
+      - apiGroups:
+          - traefik.io
+        resources:
+          - ingressroutes
+          - ingressroutetcps
+          - ingressrouteudps
+          - middlewares
+          - middlewaretcps
+          - serverstransports
+          - serverstransporttcps
+          - tlsoptions
+          - tlsstores
+          - traefikservices
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - ""
+        resources:
+          - namespaces
+          - secrets
+          - configmaps
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - gateway.networking.k8s.io
+        resources:
+          - backendtlspolicies
+          - gatewayclasses
+          - gateways
+          - grpcroutes
+          - httproutes
+          - referencegrants
+          - tcproutes
+          - tlsroutes
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - gateway.networking.k8s.io
+        resources:
+          - backendtlspolicies/status
+          - gatewayclasses/status
+          - gateways/status
+          - grpcroutes/status
+          - httproutes/status
+          - tcproutes/status
+          - tlsroutes/status
+        verbs:
+          - update
+  6: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/instance: traefik-public
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        helm.sh/chart: app-39.0.0
+        traefik.io/controller: traefik-public
+      name: RELEASE-NAME-app-NAMESPACE
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: RELEASE-NAME-app-NAMESPACE
+    subjects:
+      - kind: ServiceAccount
+        name: RELEASE-NAME-app
+        namespace: NAMESPACE
+  7: |
+    apiVersion: v1
+    automountServiceAccountToken: false
+    kind: ServiceAccount
+    metadata:
+      annotations: null
+      labels:
+        app.kubernetes.io/instance: traefik-public
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        helm.sh/chart: app-39.0.0
+        traefik.io/controller: traefik-public
+      name: RELEASE-NAME-app
+      namespace: NAMESPACE
+  8: |
+    apiVersion: v1
+    kind: Service
+    metadata:
+      annotations: null
+      labels:
+        app.kubernetes.io/instance: traefik-public
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        helm.sh/chart: app-39.0.0
+        traefik.io/controller: traefik-public
+      name: RELEASE-NAME-app
+      namespace: NAMESPACE
+    spec:
+      externalTrafficPolicy: Local
+      ports:
+        - name: web
+          port: 80
+          protocol: TCP
+          targetPort: web
+        - name: websecure
+          port: 443
+          protocol: TCP
+          targetPort: websecure
+      selector:
+        app.kubernetes.io/instance: traefik-public
+        app.kubernetes.io/name: app
+      type: LoadBalancer

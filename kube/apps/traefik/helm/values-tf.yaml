@@ -1,9 +1,0 @@
-app:
-  fullnameOverride: ${release}
-  nameOverride: traefik
-  instanceLabelOverride: ${release}
-
-  ingressClass:
-    enabled: true
-    isDefaultClass: false
-    name: ${release}

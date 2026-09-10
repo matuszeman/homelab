@@ -3,3 +3,11 @@
 app:
   global:
     checkNewVersion: false
+  experimental:
+    # -- Defines whether all plugins must be loaded successfully for Traefik to start
+    abortOnPluginFailure: true
+  gateway:
+    enabled: false
+  service:
+    spec:
+      externalTrafficPolicy: Local
