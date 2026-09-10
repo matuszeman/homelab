@@ -3,13 +3,13 @@ locals {
 }
 
 module "assignment-pool" {
-  source = "../network-address-pool-output"
+  source = "../../network-address-pool-output"
   pool = local.network_address_pool
 }
 
 resource "zerotier_network" "this" {
   name = var.network.name
-  description = "tf - routed"
+  description = "tf: bridged"
   private = var.private
 
   dns {
@@ -35,20 +35,11 @@ resource "zerotier_network" "this" {
   }
 
   # For client to use this route they must enable "Route all traffic through ZeroTier"
-  # TODO this does not work yes, maybe firewall settings?
   dynamic "route" {
     for_each = var.network.gateway != null ? [1] : []
     content {
       target = "0.0.0.0/0"
       via    = var.network.gateway
-    }
-  }
-
-  dynamic "route" {
-    for_each = var.network.routes != null ? var.network.routes : []
-    content {
-      target = route.value.to
-      via    = route.value.via
     }
   }
 }

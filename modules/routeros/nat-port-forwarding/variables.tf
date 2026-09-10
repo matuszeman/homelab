@@ -2,6 +2,7 @@ variable "in_interface_list" {}
 variable "port_forwards" {
   type = map(object({
     port: number
+    protocol: optional(string, "tcp")
     enabled: optional(bool, true)
     log: optional(bool, false)
     log_prefix: optional(string, "")

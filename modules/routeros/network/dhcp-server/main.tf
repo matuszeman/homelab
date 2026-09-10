@@ -10,12 +10,13 @@ resource "routeros_ip_pool" "this" {
 }
 
 resource "routeros_ip_dhcp_server" "this" {
-  address_pool = routeros_ip_pool.this.name
-    disabled     = var.disabled
-  interface    = var.interface
-  name         = var.network.name
-  comment      = format(local.comment_format, "")
-  lease_time   = var.lease_time
+  address_pool              = routeros_ip_pool.this.name
+  disabled                  = var.disabled
+  interface                 = var.interface
+  name                      = var.network.name
+  comment                   = format(local.comment_format, "")
+  lease_time                = var.lease_time
+  dynamic_lease_identifiers = "client-mac,client-id"
 }
 
 resource "routeros_ip_dhcp_server_option" "options" {

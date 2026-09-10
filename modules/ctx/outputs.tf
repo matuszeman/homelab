@@ -10,6 +10,26 @@ locals {
   }
 }
 
+output "name" {
+  value = var.name
+}
+
+output "env" {
+  value = var.env
+}
+
+output "cluster" {
+  value = var.cluster
+}
+
+output "repo" {
+  value = var.repo
+}
+
+output "repo_path" {
+  value = var.repo_path
+}
+
 output "tags" {
   value = local.tags
 }

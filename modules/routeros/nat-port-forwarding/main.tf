@@ -10,7 +10,7 @@ resource "routeros_ip_firewall_nat" "rule" {
   disabled = !each.value.enabled
   chain             = "dstnat"
   in_interface_list = var.in_interface_list
-  protocol          = "tcp"
+  protocol          = each.value.protocol
   dst_port = each.value.port
   dst_address = var.public_address
 

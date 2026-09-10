@@ -11,6 +11,8 @@ module "machine-config" {
   node_annotations = var.node_annotations
   node_taints = var.node_taints
   bootstrap = var.bootstrap
+  extra_mounts = var.extra_mounts
+  extra_config_patches = var.extra_config_patches
 }
 
 #https://github.com/ionfury/homelab-modules/blob/main/modules/talos-cluster/apply.tf#L6

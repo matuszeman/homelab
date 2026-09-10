@@ -20,6 +20,18 @@ machine:
     #registerWithFQDN: true
     extraArgs:
       rotate-server-certificates: ${cluster_config.metrics_server_enabled}
+    #%{ if length(extra_mounts) > 0 }
+    extraMounts:
+      #%{ for m in extra_mounts }
+      - destination: ${m.destination}
+        type: ${m.type}
+        source: ${m.source}
+        options:
+          #%{ for o in m.options }
+          - ${o}
+          #%{ endfor }
+      #%{ endfor }
+    #%{ endif }
     nodeIP:
       validSubnets:
         - ${cluster_config.network.cidr}

@@ -1,2 +1,0 @@
-variable "ctx" {}
-variable "release" {}

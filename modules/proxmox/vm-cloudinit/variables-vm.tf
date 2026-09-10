@@ -6,6 +6,14 @@ variable "root_volume_size_gb" {
   description = "Volume size in GB"
 }
 
+variable "data_volumes" {
+  type = list(object({
+    size_gb   = number
+    interface = string
+  }))
+  default = []
+}
+
 variable "memory_gb" {
   description = "Memory size in GB"
 }

@@ -58,3 +58,17 @@ variable "node_taints" {
   type = map(string)
   default = {}
 }
+variable "extra_mounts" {
+  type = list(object({
+    destination = string
+    source      = string
+    type        = string
+    options     = list(string)
+  }))
+  default = []
+}
+variable "extra_config_patches" {
+  type        = list(string)
+  default     = []
+  description = "Additional raw YAML config patches (e.g. UserVolumeConfig)"
+}

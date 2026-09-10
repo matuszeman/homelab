@@ -16,3 +16,7 @@ output "cdrom" {
     interface = "ide0"
   }
 }
+
+# output "cloudinit_network" {
+#   value = module.cloudinit-network
+# }

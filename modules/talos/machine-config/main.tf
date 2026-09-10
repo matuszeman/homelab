@@ -1,3 +1,7 @@
+resource "terraform_data" "machine_configuration" {
+  input = nonsensitive(data.talos_machine_configuration.this.machine_configuration)
+}
+
 data "talos_machine_configuration" "this" {
   cluster_name     = var.cluster_config.cluster_name
   machine_type     = var.machine_type
@@ -16,6 +20,7 @@ data "talos_machine_configuration" "this" {
       node_labels = var.node_labels
       node_annotations = var.node_annotations
       node_taints = var.node_taints
+      extra_mounts = var.extra_mounts
     }),
     # controlplane
     var.machine_type != "controlplane" ? null : templatefile("${path.module}/controlplane.yaml", {
@@ -24,6 +29,8 @@ data "talos_machine_configuration" "this" {
     # bootstrap controlplane
     var.bootstrap == false ? null : templatefile("${path.module}/bootstrap.yaml", {}),
     # worker (optional, currently just common, but can be extended)
-    var.machine_type == "worker" ? templatefile("${path.module}/worker.yaml", {}) : null
+    var.machine_type == "worker" ? templatefile("${path.module}/worker.yaml", {}) : null,
+    # extra patches (e.g. UserVolumeConfig)
+    length(var.extra_config_patches) > 0 ? join("\n---\n", var.extra_config_patches) : null,
   ])
 }

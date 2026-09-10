@@ -41,7 +41,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   name      = var.name
   node_name = var.pve_node
   # use lowercase, proxmox converts them to lowercase
-  tags      = ["tf", "talos"]
+  tags      = ["tf", "env.${var.ctx.env}"]
 
   scsi_hardware = var.scsi_hardware
   machine = var.machine
@@ -81,6 +81,19 @@ resource "proxmox_virtual_environment_vm" "this" {
     cache        = "writethrough"
     file_format  = "raw"
     #file_id = var.pve_iso_file_id
+  }
+
+  dynamic "disk" {
+    for_each = var.data_volumes
+    content {
+      interface   = disk.value.interface
+      size        = disk.value.size_gb
+      discard     = "on"
+      iothread    = true
+      cache       = "writethrough"
+      file_format = "raw"
+      ssd = true
+    }
   }
 
   # https://registry.terraform.io/providers/bpg/proxmox/latest/docs/resources/virtual_environment_vm#cdrom-1
