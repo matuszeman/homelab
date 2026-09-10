@@ -1,8 +1,8 @@
 app:
   # values don't meet the specifications of the schema(s) in the following chart(s):
   # additional properties 'fullnameOverride', 'nameOverride' not allowed
-  #fullnameOverride: traefik-public
-  #nameOverride: traefik
+  fullnameOverride: traefik-public
+  nameOverride: traefik
   instanceLabelOverride: traefik-public
 
   commonLabels:
