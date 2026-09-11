@@ -1,0 +1,7 @@
+suite: default
+values:
+  - values/default.yaml
+tests:
+  - it: renders
+    asserts:
+      - matchSnapshot: {}

@@ -270,8 +270,6 @@ renders all resources:
           enableServiceLinks: false
           hostAliases: []
           initContainers: []
-          nodeSelector:
-            node-role.kubernetes.io/control-plane: ""
           priorityClassName: system-cluster-critical
           securityContext:
             fsGroup: 65532
@@ -280,9 +278,6 @@ renders all resources:
             runAsNonRoot: true
             runAsUser: 65532
           serviceAccountName: csi-proxmox-controller
-          tolerations:
-            - effect: NoSchedule
-              key: node-role.kubernetes.io/control-plane
           topologySpreadConstraints:
             - labelSelector:
                 matchLabels:
@@ -626,13 +621,13 @@ renders all resources:
   15: |
     apiVersion: v1
     data:
-      config.yaml: Y2x1c3RlcnM6Ci0gaW5zZWN1cmU6IGZhbHNlCiAgcmVnaW9uOiBSZWdpb24tMQogIHRva2VuX2lkOiBrdWJlcm5ldGVzLWNzaUBwdmUhY3NpCiAgdG9rZW5fc2VjcmV0OiBzZWNyZXQKICB1cmw6IGh0dHBzOi8vY2x1c3Rlci1hcGktMS5leG1wbGUuY29tOjgwMDYvYXBpMi9qc29uCi0gaW5zZWN1cmU6IGZhbHNlCiAgcmVnaW9uOiBSZWdpb24tMgogIHRva2VuX2lkOiBrdWJlcm5ldGVzLWNzaUBwdmUhY3NpCiAgdG9rZW5fc2VjcmV0OiBzZWNyZXQKICB1cmw6IGh0dHBzOi8vY2x1c3Rlci1hcGktMi5leG1wbGUuY29tOjgwMDYvYXBpMi9qc29u
+      config.yaml: Y2x1c3RlcnM6Ci0gcmVnaW9uOiBteS1jbHVzdGVyCiAgdG9rZW5faWQ6IGt1YmVybmV0ZXMtY3NpQHB2ZSFjc2kKICB0b2tlbl9zZWNyZXQ6IGNoYW5nZW1lCiAgdXJsOiBodHRwczovL3Byb3htb3guZXhhbXBsZS5jb206ODAwNi9hcGkyL2pzb24=
     kind: Secret
     metadata:
       labels:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: sci-proxmox-config
-        app.kubernetes.io/version: 1.0.0
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
       name: RELEASE-NAME-config-secret
     type: Opaque

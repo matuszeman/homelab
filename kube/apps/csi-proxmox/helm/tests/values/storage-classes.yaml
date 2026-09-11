@@ -1,0 +1,9 @@
+app:
+  storageClass:
+    - name: proxmox-data-xfs
+      storage: data
+      reclaimPolicy: Delete
+      fstype: xfs
+    - name: proxmox-data
+      storage: data
+      reclaimPolicy: Delete

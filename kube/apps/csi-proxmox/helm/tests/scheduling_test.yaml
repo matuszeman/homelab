@@ -1,0 +1,8 @@
+suite: scheduling
+values:
+  - values/default.yaml
+  - values/scheduling.yaml
+tests:
+  - it: renders all resources
+    asserts:
+      - matchSnapshot: {}

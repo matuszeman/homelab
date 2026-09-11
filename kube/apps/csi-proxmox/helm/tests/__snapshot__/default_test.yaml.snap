@@ -1,0 +1,609 @@
+renders:
+  1: |
+    raw: ""
+  2: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-controller
+      namespace: NAMESPACE
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - persistentvolumes
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - patch
+          - delete
+      - apiGroups:
+          - ""
+        resources:
+          - persistentvolumeclaims
+        verbs:
+          - get
+          - list
+          - watch
+          - update
+      - apiGroups:
+          - ""
+        resources:
+          - persistentvolumeclaims/status
+        verbs:
+          - patch
+      - apiGroups:
+          - ""
+        resources:
+          - events
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+      - apiGroups:
+          - storage.k8s.io
+        resources:
+          - storageclasses
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - storage.k8s.io
+        resources:
+          - csinodes
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - storage.k8s.io
+        resources:
+          - volumeattributesclasses
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - ""
+        resources:
+          - nodes
+        verbs:
+          - get
+          - list
+          - watch
+      - apiGroups:
+          - storage.k8s.io
+        resources:
+          - volumeattachments
+        verbs:
+          - get
+          - list
+          - watch
+          - patch
+      - apiGroups:
+          - storage.k8s.io
+        resources:
+          - volumeattachments/status
+        verbs:
+          - patch
+      - apiGroups:
+          - snapshot.storage.k8s.io
+        resources:
+          - volumesnapshots
+        verbs:
+          - get
+          - list
+  3: |
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-controller
+      namespace: NAMESPACE
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app.kubernetes.io/component: controller
+          app.kubernetes.io/instance: RELEASE-NAME
+          app.kubernetes.io/name: csi-proxmox
+      strategy:
+        rollingUpdate:
+          maxUnavailable: 1
+        type: RollingUpdate
+      template:
+        metadata:
+          annotations:
+            checksum/config: ce080eff0c26b50fe73bf9fcda017c8ad47c1000729fd0c555cfe3535c6d6222
+          labels:
+            app.kubernetes.io/component: controller
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: csi-proxmox
+        spec:
+          containers:
+            - args:
+                - -v=2
+                - --csi-address=unix:///csi/csi.sock
+                - --cloud-config=/etc/proxmox/config.yaml
+              image: ghcr.io/sergelogvinov/proxmox-csi-controller:v0.18.1
+              imagePullPolicy: IfNotPresent
+              name: csi-proxmox-controller
+              ports: null
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /csi
+                  name: socket-dir
+                - mountPath: /etc/proxmox/
+                  name: cloud-config
+            - args:
+                - -v=2
+                - --csi-address=unix:///csi/csi.sock
+                - --timeout=3m
+                - --leader-election
+                - --default-fstype=ext4
+              image: registry.k8s.io/sig-storage/csi-attacher:v4.10.0
+              imagePullPolicy: IfNotPresent
+              name: csi-attacher
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /csi
+                  name: socket-dir
+            - args:
+                - -v=2
+                - --csi-address=unix:///csi/csi.sock
+                - --timeout=3m
+                - --leader-election
+                - --enable-capacity
+                - --capacity-ownerref-level=2
+                - --default-fstype=ext4
+              env:
+                - name: NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+              image: registry.k8s.io/sig-storage/csi-provisioner:v5.3.0
+              imagePullPolicy: IfNotPresent
+              name: csi-provisioner
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /csi
+                  name: socket-dir
+            - args:
+                - -v=2
+                - --csi-address=unix:///csi/csi.sock
+                - --timeout=3m
+                - --handle-volume-inuse-error=false
+                - --leader-election
+              image: registry.k8s.io/sig-storage/csi-resizer:v1.14.0
+              imagePullPolicy: IfNotPresent
+              name: csi-resizer
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /csi
+                  name: socket-dir
+            - args:
+                - -v=2
+                - --csi-address=unix:///csi/csi.sock
+              image: registry.k8s.io/sig-storage/livenessprobe:v2.16.0
+              imagePullPolicy: IfNotPresent
+              name: liveness-probe
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /csi
+                  name: socket-dir
+          enableServiceLinks: false
+          hostAliases: []
+          initContainers: []
+          priorityClassName: system-cluster-critical
+          securityContext:
+            fsGroup: 65532
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 65532
+            runAsNonRoot: true
+            runAsUser: 65532
+          serviceAccountName: csi-proxmox-controller
+          topologySpreadConstraints:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: controller
+                  app.kubernetes.io/instance: RELEASE-NAME
+                  app.kubernetes.io/name: csi-proxmox
+              maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+          volumes:
+            - emptyDir: {}
+              name: socket-dir
+            - name: cloud-config
+              secret:
+                items:
+                  - key: config.yaml
+                    path: config.yaml
+                secretName: csi-proxmox-config-secret
+  4: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-controller
+      namespace: NAMESPACE
+    rules:
+      - apiGroups:
+          - coordination.k8s.io
+        resources:
+          - leases
+        verbs:
+          - get
+          - watch
+          - list
+          - delete
+          - update
+          - create
+      - apiGroups:
+          - storage.k8s.io
+        resources:
+          - csistoragecapacities
+        verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+      - apiGroups:
+          - ""
+        resources:
+          - pods
+        verbs:
+          - get
+      - apiGroups:
+          - apps
+        resources:
+          - replicasets
+        verbs:
+          - get
+  5: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-controller
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: csi-proxmox-controller
+    subjects:
+      - kind: ServiceAccount
+        name: csi-proxmox-controller
+        namespace: NAMESPACE
+  6: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-controller
+      namespace: NAMESPACE
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: csi-proxmox-controller
+    subjects:
+      - kind: ServiceAccount
+        name: csi-proxmox-controller
+        namespace: NAMESPACE
+  7: |
+    apiVersion: storage.k8s.io/v1
+    kind: CSIDriver
+    metadata:
+      name: csi.proxmox.sinextra.dev
+    spec:
+      attachRequired: true
+      podInfoOnMount: true
+      storageCapacity: true
+      volumeLifecycleModes:
+        - Persistent
+  8: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-node
+      namespace: NAMESPACE
+    rules:
+      - apiGroups:
+          - ""
+        resources:
+          - nodes
+        verbs:
+          - get
+  9: |
+    apiVersion: apps/v1
+    kind: DaemonSet
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-node
+      namespace: NAMESPACE
+    spec:
+      selector:
+        matchLabels:
+          app.kubernetes.io/component: node
+          app.kubernetes.io/instance: RELEASE-NAME
+          app.kubernetes.io/name: csi-proxmox
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/component: node
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: csi-proxmox
+        spec:
+          containers:
+            - args:
+                - -v=2
+                - --csi-address=unix:///csi/csi.sock
+                - --node-id=$(NODE_NAME)
+              env:
+                - name: NODE_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: spec.nodeName
+              image: ghcr.io/sergelogvinov/proxmox-csi-node:v0.18.1
+              imagePullPolicy: IfNotPresent
+              name: csi-proxmox-node
+              resources: {}
+              securityContext:
+                capabilities:
+                  add:
+                    - SYS_ADMIN
+                    - CHOWN
+                    - DAC_OVERRIDE
+                  drop:
+                    - ALL
+                privileged: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /csi
+                  name: socket
+                - mountPath: /var/lib/kubelet
+                  mountPropagation: Bidirectional
+                  name: kubelet
+                - mountPath: /dev
+                  name: dev
+                - mountPath: /sys
+                  name: sys
+            - args:
+                - -v=2
+                - --csi-address=unix:///csi/csi.sock
+                - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.proxmox.sinextra.dev/csi.sock
+              image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.15.0
+              imagePullPolicy: IfNotPresent
+              name: csi-node-driver-registrar
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /csi
+                  name: socket
+                - mountPath: /registration
+                  name: registration
+            - args:
+                - -v=2
+                - --csi-address=unix:///csi/csi.sock
+              image: registry.k8s.io/sig-storage/livenessprobe:v2.16.0
+              imagePullPolicy: IfNotPresent
+              name: liveness-probe
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                readOnlyRootFilesystem: true
+                seccompProfile:
+                  type: RuntimeDefault
+              volumeMounts:
+                - mountPath: /csi
+                  name: socket
+          enableServiceLinks: false
+          priorityClassName: system-node-critical
+          securityContext:
+            runAsGroup: 0
+            runAsUser: 0
+          serviceAccountName: csi-proxmox-node
+          tolerations:
+            - effect: NoSchedule
+              key: karpenter.sh/disrupted
+              operator: Exists
+            - effect: NoSchedule
+              key: node.kubernetes.io/unschedulable
+              operator: Exists
+            - effect: NoSchedule
+              key: node.kubernetes.io/disk-pressure
+              operator: Exists
+          volumes:
+            - hostPath:
+                path: /var/lib/kubelet/plugins/csi.proxmox.sinextra.dev/
+                type: DirectoryOrCreate
+              name: socket
+            - hostPath:
+                path: /var/lib/kubelet/plugins_registry/
+                type: Directory
+              name: registration
+            - hostPath:
+                path: /var/lib/kubelet
+                type: Directory
+              name: kubelet
+            - hostPath:
+                path: /dev
+                type: Directory
+              name: dev
+            - hostPath:
+                path: /sys
+                type: Directory
+              name: sys
+      updateStrategy:
+        type: RollingUpdate
+  10: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: csi-proxmox-node
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: csi-proxmox-node
+    subjects:
+      - kind: ServiceAccount
+        name: csi-proxmox-node
+        namespace: NAMESPACE
+  11: |
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-controller
+      namespace: NAMESPACE
+  12: |
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+        helm.sh/chart: app-0.5.6
+      name: csi-proxmox-node
+      namespace: NAMESPACE
+  13: |
+    apiVersion: v1
+    data:
+      config.yaml: Y2x1c3RlcnM6Ci0gcmVnaW9uOiBteS1jbHVzdGVyCiAgdG9rZW5faWQ6IGt1YmVybmV0ZXMtY3NpQHB2ZSFjc2kKICB0b2tlbl9zZWNyZXQ6IGNoYW5nZW1lCiAgdXJsOiBodHRwczovL3Byb3htb3guZXhhbXBsZS5jb206ODAwNi9hcGkyL2pzb24=
+    kind: Secret
+    metadata:
+      labels:
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: csi-proxmox
+        app.kubernetes.io/version: v0.18.1
+      name: RELEASE-NAME-config-secret
+    type: Opaque

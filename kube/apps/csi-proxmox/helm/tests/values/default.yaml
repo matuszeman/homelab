@@ -1,0 +1,10 @@
+config:
+  configs:
+    secret:
+      content:
+        config.yaml:
+          clusters:
+            - url: https://proxmox.example.com:8006/api2/json
+              token_id: "kubernetes-csi@pve!csi"
+              token_secret: "changeme"
+              region: my-cluster

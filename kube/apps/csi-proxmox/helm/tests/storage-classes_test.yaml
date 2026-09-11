@@ -1,0 +1,8 @@
+suite: storage-classes
+values:
+  - values/default.yaml
+  - values/storage-classes.yaml
+tests:
+  - it: renders all resources
+    asserts:
+      - matchSnapshot: {}

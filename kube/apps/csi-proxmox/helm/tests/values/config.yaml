@@ -1,22 +1,4 @@
-app:
-  nodeSelector:
-    node-role.kubernetes.io/control-plane: ""
-  tolerations:
-    - key: node-role.kubernetes.io/control-plane
-      effect: NoSchedule
-
-  storageClass:
-    - name: proxmox-data-xfs
-      storage: data
-      reclaimPolicy: Delete
-      fstype: xfs
-    - name: proxmox-data
-      storage: data
-      reclaimPolicy: Delete
-
 config:
-  appName: sci-proxmox-config
-  appVersion: 1.0.0
   configs:
     secret:
       secret: {}
