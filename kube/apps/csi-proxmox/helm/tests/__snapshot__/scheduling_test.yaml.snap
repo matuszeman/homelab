@@ -9,8 +9,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-controller
       namespace: NAMESPACE
     rules:
@@ -105,6 +105,8 @@ renders all resources:
         verbs:
           - get
           - list
+          - watch
+          - update
   3: |
     apiVersion: apps/v1
     kind: Deployment
@@ -113,8 +115,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-controller
       namespace: NAMESPACE
     spec:
@@ -142,7 +144,7 @@ renders all resources:
                 - -v=2
                 - --csi-address=unix:///csi/csi.sock
                 - --cloud-config=/etc/proxmox/config.yaml
-              image: ghcr.io/sergelogvinov/proxmox-csi-controller:v0.18.1
+              image: ghcr.io/sergelogvinov/proxmox-csi-controller:v0.20.0
               imagePullPolicy: IfNotPresent
               name: csi-proxmox-controller
               ports: null
@@ -169,7 +171,7 @@ renders all resources:
                 - --timeout=3m
                 - --leader-election
                 - --default-fstype=ext4
-              image: registry.k8s.io/sig-storage/csi-attacher:v4.10.0
+              image: registry.k8s.io/sig-storage/csi-attacher:v4.12.0
               imagePullPolicy: IfNotPresent
               name: csi-attacher
               resources:
@@ -204,7 +206,7 @@ renders all resources:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.name
-              image: registry.k8s.io/sig-storage/csi-provisioner:v5.3.0
+              image: registry.k8s.io/sig-storage/csi-provisioner:v6.3.0
               imagePullPolicy: IfNotPresent
               name: csi-provisioner
               resources:
@@ -228,7 +230,7 @@ renders all resources:
                 - --timeout=3m
                 - --handle-volume-inuse-error=false
                 - --leader-election
-              image: registry.k8s.io/sig-storage/csi-resizer:v1.14.0
+              image: registry.k8s.io/sig-storage/csi-resizer:v2.2.1
               imagePullPolicy: IfNotPresent
               name: csi-resizer
               resources:
@@ -249,7 +251,7 @@ renders all resources:
             - args:
                 - -v=2
                 - --csi-address=unix:///csi/csi.sock
-              image: registry.k8s.io/sig-storage/livenessprobe:v2.16.0
+              image: registry.k8s.io/sig-storage/livenessprobe:v2.19.0
               imagePullPolicy: IfNotPresent
               name: liveness-probe
               resources:
@@ -309,8 +311,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-controller
       namespace: NAMESPACE
     rules:
@@ -357,8 +359,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-controller
     roleRef:
       apiGroup: rbac.authorization.k8s.io
@@ -376,8 +378,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-controller
       namespace: NAMESPACE
     roleRef:
@@ -407,8 +409,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-node
       namespace: NAMESPACE
     rules:
@@ -426,8 +428,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-node
       namespace: NAMESPACE
     spec:
@@ -453,7 +455,7 @@ renders all resources:
                   valueFrom:
                     fieldRef:
                       fieldPath: spec.nodeName
-              image: ghcr.io/sergelogvinov/proxmox-csi-node:v0.18.1
+              image: ghcr.io/sergelogvinov/proxmox-csi-node:v0.20.0
               imagePullPolicy: IfNotPresent
               name: csi-proxmox-node
               resources: {}
@@ -482,7 +484,7 @@ renders all resources:
                 - -v=2
                 - --csi-address=unix:///csi/csi.sock
                 - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.proxmox.sinextra.dev/csi.sock
-              image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.15.0
+              image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.17.0
               imagePullPolicy: IfNotPresent
               name: csi-node-driver-registrar
               resources:
@@ -505,7 +507,7 @@ renders all resources:
             - args:
                 - -v=2
                 - --csi-address=unix:///csi/csi.sock
-              image: registry.k8s.io/sig-storage/livenessprobe:v2.16.0
+              image: registry.k8s.io/sig-storage/livenessprobe:v2.19.0
               imagePullPolicy: IfNotPresent
               name: liveness-probe
               resources:
@@ -583,8 +585,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-controller
       namespace: NAMESPACE
   12: |
@@ -595,8 +597,8 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
-        helm.sh/chart: app-0.5.6
+        app.kubernetes.io/version: v0.20.0
+        helm.sh/chart: app-0.5.12
       name: csi-proxmox-node
       namespace: NAMESPACE
   13: |
@@ -609,6 +611,6 @@ renders all resources:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: csi-proxmox
-        app.kubernetes.io/version: v0.18.1
+        app.kubernetes.io/version: v0.20.0
       name: RELEASE-NAME-config-secret
     type: Opaque

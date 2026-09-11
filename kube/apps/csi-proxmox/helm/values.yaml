@@ -25,27 +25,28 @@ app:
 
   # StorageClass definitions — one entry per Proxmox storage pool. # required
   # storageClass:
-  #   - name: proxmox-data-xfs   # required
-  #     storage: data             # required — Proxmox storage pool name
-  #     reclaimPolicy: Delete     # required — Delete | Retain
-  #     fstype: xfs               # xfs | ext4 (default: ext4)
+  #   - name: proxmox-data-xfs           # required
+  #     storage: data                     # required — Proxmox storage pool name
+  #     reclaimPolicy: Delete             # required — Delete | Retain
+  #     fstype: xfs                       # xfs | ext4 (default: ext4)
+  #     volumeBindingMode: WaitForFirstConsumer  # WaitForFirstConsumer | Immediate (use Immediate for ceph)
 
 # idp-app config block — manages the Proxmox API credentials Secret.
 # See: https://matuszeman.github.io/charts
 config:
   appName: csi-proxmox
-  appVersion: v0.18.1 # kept in sync with app dependency .Chart.AppVersion
+  appVersion: v0.20.0 # kept in sync with app dependency .Chart.AppVersion
   configs:
     # https://github.com/sergelogvinov/proxmox-csi-plugin/blob/main/docs/install.md#install-the-plugin-by-using-kubectl
     secret:
       secret: {}  # required — creates an Opaque Secret
       content:
-        # config.yaml content is set per-environment in the environment values file. # required
-        # Example:
-        #   config.yaml:
-        #     clusters:
-        #       - url: https://proxmox.example.com:8006/api2/json  # required
-        #         token_id: "kubernetes-csi@pve!csi"               # required
-        #         token_secret: "changeme"                          # required
-        #         region: my-cluster                                # required
+        # config.yaml is set per-environment in the environment values file. # required
+        # config.yaml:
+        #   clusters:
+        #     - url: https://proxmox.example.com:8006/api2/json  # required
+        #       insecure: false
+        #       token_id: "kubernetes-csi@pve!csi"               # required
+        #       token_secret: "changeme"                          # required
+        #       region: my-cluster                                # required
         config.yaml: null
