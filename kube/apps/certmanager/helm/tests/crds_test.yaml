@@ -1,6 +1,6 @@
-suite: required
-values:
-  - values/required.yaml
+suite: crds
+templates:
+  - charts/app/templates/crd-*.yaml
 tests:
   - it: renders
     asserts:

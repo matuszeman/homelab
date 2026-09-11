@@ -1,4 +1,10 @@
 suite: default
+values:
+  - values/required.yaml
+templates:
+  - charts/app/templates/*.yaml
+excludeTemplates:
+  - charts/app/templates/crd-*.yaml
 tests:
   - it: renders
     asserts:
