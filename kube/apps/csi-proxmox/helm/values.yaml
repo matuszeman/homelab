@@ -32,7 +32,7 @@ app:
   #     volumeBindingMode: WaitForFirstConsumer  # WaitForFirstConsumer | Immediate (use Immediate for ceph)
 
 # idp-app config block — manages the Proxmox API credentials Secret.
-# See: https://matuszeman.github.io/charts
+# See: https://github.com/matuszeman/charts/tree/main/charts/idp-app
 config:
   appName: csi-proxmox
   appVersion: v0.20.0 # kept in sync with app dependency .Chart.AppVersion

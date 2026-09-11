@@ -9,5 +9,5 @@ dependencies:
     repository: oci://ghcr.io/sergelogvinov/charts
   - name: idp-app
     alias: config
-    version: 5.10.1
+    version: 6.5.0
     repository: https://matuszeman.github.io/charts
