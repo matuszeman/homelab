@@ -9,8 +9,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: cainjector
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-cainjector
       namespace: NAMESPACE
     spec:
@@ -32,8 +32,8 @@ renders:
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: cainjector
-            app.kubernetes.io/version: v1.19.2
-            helm.sh/chart: app-v1.19.2
+            app.kubernetes.io/version: v1.21.2
+            helm.sh/chart: app-v1.21.2
         spec:
           containers:
             - args:
@@ -44,7 +44,7 @@ renders:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
-              image: quay.io/jetstack/cert-manager-cainjector:v1.19.2
+              image: quay.io/jetstack/cert-manager-cainjector:v1.21.2
               imagePullPolicy: IfNotPresent
               name: app-cainjector
               ports:
@@ -75,8 +75,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: cainjector
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-cainjector
     rules:
       - apiGroups:
@@ -145,8 +145,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: cainjector
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-cainjector
     roleRef:
       apiGroup: rbac.authorization.k8s.io
@@ -166,8 +166,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: cainjector
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-cainjector:leaderelection
       namespace: certmanager
     rules:
@@ -198,8 +198,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: cainjector
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-cainjector:leaderelection
       namespace: certmanager
     roleRef:
@@ -220,8 +220,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: cainjector
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-cainjector
       namespace: NAMESPACE
     spec:
@@ -245,8 +245,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: cainjector
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-cainjector
       namespace: NAMESPACE
   8: |
@@ -259,8 +259,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager
       namespace: NAMESPACE
     spec:
@@ -282,22 +282,22 @@ renders:
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: app
-            app.kubernetes.io/version: v1.19.2
-            helm.sh/chart: app-v1.19.2
+            app.kubernetes.io/version: v1.21.2
+            helm.sh/chart: app-v1.21.2
         spec:
           containers:
             - args:
                 - --v=2
                 - --cluster-resource-namespace=$(POD_NAMESPACE)
                 - --leader-election-namespace=certmanager
-                - --acme-http01-solver-image=quay.io/jetstack/cert-manager-acmesolver:v1.19.2
+                - --acme-http01-solver-image=quay.io/jetstack/cert-manager-acmesolver:v1.21.2
                 - --max-concurrent-challenges=60
               env:
                 - name: POD_NAMESPACE
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
-              image: quay.io/jetstack/cert-manager-controller:v1.19.2
+              image: quay.io/jetstack/cert-manager-controller:v1.21.2
               imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 8
@@ -341,8 +341,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager:leaderelection
       namespace: certmanager
     rules:
@@ -372,8 +372,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager:leaderelection
       namespace: certmanager
     roleRef:
@@ -386,51 +386,6 @@ renders:
         namespace: NAMESPACE
   11: |
     apiVersion: rbac.authorization.k8s.io/v1
-    kind: Role
-    metadata:
-      labels:
-        app: app
-        app.kubernetes.io/component: controller
-        app.kubernetes.io/instance: RELEASE-NAME
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
-      name: certmanager-tokenrequest
-      namespace: NAMESPACE
-    rules:
-      - apiGroups:
-          - ""
-        resourceNames:
-          - certmanager
-        resources:
-          - serviceaccounts/token
-        verbs:
-          - create
-  12: |
-    apiVersion: rbac.authorization.k8s.io/v1
-    kind: RoleBinding
-    metadata:
-      labels:
-        app: app
-        app.kubernetes.io/component: controller
-        app.kubernetes.io/instance: RELEASE-NAME
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
-      name: certmanager-tokenrequest
-      namespace: NAMESPACE
-    roleRef:
-      apiGroup: rbac.authorization.k8s.io
-      kind: Role
-      name: certmanager-tokenrequest
-    subjects:
-      - kind: ServiceAccount
-        name: certmanager
-        namespace: NAMESPACE
-  13: |
-    apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
       labels:
@@ -439,8 +394,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-issuers
     rules:
       - apiGroups:
@@ -477,7 +432,7 @@ renders:
         verbs:
           - create
           - patch
-  14: |
+  12: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -487,8 +442,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-clusterissuers
     rules:
       - apiGroups:
@@ -525,7 +480,7 @@ renders:
         verbs:
           - create
           - patch
-  15: |
+  13: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -535,8 +490,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-certificates
     rules:
       - apiGroups:
@@ -596,7 +551,7 @@ renders:
         verbs:
           - create
           - patch
-  16: |
+  14: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -606,8 +561,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-orders
     rules:
       - apiGroups:
@@ -650,6 +605,13 @@ renders:
         verbs:
           - update
       - apiGroups:
+          - cert-manager.io
+        resources:
+          - clusterissuers/finalizers
+          - issuers/finalizers
+        verbs:
+          - update
+      - apiGroups:
           - ""
         resources:
           - secrets
@@ -664,7 +626,7 @@ renders:
         verbs:
           - create
           - patch
-  17: |
+  15: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -674,8 +636,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-challenges
     rules:
       - apiGroups:
@@ -771,7 +733,7 @@ renders:
           - get
           - list
           - watch
-  18: |
+  16: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -781,8 +743,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-ingress-shim
     rules:
       - apiGroups:
@@ -824,6 +786,7 @@ renders:
         resources:
           - gateways
           - httproutes
+          - listenersets
         verbs:
           - get
           - list
@@ -833,6 +796,7 @@ renders:
         resources:
           - gateways/finalizers
           - httproutes/finalizers
+          - listenersets/finalizers
         verbs:
           - update
       - apiGroups:
@@ -842,6 +806,48 @@ renders:
         verbs:
           - create
           - patch
+  17: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      labels:
+        app: app
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
+      name: certmanager-controller-issuers
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: certmanager-controller-issuers
+    subjects:
+      - kind: ServiceAccount
+        name: certmanager
+        namespace: NAMESPACE
+  18: |
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      labels:
+        app: app
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/instance: RELEASE-NAME
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: app
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
+      name: certmanager-controller-clusterissuers
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: certmanager-controller-clusterissuers
+    subjects:
+      - kind: ServiceAccount
+        name: certmanager
+        namespace: NAMESPACE
   19: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
@@ -852,13 +858,13 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
-      name: certmanager-controller-issuers
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
+      name: certmanager-controller-certificates
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
-      name: certmanager-controller-issuers
+      name: certmanager-controller-certificates
     subjects:
       - kind: ServiceAccount
         name: certmanager
@@ -873,13 +879,13 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
-      name: certmanager-controller-clusterissuers
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
+      name: certmanager-controller-orders
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
-      name: certmanager-controller-clusterissuers
+      name: certmanager-controller-orders
     subjects:
       - kind: ServiceAccount
         name: certmanager
@@ -894,13 +900,13 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
-      name: certmanager-controller-certificates
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
+      name: certmanager-controller-challenges
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
-      name: certmanager-controller-certificates
+      name: certmanager-controller-challenges
     subjects:
       - kind: ServiceAccount
         name: certmanager
@@ -915,60 +921,18 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
-      name: certmanager-controller-orders
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
+      name: certmanager-controller-ingress-shim
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: ClusterRole
-      name: certmanager-controller-orders
+      name: certmanager-controller-ingress-shim
     subjects:
       - kind: ServiceAccount
         name: certmanager
         namespace: NAMESPACE
   23: |
-    apiVersion: rbac.authorization.k8s.io/v1
-    kind: ClusterRoleBinding
-    metadata:
-      labels:
-        app: app
-        app.kubernetes.io/component: controller
-        app.kubernetes.io/instance: RELEASE-NAME
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
-      name: certmanager-controller-challenges
-    roleRef:
-      apiGroup: rbac.authorization.k8s.io
-      kind: ClusterRole
-      name: certmanager-controller-challenges
-    subjects:
-      - kind: ServiceAccount
-        name: certmanager
-        namespace: NAMESPACE
-  24: |
-    apiVersion: rbac.authorization.k8s.io/v1
-    kind: ClusterRoleBinding
-    metadata:
-      labels:
-        app: app
-        app.kubernetes.io/component: controller
-        app.kubernetes.io/instance: RELEASE-NAME
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
-      name: certmanager-controller-ingress-shim
-    roleRef:
-      apiGroup: rbac.authorization.k8s.io
-      kind: ClusterRole
-      name: certmanager-controller-ingress-shim
-    subjects:
-      - kind: ServiceAccount
-        name: certmanager
-        namespace: NAMESPACE
-  25: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -978,8 +942,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
         rbac.authorization.k8s.io/aggregate-to-cluster-reader: "true"
       name: certmanager-cluster-view
     rules:
@@ -991,7 +955,7 @@ renders:
           - get
           - list
           - watch
-  26: |
+  24: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -1001,8 +965,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
         rbac.authorization.k8s.io/aggregate-to-admin: "true"
         rbac.authorization.k8s.io/aggregate-to-cluster-reader: "true"
         rbac.authorization.k8s.io/aggregate-to-edit: "true"
@@ -1028,7 +992,7 @@ renders:
           - get
           - list
           - watch
-  27: |
+  25: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -1038,8 +1002,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
         rbac.authorization.k8s.io/aggregate-to-admin: "true"
         rbac.authorization.k8s.io/aggregate-to-edit: "true"
       name: certmanager-edit
@@ -1066,14 +1030,19 @@ renders:
           - acme.cert-manager.io
         resources:
           - challenges
-          - orders
         verbs:
-          - create
           - delete
           - deletecollection
           - patch
           - update
-  28: |
+      - apiGroups:
+          - acme.cert-manager.io
+        resources:
+          - orders
+        verbs:
+          - delete
+          - deletecollection
+  26: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -1083,8 +1052,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-approve:cert-manager-io
     rules:
       - apiGroups:
@@ -1096,7 +1065,7 @@ renders:
           - signers
         verbs:
           - approve
-  29: |
+  27: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
@@ -1106,8 +1075,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-approve:cert-manager-io
     roleRef:
       apiGroup: rbac.authorization.k8s.io
@@ -1117,7 +1086,7 @@ renders:
       - kind: ServiceAccount
         name: certmanager
         namespace: NAMESPACE
-  30: |
+  28: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -1127,8 +1096,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-certificatesigningrequests
     rules:
       - apiGroups:
@@ -1162,7 +1131,7 @@ renders:
           - subjectaccessreviews
         verbs:
           - create
-  31: |
+  29: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
@@ -1172,8 +1141,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-controller-certificatesigningrequests
     roleRef:
       apiGroup: rbac.authorization.k8s.io
@@ -1183,7 +1152,7 @@ renders:
       - kind: ServiceAccount
         name: certmanager
         namespace: NAMESPACE
-  32: |
+  30: |
     apiVersion: v1
     kind: Service
     metadata:
@@ -1193,22 +1162,21 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager
       namespace: NAMESPACE
     spec:
       ports:
-        - name: tcp-prometheus-servicemonitor
+        - name: http-metrics
           port: 9402
           protocol: TCP
-          targetPort: http-metrics
       selector:
         app.kubernetes.io/component: controller
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/name: app
       type: ClusterIP
-  33: |
+  31: |
     apiVersion: v1
     automountServiceAccountToken: true
     kind: ServiceAccount
@@ -1219,11 +1187,11 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: app
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager
       namespace: NAMESPACE
-  34: |
+  32: |
     apiVersion: batch/v1
     kind: Job
     metadata:
@@ -1237,8 +1205,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: startupapicheck
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-startupapicheck
       namespace: NAMESPACE
     spec:
@@ -1251,8 +1219,8 @@ renders:
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: startupapicheck
-            app.kubernetes.io/version: v1.19.2
-            helm.sh/chart: app-v1.19.2
+            app.kubernetes.io/version: v1.21.2
+            helm.sh/chart: app-v1.21.2
         spec:
           containers:
             - args:
@@ -1265,7 +1233,7 @@ renders:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
-              image: quay.io/jetstack/cert-manager-startupapicheck:v1.19.2
+              image: quay.io/jetstack/cert-manager-startupapicheck:v1.21.2
               imagePullPolicy: IfNotPresent
               name: app-startupapicheck
               securityContext:
@@ -1283,7 +1251,7 @@ renders:
             seccompProfile:
               type: RuntimeDefault
           serviceAccountName: certmanager-startupapicheck
-  35: |
+  33: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:
@@ -1297,8 +1265,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: startupapicheck
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-startupapicheck:create-cert
       namespace: NAMESPACE
     rules:
@@ -1308,7 +1276,7 @@ renders:
           - certificaterequests
         verbs:
           - create
-  36: |
+  34: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: RoleBinding
     metadata:
@@ -1322,8 +1290,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: startupapicheck
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-startupapicheck:create-cert
       namespace: NAMESPACE
     roleRef:
@@ -1334,7 +1302,7 @@ renders:
       - kind: ServiceAccount
         name: certmanager-startupapicheck
         namespace: NAMESPACE
-  37: |
+  35: |
     apiVersion: v1
     automountServiceAccountToken: true
     kind: ServiceAccount
@@ -1349,11 +1317,11 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: startupapicheck
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-startupapicheck
       namespace: NAMESPACE
-  38: |
+  36: |
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -1363,8 +1331,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook
       namespace: NAMESPACE
     spec:
@@ -1386,8 +1354,8 @@ renders:
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: webhook
-            app.kubernetes.io/version: v1.19.2
-            helm.sh/chart: app-v1.19.2
+            app.kubernetes.io/version: v1.21.2
+            helm.sh/chart: app-v1.21.2
         spec:
           containers:
             - args:
@@ -1403,7 +1371,7 @@ renders:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
-              image: quay.io/jetstack/cert-manager-webhook:v1.19.2
+              image: quay.io/jetstack/cert-manager-webhook:v1.21.2
               imagePullPolicy: IfNotPresent
               livenessProbe:
                 failureThreshold: 3
@@ -1450,7 +1418,7 @@ renders:
             seccompProfile:
               type: RuntimeDefault
           serviceAccountName: certmanager-webhook
-  39: |
+  37: |
     apiVersion: admissionregistration.k8s.io/v1
     kind: MutatingWebhookConfiguration
     metadata:
@@ -1462,8 +1430,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook
     webhooks:
       - admissionReviewVersions:
@@ -1487,7 +1455,7 @@ renders:
               - certificaterequests
         sideEffects: None
         timeoutSeconds: 30
-  40: |
+  38: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: Role
     metadata:
@@ -1497,8 +1465,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook:dynamic-serving
       namespace: NAMESPACE
     rules:
@@ -1519,7 +1487,7 @@ renders:
           - secrets
         verbs:
           - create
-  41: |
+  39: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: RoleBinding
     metadata:
@@ -1529,8 +1497,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook:dynamic-serving
       namespace: NAMESPACE
     roleRef:
@@ -1541,7 +1509,7 @@ renders:
       - kind: ServiceAccount
         name: certmanager-webhook
         namespace: NAMESPACE
-  42: |
+  40: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
     metadata:
@@ -1551,8 +1519,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook:subjectaccessreviews
     rules:
       - apiGroups:
@@ -1561,7 +1529,7 @@ renders:
           - subjectaccessreviews
         verbs:
           - create
-  43: |
+  41: |
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
@@ -1571,8 +1539,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook:subjectaccessreviews
     roleRef:
       apiGroup: rbac.authorization.k8s.io
@@ -1582,7 +1550,7 @@ renders:
       - kind: ServiceAccount
         name: certmanager-webhook
         namespace: NAMESPACE
-  44: |
+  42: |
     apiVersion: v1
     kind: Service
     metadata:
@@ -1592,8 +1560,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook
       namespace: NAMESPACE
     spec:
@@ -1611,7 +1579,7 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/name: webhook
       type: ClusterIP
-  45: |
+  43: |
     apiVersion: v1
     automountServiceAccountToken: true
     kind: ServiceAccount
@@ -1622,11 +1590,11 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook
       namespace: NAMESPACE
-  46: |
+  44: |
     apiVersion: admissionregistration.k8s.io/v1
     kind: ValidatingWebhookConfiguration
     metadata:
@@ -1638,8 +1606,8 @@ renders:
         app.kubernetes.io/instance: RELEASE-NAME
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: webhook
-        app.kubernetes.io/version: v1.19.2
-        helm.sh/chart: app-v1.19.2
+        app.kubernetes.io/version: v1.21.2
+        helm.sh/chart: app-v1.21.2
       name: certmanager-webhook
     webhooks:
       - admissionReviewVersions:
