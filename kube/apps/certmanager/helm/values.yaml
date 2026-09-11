@@ -1,5 +1,9 @@
 # https://cert-manager.io/docs/installation/helm/#helm-installation
 # https://artifacthub.io/packages/helm/cert-manager/cert-manager
+global:
+  leaderElection:
+    namespace: "" # required
+
 app:
   fullnameOverride: certmanager
   crds:
