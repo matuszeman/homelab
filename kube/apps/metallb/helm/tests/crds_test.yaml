@@ -1,0 +1,8 @@
+suite: crds
+templates:
+  - charts/app/charts/crds/templates/crds.yaml
+  - charts/app/charts/frr-k8s/charts/crds/templates/*.yaml
+tests:
+  - it: renders
+    asserts:
+      - matchSnapshot: {}

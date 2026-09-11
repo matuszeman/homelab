@@ -1,4 +1,9 @@
 suite: default
+templates:
+  - charts/app/templates/*.yaml
+  - charts/app/charts/frr-k8s/templates/*.yaml
+excludeTemplates:
+  - charts/app/templates/crds.yaml
 tests:
   - it: renders
     asserts:
