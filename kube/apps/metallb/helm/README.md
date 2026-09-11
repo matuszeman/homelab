@@ -1,3 +1,5 @@
+Release notes: https://metallb.universe.tf/release-notes/
+
 # MetalLB Configuration
 
 This chart configures MetalLB with `IPAddressPool` and `L2Advertisement` resources.
