@@ -61,7 +61,7 @@ renders:
           containers:
             - args:
                 - --v=2
-                - --leader-election-namespace=
+                - --leader-election-namespace=certmanager
               env:
                 - name: POD_NAMESPACE
                   valueFrom:
@@ -192,7 +192,7 @@ renders:
         app.kubernetes.io/version: v1.19.2
         helm.sh/chart: app-v1.19.2
       name: certmanager-cainjector:leaderelection
-      namespace: null
+      namespace: certmanager
     rules:
       - apiGroups:
           - coordination.k8s.io
@@ -224,7 +224,7 @@ renders:
         app.kubernetes.io/version: v1.19.2
         helm.sh/chart: app-v1.19.2
       name: certmanager-cainjector:leaderelection
-      namespace: null
+      namespace: certmanager
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: Role
@@ -12649,7 +12649,7 @@ renders:
             - args:
                 - --v=2
                 - --cluster-resource-namespace=$(POD_NAMESPACE)
-                - --leader-election-namespace=
+                - --leader-election-namespace=certmanager
                 - --acme-http01-solver-image=quay.io/jetstack/cert-manager-acmesolver:v1.19.2
                 - --max-concurrent-challenges=60
               env:
@@ -12704,7 +12704,7 @@ renders:
         app.kubernetes.io/version: v1.19.2
         helm.sh/chart: app-v1.19.2
       name: certmanager:leaderelection
-      namespace: null
+      namespace: certmanager
     rules:
       - apiGroups:
           - coordination.k8s.io
@@ -12735,7 +12735,7 @@ renders:
         app.kubernetes.io/version: v1.19.2
         helm.sh/chart: app-v1.19.2
       name: certmanager:leaderelection
-      namespace: null
+      namespace: certmanager
     roleRef:
       apiGroup: rbac.authorization.k8s.io
       kind: Role

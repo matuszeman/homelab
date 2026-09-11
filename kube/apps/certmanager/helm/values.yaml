@@ -2,7 +2,7 @@
 # https://artifacthub.io/packages/helm/cert-manager/cert-manager
 global:
   leaderElection:
-    namespace: ${namespace}
+    namespace: "" # required
 
 app:
   fullnameOverride: certmanager

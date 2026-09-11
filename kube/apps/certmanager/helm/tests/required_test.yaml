@@ -1,0 +1,7 @@
+suite: required
+values:
+  - values/required.yaml
+tests:
+  - it: renders
+    asserts:
+      - matchSnapshot: {}
