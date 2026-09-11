@@ -4,6 +4,10 @@ app:
   nameOverride: metallb
   crds:
     enabled: true
+  controller:
+    logLevel: warn
+  speaker:
+    logLevel: warn
 
 # IPAddressPool resources. Each key becomes a separate IPAddressPool resource.
 # ipAddressPools:

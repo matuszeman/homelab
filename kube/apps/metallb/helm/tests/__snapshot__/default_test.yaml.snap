@@ -3031,7 +3031,7 @@ renders:
           containers:
             - args:
                 - --port=9120
-                - --log-level=info
+                - --log-level=warn
                 - --webhook-mode=enabled
               env:
                 - name: METALLB_POD_NAME
@@ -3637,7 +3637,7 @@ renders:
           containers:
             - args:
                 - --port=9120
-                - --log-level=info
+                - --log-level=warn
               env:
                 - name: METALLB_NODE_NAME
                   valueFrom:
