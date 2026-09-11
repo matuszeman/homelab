@@ -1,16 +1,3 @@
-# idp-app - this should be fixed in idp-app
-global:
-  idpAppConfig:
-    clusters:
-      _: {}
-    imageRepositories:
-      docker.io: docker.io
-    defaults:
-      imageRepository: docker.io
-      configs:
-        annotations: {}
-# END
-
 app:
   appName: authelia
   appVersion: 4.39.15

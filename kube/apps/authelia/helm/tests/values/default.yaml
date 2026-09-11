@@ -1,0 +1,11 @@
+app:
+  configs:
+    config:
+      content:
+        configuration.yaml:
+          storage:
+            local:
+              path: /data/db.sqlite3
+    secrets:
+      content:
+        storage_encryption_key: a_very_important_secret
